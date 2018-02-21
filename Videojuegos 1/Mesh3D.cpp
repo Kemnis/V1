@@ -11,24 +11,18 @@ Mesh3D::Mesh3D()
 	m_indexBuffer = 0;
 }
 
-
-Mesh3D::Mesh3D(const Mesh3D& other)
-{
-}
-
-
 Mesh3D::~Mesh3D()
 {
 }
 
 
-bool Mesh3D::Initialize(ID3D11Device* device)
+bool Mesh3D::Initialize()
 {
 	bool result;
 
 
 	// Initialize the vertex and index buffers.
-	result = InitializeBuffers(device);
+	result = InitializeBuffers();
 	if (!result)
 	{
 		return false;
@@ -47,10 +41,10 @@ void Mesh3D::Shutdown()
 }
 
 
-void Mesh3D::Render(ID3D11DeviceContext* deviceContext)
+void Mesh3D::Render()
 {
 	// Put the vertex and index buffers on the graphics pipeline to prepare them for drawing.
-	RenderBuffers(deviceContext);
+	RenderBuffers();
 
 	return;
 }
@@ -62,7 +56,7 @@ int Mesh3D::GetIndexCount()
 }
 
 
-bool Mesh3D::InitializeBuffers(ID3D11Device* device)
+bool Mesh3D::InitializeBuffers()
 {
 	VertexType* vertices;
 	unsigned long* indices;
@@ -177,7 +171,7 @@ void Mesh3D::ShutdownBuffers()
 }
 
 
-void Mesh3D::RenderBuffers(ID3D11DeviceContext* deviceContext)
+void Mesh3D::RenderBuffers()
 {
 	unsigned int stride;
 	unsigned int offset;

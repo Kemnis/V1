@@ -1,8 +1,6 @@
 #include "stdafx.h"
 
-Scene::Scene(SpecsDx* From, HWND hWnd) {
-	Environment = From;
-	hwnd = hWnd;
+Scene::Scene() {
 	AwakeObjects();
 }
 
@@ -16,9 +14,9 @@ void Scene::AwakeObjects() {
 	SceneCamera = 0;
 	TestMesh3D = 0;
 	TestShader = 0;
-	SceneCamera = new Camera3D(Environment->GetScreenWidth(), Environment->GetScreenHeight(), 0.01f, 100.0f);
+	SceneCamera = new Camera3D(specsDx->GetScreenWidth(), specsDx->GetScreenHeight(), 0.01f, 100.0f);
 	TestMesh3D = new Mesh3D;
-	TestShader = new ColorShaderClass;
+	TestShader = new ShaderClass;
 }
 
 string Scene::CreateScene() {
@@ -29,14 +27,14 @@ string Scene::CreateScene() {
 	/*SceneCamera->SetViewMatrix(CameraMatrix);*/
 
 	// Initialize the model object.
-	bool res = TestMesh3D->Initialize(Environment->GetDevice());
+	bool res = TestMesh3D->Initialize();
 	if (!res)
 		Error("No se pudo generar el triangulo");
 	else
 		_RPT0(0,"Triangle created!\n");
 
 	// Initialize the color shader object.
-	res = TestShader->Initialize(Environment->GetDevice(), hwnd);
+	res = TestShader->Initialize();
 	if (!res)
 		Error("No se pudo inicializar el shader");
 	else
@@ -58,7 +56,7 @@ string Scene::RenderScene()
 	XMMATRIX* projectionMatrix;
 
 	// Clear the buffers to begin the scene.
-	Environment->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
+	specsDx->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
 
 	//// Generate the view matrix based on the camera's position.
 	SceneCamera->Watch();
@@ -72,15 +70,15 @@ string Scene::RenderScene()
 	//Environment->GetProjectionMatrix(projectionMatrix);
 
 	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
-	TestMesh3D->Render(Environment->GetDeviceContext());
+	TestMesh3D->Render();
 
 	// Render the model using the color shader.
-	RB = TestShader->Render(Environment->GetDeviceContext(), TestMesh3D->GetIndexCount(), &worldMatrix, &viewMatrix, projectionMatrix);
+	RB = TestShader->Render(TestMesh3D->GetIndexCount(), &worldMatrix, &viewMatrix, projectionMatrix);
 	if (!RB)
 		Error("El Shader no pudo renderizar los objetos");
 
 	// Present the rendered scene to the screen.
-	Environment->EndScene();
+	specsDx->EndScene();
 	return "S_OK";
 }
 

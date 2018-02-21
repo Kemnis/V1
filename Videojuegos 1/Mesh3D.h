@@ -1,23 +1,10 @@
 #pragma once
-////////////////////////////////////////////////////////////////////////////////
-// Filename: Mesh3D.h
-////////////////////////////////////////////////////////////////////////////////
 #ifndef _Mesh3D_H_
 #define _Mesh3D_H_
-
-
-//////////////
-// INCLUDES //
-//////////////
 #include <d3d11.h>
 #include <directxmath.h>
 using namespace DirectX;
-
-
-////////////////////////////////////////////////////////////////////////////////
-// Class name: Mesh3D
-////////////////////////////////////////////////////////////////////////////////
-class Mesh3D
+class Mesh3D : DxComponent<Mesh3D>
 {
 private:
 	struct VertexType
@@ -31,16 +18,17 @@ public:
 	Mesh3D(const Mesh3D&);
 	~Mesh3D();
 
-	bool Initialize(ID3D11Device*);
+	bool Initialize();
 	void Shutdown();
-	void Render(ID3D11DeviceContext*);
+	void Render();
+	void Draw();
 
 	int GetIndexCount();
 
 private:
-	bool InitializeBuffers(ID3D11Device*);
+	bool InitializeBuffers();
 	void ShutdownBuffers();
-	void RenderBuffers(ID3D11DeviceContext*);
+	void RenderBuffers();
 
 private:
 	ID3D11Buffer * m_vertexBuffer, *m_indexBuffer;

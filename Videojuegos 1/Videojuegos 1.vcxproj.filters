@@ -96,6 +96,9 @@
     <ClInclude Include="EntityManager.h">
       <Filter>Archivos de encabezado\Core\Components</Filter>
     </ClInclude>
+    <ClInclude Include="DxComponent.h">
+      <Filter>Archivos de encabezado\WindowDx</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SpecsDx.cpp">
@@ -126,7 +129,7 @@
       <Filter>Archivos de origen\Core\Components</Filter>
     </ClCompile>
     <ClCompile Include="EntityManager.cpp">
-      <Filter>Archivos de encabezado\Core\Components</Filter>
+      <Filter>Archivos de origen\Core\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

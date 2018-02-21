@@ -4,10 +4,10 @@
 #include "Camera3D.h"
 #include "Mesh3D.h"
 #include "colorshaderclass.h"
-class Scene
+class Scene : DxComponent<Scene>
 {
 public:
-	Scene(SpecsDx* From, HWND hWnd);
+	Scene();
 	~Scene();
 
 	virtual void DefineCommonShader();
@@ -26,12 +26,10 @@ protected:
 	string RS;
 	// Variables de respuesta
 	
-	SpecsDx* Environment;
-	HWND hwnd;
 private:
 	XMMATRIX CameraMatrix;
 	Mesh3D* TestMesh3D;
-	ColorShaderClass* TestShader;
+	ShaderClass* TestShader;
 };
 
 #endif

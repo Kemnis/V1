@@ -1,6 +1,10 @@
 #pragma once
 #ifndef _GameManager_H_
 #define _GameManager_H_
+#include <map>
+#include "Camera3D.h"
+#include "Mesh3D.h"
+#include "colorshaderclass.h"
 #include "EntityManager.h"
 #include "SpecsDx.h"
 #include "Scene.h"
@@ -10,10 +14,12 @@ public:
 	
 	GameManager();
 	~GameManager();
-	virtual string StartEngine(int screenWidth, int screenHeight, HWND hWnd, char Mode);
+	virtual string Initialize();
 	virtual string FrameProcess();
 	virtual string FrameRender();
-	virtual string InitEntity();
+	string AddScene(Scene newScene, int indexScene);
+	Scene GetCurrentScene();
+	void ChangeScene(int index);
 	virtual void Shutdown();
 
 protected:
@@ -23,16 +29,12 @@ protected:
 	// Variables de respuesta
 		
 	HWND hwnd;
-	SpecsDx* Dx11 = 0;
-	EntityManager* Entity;
-
+	//Escenas
+	std::map<int, Scene> Niveles;
+	Scene* CurrentScene;
+	int CurrentSceneIndex;
 
 private:
-	
-
-	const bool VSYNC_ENABLED = true;
-	const float SCREEN_DEPTH = 1000.0f;
-	const float SCREEN_NEAR = 0.1f;
 };
 
 #endif

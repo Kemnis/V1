@@ -17,28 +17,39 @@ SpecsDx::SpecsDx()
 	m_alphaBlendState2 = 0;
 }
 
-
-SpecsDx::SpecsDx(const SpecsDx& other)
-{
+SpecsDx* SpecsDx::Initialize(int screenWidth, int screenHeight, HWND hwnd, bool fullscreen) {
+	if (instance == nullptr) {
+		instance = new SpecsDx;
+		instance->Init(screenWidth, screenHeight, hwnd, fullscreen);
+	}
+	return instance;
 }
 
+SpecsDx* SpecsDx::GetInstance()
+{
+	return instance;
+}
+
+SpecsDx* SpecsDx::instance = nullptr;
 
 SpecsDx::~SpecsDx()
 {
 }
 
-string SpecsDx::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscreen,
-	float screenDepth, float screenNear)
+string SpecsDx::Init(int screenWidth, int screenHeight, HWND hwnd, bool fullscreen)
 {
 	HRESULT result;
 	IDXGIFactory* factory;
 	IDXGIAdapter* adapter;
 	IDXGIOutput* adapterOutput;
-	unsigned int numModes, i, numerator, denominator;
+	unsigned int numModes = 0;
+	unsigned int i = 0;
+	unsigned int numerator = 0; 
+	unsigned int denominator = 0;
 	size_t stringLength;
 	DXGI_MODE_DESC* displayModeList;
 	DXGI_ADAPTER_DESC adapterDesc;
-	int error;
+	int error = 0;
 	DXGI_SWAP_CHAIN_DESC swapChainDesc;
 	D3D_FEATURE_LEVEL featureLevel;
 	ID3D11Texture2D* backBufferPtr;
@@ -47,13 +58,14 @@ string SpecsDx::Initialize(int screenWidth, int screenHeight, bool vsync, HWND h
 	D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
 	D3D11_RASTERIZER_DESC rasterDesc;
 	D3D11_VIEWPORT viewport;
-	float fieldOfView, screenAspect;
+	float fieldOfView = 0;
+	float screenAspect = 0;
 	D3D11_DEPTH_STENCIL_DESC depthDisabledStencilDesc;
 	D3D11_BLEND_DESC blendStateDescription;
-
+	this->hwnd = hwnd;
 
 	// Store the vsync setting.
-	m_vsync_enabled = vsync;
+	m_vsync_enabled = VSYNC_ENABLED;
 
 	// Create a DirectX graphics interface factory.
 	result = CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)&factory);
@@ -361,15 +373,6 @@ string SpecsDx::Initialize(int screenWidth, int screenHeight, bool vsync, HWND h
 	fieldOfView = 3.141592654f / 4.0f;
 	screenAspect = (float)screenWidth / (float)screenHeight;
 
-	// Create the projection matrix for 3D rendering.
-	m_projectionMatrix = XMMatrixPerspectiveFovLH(fieldOfView, screenAspect, screenNear, screenDepth);
-
-	// Initialize the world matrix to the identity matrix.
-	m_worldMatrix = XMMatrixIdentity();
-
-	// Create an orthographic projection matrix for 2D rendering.
-	m_orthoMatrix = XMMatrixOrthographicLH((float)screenWidth, (float)screenHeight, screenNear, screenDepth);
-
 	// Clear the second depth stencil state before setting the parameters.
 	ZeroMemory(&depthDisabledStencilDesc, sizeof(depthDisabledStencilDesc));
 
@@ -567,26 +570,6 @@ ID3D11DeviceContext* SpecsDx::GetDeviceContext()
 	return m_deviceContext;
 }
 
-void SpecsDx::GetProjectionMatrix(XMMATRIX& projectionMatrix)
-{
-	projectionMatrix = m_projectionMatrix;
-	return;
-}
-
-
-void SpecsDx::GetWorldMatrix(XMMATRIX& worldMatrix)
-{
-	worldMatrix = m_worldMatrix;
-	return;
-}
-
-
-void SpecsDx::GetOrthoMatrix(XMMATRIX& orthoMatrix)
-{
-	orthoMatrix = m_orthoMatrix;
-	return;
-}
-
 int SpecsDx::GetScreenWidth()
 {
 	return m_screenWidth;
@@ -595,6 +578,11 @@ int SpecsDx::GetScreenWidth()
 int SpecsDx::GetScreenHeight()
 {
 	return m_screenHeight;
+}
+
+HWND SpecsDx::GetHwnd()
+{
+	return hwnd;
 }
 
 void SpecsDx::GetVideoCardInfo(char* cardName, int& memory)

@@ -1,25 +1,12 @@
-////////////////////////////////////////////////////////////////////////////////
-// Filename: colorshaderclass.h
-////////////////////////////////////////////////////////////////////////////////
 #ifndef _COLORSHADERCLASS_H_
 #define _COLORSHADERCLASS_H_
-
-
-//////////////
-// INCLUDES //
-//////////////
 #include <d3d11.h>
 #include <d3dcompiler.h>
 #include <directxmath.h>
 #include <fstream>
 using namespace DirectX;
 using namespace std;
-
-
-////////////////////////////////////////////////////////////////////////////////
-// Class name: ColorShaderClass
-////////////////////////////////////////////////////////////////////////////////
-class ColorShaderClass
+class ShaderClass : public DxComponent<ShaderClass>
 {
 private:
 	struct MatrixBufferType
@@ -32,21 +19,21 @@ private:
 	};
 
 public:
-	ColorShaderClass();
-	ColorShaderClass(const ColorShaderClass&);
-	~ColorShaderClass();
+	ShaderClass();
+	ShaderClass(const ShaderClass&);
+	~ShaderClass();
 
-	bool Initialize(ID3D11Device*, HWND);
+	bool Initialize();
 	void Shutdown();
-	bool Render(ID3D11DeviceContext*, int, const XMMATRIX*, const XMMATRIX*, const XMMATRIX*);
+	bool Render(int, const XMMATRIX*, const XMMATRIX*, const XMMATRIX*);
 
 private:
-	bool InitializeShader(ID3D11Device*, HWND, string, string);
+	bool InitializeShader(string, string);
 	void ShutdownShader();
-	void OutputShaderErrorMessage(ID3D10Blob*, HWND, LPCWSTR);
+	void OutputShaderErrorMessage(ID3D10Blob*, LPCWSTR);
 
-	bool SetShaderParameters(ID3D11DeviceContext*, XMMATRIX, XMMATRIX, XMMATRIX);
-	void RenderShader(ID3D11DeviceContext*, int);
+	bool SetShaderParameters(XMMATRIX, XMMATRIX, XMMATRIX);
+	void RenderShader(int);
 
 private:
 	ID3D11VertexShader* m_vertexShader;

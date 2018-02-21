@@ -1,37 +1,22 @@
 #pragma once
-////////////////////////////////////////////////////////////////////////////////
-// Filename: SpecsDx.h
-////////////////////////////////////////////////////////////////////////////////
 #ifndef _SpecsDx_H_
 #define _SpecsDx_H_
-
-/////////////
-// LINKING //
-/////////////
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "d3dcompiler.lib")
-
-//////////////
-// INCLUDES //
-//////////////
 #include <d3d11.h>
 #include <directxmath.h>
 #include <string>
 using namespace std;
 using namespace DirectX;
-
-////////////////////////////////////////////////////////////////////////////////
-// Class name: SpecsDx
-////////////////////////////////////////////////////////////////////////////////
 class SpecsDx
 {
 public:
-	SpecsDx();
-	SpecsDx(const SpecsDx&);
+	static SpecsDx* Initialize(int, int, HWND, bool);
+	static SpecsDx* GetInstance();
 	~SpecsDx();
 
-	string Initialize(int, int, bool, HWND, bool, float, float);
+	string Init(int, int, HWND, bool);
 	void Shutdown();
 
 	void BeginScene(float, float, float, float);
@@ -39,11 +24,7 @@ public:
 
 	ID3D11Device* GetDevice();
 	ID3D11DeviceContext* GetDeviceContext();
-
-	void GetProjectionMatrix(XMMATRIX&);
-	void GetWorldMatrix(XMMATRIX&);
-	void GetOrthoMatrix(XMMATRIX&);
-
+	HWND GetHwnd();
 	int GetScreenWidth();
 	int GetScreenHeight();
 
@@ -51,14 +32,22 @@ public:
 	void TurnZBufferOff();
 	void TurnOnAlphaBlending();
 	void TurnOffAlphaBlending();
-	//ParaSkyDome
+
 	void TurnOnCulling();
 	void TurnOffCulling();
 
 	void GetVideoCardInfo(char*, int&);
 	void EnableSecondBlendState();
 
+protected:
+	const bool VSYNC_ENABLED = true;
+	const float SCREEN_DEPTH = 1000.0f;
+	const float SCREEN_NEAR = 0.1f;
+	HWND hwnd;
+
 private:
+	static SpecsDx * instance;
+	SpecsDx();
 	int m_screenWidth;
 	int m_screenHeight;
 	bool m_vsync_enabled;
@@ -72,9 +61,6 @@ private:
 	ID3D11DepthStencilState* m_depthStencilState;
 	ID3D11DepthStencilView* m_depthStencilView;
 	ID3D11RasterizerState* m_rasterState;
-	XMMATRIX m_projectionMatrix;
-	XMMATRIX m_worldMatrix;
-	XMMATRIX m_orthoMatrix;
 
 	//Nuevas variables
 	ID3D11DepthStencilState* m_depthDisabledStencilState;
@@ -83,7 +69,6 @@ private:
 	//Para SkyDome
 	ID3D11RasterizerState * m_rasterStateNoCulling;
 	ID3D11BlendState* m_alphaBlendState2;
-
 };
 
 #endif
