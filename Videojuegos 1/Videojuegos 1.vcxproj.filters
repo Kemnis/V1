@@ -63,9 +63,6 @@
     <ClInclude Include="GameManager.h">
       <Filter>Archivos de encabezado\Core\Components</Filter>
     </ClInclude>
-    <ClInclude Include="EntityManager.h">
-      <Filter>Archivos de encabezado\Core\Components</Filter>
-    </ClInclude>
     <ClInclude Include="DxComponent.h">
       <Filter>Archivos de encabezado\Core\WindowDx</Filter>
     </ClInclude>
@@ -79,6 +76,12 @@
       <Filter>Archivos de encabezado\Core\Components</Filter>
     </ClInclude>
     <ClInclude Include="ShaderClass.h">
+      <Filter>Archivos de encabezado\Core\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>Archivos de encabezado\Core\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceManager.h">
       <Filter>Archivos de encabezado\Core\Components</Filter>
     </ClInclude>
   </ItemGroup>
@@ -98,9 +101,6 @@
     <ClCompile Include="GameManager.cpp">
       <Filter>Archivos de origen\Core\Components</Filter>
     </ClCompile>
-    <ClCompile Include="EntityManager.cpp">
-      <Filter>Archivos de origen\Core\Components</Filter>
-    </ClCompile>
     <ClCompile Include="Mesh3D.cpp">
       <Filter>Archivos de origen\Core\Components</Filter>
     </ClCompile>
@@ -111,6 +111,12 @@
       <Filter>Archivos de origen\Core\Components</Filter>
     </ClCompile>
     <ClCompile Include="ShaderClass.cpp">
+      <Filter>Archivos de origen\Core\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>Archivos de origen\Core\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManager.cpp">
       <Filter>Archivos de origen\Core\Components</Filter>
     </ClCompile>
   </ItemGroup>

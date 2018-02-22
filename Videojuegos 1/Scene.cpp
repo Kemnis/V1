@@ -1,16 +1,6 @@
 #include "stdafx.h"
 
 Scene::Scene() {
-	AwakeObjects();
-}
-
-Scene::~Scene() {}
-
-void Scene::DefineCommonShader() {
-
-}
-
-void Scene::AwakeObjects() {
 	SceneCamera = 0;
 	TestMesh3D = 0;
 	TestShader = 0;
@@ -18,6 +8,8 @@ void Scene::AwakeObjects() {
 	TestMesh3D = new Mesh3D;
 	TestShader = new ShaderClass;
 }
+
+Scene::~Scene() {}
 
 string Scene::CreateScene() {
 
@@ -58,24 +50,21 @@ string Scene::RenderScene()
 	// Clear the buffers to begin the scene.
 	specsDx->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
 
-	//// Generate the view matrix based on the camera's position.
+	// Generate the view matrix based on the camera's position.
 	SceneCamera->Watch();
 
-	//// Get the world, view, and projection matrices from the camera and d3d objects.
-	//Environment->GetWorldMatrix(worldMatrix);
+	// Get the world, view, and projection matrices from the camera and d3d objects.
 	worldMatrix = XMMatrixIdentity();
 	SceneCamera->GetViewMatrix(viewMatrix);
 	projectionMatrix = SceneCamera->GetProjectionMatrix();
-	//SceneCamera->GetViewMatrix(viewMatrix);
-	//Environment->GetProjectionMatrix(projectionMatrix);
+
+	TestShader->SetShaderParameters(worldMatrix, viewMatrix, *projectionMatrix);
+
+	ResourceManager::bindShader(TestShader);
+	ResourceManager::bindMesh(TestMesh3D);
 
 	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
 	TestMesh3D->Render();
-
-	// Render the model using the color shader.
-	RB = TestShader->Render(&worldMatrix, &viewMatrix, projectionMatrix);
-	if (!RB)
-		Error("El Shader no pudo renderizar los objetos");
 
 	// Present the rendered scene to the screen.
 	specsDx->EndScene();

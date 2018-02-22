@@ -15,51 +15,6 @@ Mesh3D::~Mesh3D()
 
 bool Mesh3D::Initialize()
 {
-	bool result;
-
-
-	// Initialize the vertex and index buffers.
-	result = InitializeBuffers();
-	if (!result)
-	{
-		return false;
-	}
-
-	return true;
-}
-
-void Mesh3D::BindMesh()
-{
-	unsigned int stride;
-	unsigned int offset;
-
-	// Set vertex buffer stride and offset.
-	stride = sizeof(VertexType);
-	offset = 0;
-
-	// Set the vertex buffer to active in the input assembler so it can be rendered.
-	deviceContext->IASetVertexBuffers(0, 1, &m_vertexBuffer, &stride, &offset);
-
-	// Set the index buffer to active in the input assembler so it can be rendered.
-	deviceContext->IASetIndexBuffer(m_indexBuffer, DXGI_FORMAT_R32_UINT, 0);
-
-	// Set the type of primitive that should be rendered from this vertex buffer, in this case triangles.
-	deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-}
-
-void Mesh3D::Render()
-{
-	BindMesh();
-	// Render the triangle.
-	deviceContext->DrawIndexed(m_indexCount, 0, 0);
-		
-	return;
-
-	return;
-}
-
-bool Mesh3D::InitializeBuffers()
-{
 	VertexType* vertices;
 	unsigned long* indices;
 	D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
@@ -150,6 +105,36 @@ bool Mesh3D::InitializeBuffers()
 	indices = 0;
 
 	return true;
+}
+
+void Mesh3D::BindMesh()
+{
+	unsigned int stride;
+	unsigned int offset;
+
+	// Set vertex buffer stride and offset.
+	stride = sizeof(VertexType);
+	offset = 0;
+
+	// Set the vertex buffer to active in the input assembler so it can be rendered.
+	deviceContext->IASetVertexBuffers(0, 1, &m_vertexBuffer, &stride, &offset);
+
+	// Set the index buffer to active in the input assembler so it can be rendered.
+	deviceContext->IASetIndexBuffer(m_indexBuffer, DXGI_FORMAT_R32_UINT, 0);
+
+	// Set the type of primitive that should be rendered from this vertex buffer, in this case triangles.
+	deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+}
+
+void Mesh3D::Render()
+{
+	BindMesh();
+	// Render the triangle.
+	deviceContext->DrawIndexed(m_indexCount, 0, 0);
+		
+	return;
+
+	return;
 }
 
 void Mesh3D::Shutdown()

@@ -148,10 +148,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Camera3D.h" />
+    <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="ShaderClass.h" />
     <ClInclude Include="Behaviour.h" />
     <ClInclude Include="GameManager.h" />
-    <ClInclude Include="EntityManager.h" />
+    <ClInclude Include="GameObject.h" />
     <ClInclude Include="Mesh3D.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Scene.h" />
@@ -164,8 +165,9 @@
   <ItemGroup>
     <ClCompile Include="Behaviour.cpp" />
     <ClCompile Include="Camera3D.cpp" />
+    <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="ShaderClass.cpp" />
-    <ClCompile Include="EntityManager.cpp" />
+    <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="Mesh3D.cpp" />
     <ClCompile Include="Scene.cpp" />

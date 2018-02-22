@@ -5,7 +5,7 @@
 #include "Camera3D.h"
 #include "Mesh3D.h"
 #include "ShaderClass.h"
-#include "EntityManager.h"
+#include "GameObject.h"
 #include "SpecsDx.h"
 #include "Scene.h"
 class GameManager
@@ -14,7 +14,6 @@ public:
 	
 	GameManager();
 	~GameManager();
-	virtual string Initialize();
 	virtual string FrameProcess();
 	virtual string FrameRender();
 	string AddScene(Scene newScene, int indexScene);
@@ -29,6 +28,7 @@ protected:
 	// Variables de respuesta
 		
 	HWND hwnd;
+
 	//Escenas
 	std::map<int, Scene> Niveles;
 	Scene* CurrentScene;

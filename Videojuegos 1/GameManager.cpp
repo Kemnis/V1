@@ -6,7 +6,11 @@ GameManager::GameManager(){
 	CurrentScene = new Scene;
 	Niveles.insert(std::pair<int, Scene>(0, *CurrentScene));
 	CurrentSceneIndex = 0;
-	Initialize();
+	RS = CurrentScene->CreateScene();
+	if (RS != "S_OK")
+		_RPT0(0,"No fue posible crear la escena");
+	else
+		_RPT0(0, "Scene Created!\n");
 }
 
 GameManager::~GameManager(){
@@ -54,16 +58,6 @@ void GameManager::ChangeScene(int index)
 	CurrentScene->DestroyScene();
 	CurrentScene = &newCurrentScene;
 	CurrentScene->CreateScene();
-}
-
-string GameManager::Initialize()
-{
-	RS = CurrentScene->CreateScene();
-	if (RS != "S_OK")
-		return Error("No fue posible crear la escena");
-	else
-		_RPT0(0, "Scene Created!\n");
-	return "S_OK";
 }
 
 //Every object call  it's shutdown process

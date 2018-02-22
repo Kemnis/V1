@@ -10,8 +10,6 @@ public:
 	Scene();
 	~Scene();
 
-	virtual void DefineCommonShader();
-	virtual void AwakeObjects();
 	virtual string CreateScene();
 	virtual string ProcessScene();
 	virtual string RenderScene();

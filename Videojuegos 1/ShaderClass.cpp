@@ -142,38 +142,6 @@ bool ShaderClass::Initialize()
 	return true;
 }
 
-ID3D11VertexShader* ShaderClass::GetVertexShader()
-{
-	return VertexShader;
-}
-
-ID3D11PixelShader* ShaderClass::GetPixelShader()
-{
-	return PixelShader;
-}
-
-ID3D11InputLayout * ShaderClass::GetLayout()
-{
-	return Layout;
-}
-
-bool ShaderClass::Render(const XMMATRIX* worldMatrix, const XMMATRIX* viewMatrix, const XMMATRIX* projectionMatrix) 
-{
-	bool result;
-
-
-	// Set the shader parameters that it will use for rendering.
-	result = SetShaderParameters(*worldMatrix, *viewMatrix, *projectionMatrix);//worldMatrix, viewMatrix, projectionMatrix);
-	if(!result)
-	{
-		return false;
-	}
-
-	BindShader();
-
-	return true;
-}
-
 std::wstring ShaderClass::s2ws(const std::string& s)
 {
 	int len;
@@ -264,11 +232,11 @@ bool ShaderClass::SetShaderParameters(XMMATRIX worldMatrix, XMMATRIX viewMatrix,
 void ShaderClass::BindShader()
 {
 	// Set the vertex input layout.
-	deviceContext->IASetInputLayout(GetLayout());
+	deviceContext->IASetInputLayout(Layout);
 
 	// Set the vertex and pixel shaders that will be used to render this triangle.
-	deviceContext->VSSetShader(GetVertexShader(), NULL, 0);
-	deviceContext->PSSetShader(GetPixelShader(), NULL, 0);
+	deviceContext->VSSetShader(VertexShader, NULL, 0);
+	deviceContext->PSSetShader(PixelShader, NULL, 0);
 }
 
 void ShaderClass::Shutdown()

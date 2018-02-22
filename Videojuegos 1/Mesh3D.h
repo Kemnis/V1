@@ -24,7 +24,6 @@ public:
 	void BindMesh();
 
 private:
-	bool InitializeBuffers();
 	int m_vertexCount, m_indexCount;
 
 private:

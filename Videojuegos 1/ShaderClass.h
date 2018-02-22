@@ -20,22 +20,17 @@ private:
 
 public:
 	ShaderClass();
-	ShaderClass(const ShaderClass&);
 	~ShaderClass();
 
 	bool Initialize();
 	void Shutdown();
-	bool Render(const XMMATRIX*, const XMMATRIX*, const XMMATRIX*);
 	void BindShader();
-	ID3D11VertexShader* GetVertexShader();
-	ID3D11PixelShader* GetPixelShader();
-	ID3D11InputLayout* GetLayout();
+	
+	bool SetShaderParameters(XMMATRIX, XMMATRIX, XMMATRIX);
 
 private:
 	void OutputShaderErrorMessage(ID3D10Blob*, LPCTSTR);
 	std::wstring s2ws(const std::string& s);
-	bool SetShaderParameters(XMMATRIX, XMMATRIX, XMMATRIX);
-	//void RenderShader(int);
 
 private:
 	ID3D11VertexShader* VertexShader;
