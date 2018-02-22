@@ -1,0 +1,138 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Archivos de origen">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Archivos de encabezado">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Archivos de recursos">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Archivos de recursos\Shaders">
+      <UniqueIdentifier>{de25bbea-db7b-4849-adea-72a02c530d36}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Core">
+      <UniqueIdentifier>{f2a8a5c5-b54b-4969-84b0-a49d586e80dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de origen\Core">
+      <UniqueIdentifier>{f4b0f1a5-4091-4f0f-98fa-a7d9a5610115}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Core\Components">
+      <UniqueIdentifier>{227daaf0-7654-4491-9024-a8f66fcd5b33}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Generales">
+      <UniqueIdentifier>{401c2702-e018-40df-ae4d-01c173b3ace0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de origen\Core\Components">
+      <UniqueIdentifier>{b5a9ee81-e0f4-46a2-9a20-b68b9e82948d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de origen\Generales">
+      <UniqueIdentifier>{8418224a-17b4-4c20-880b-fed02f91a8ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Core\WindowDx">
+      <UniqueIdentifier>{d22c4a09-9056-4698-b80e-79665e3ede56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de origen\Core\WindowDx">
+      <UniqueIdentifier>{5b16c5aa-25e1-4faa-8531-f378e9c4079f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="SpecsDx.h">
+      <Filter>Archivos de encabezado\Core\WindowDx</Filter>
+    </ClInclude>
+    <ClInclude Include="Behaviour.h">
+      <Filter>Archivos de encabezado\Core\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Core.h">
+      <Filter>Archivos de encabezado\Core\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Archivos de encabezado\Generales</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Archivos de encabezado\Generales</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Archivos de encabezado\Generales</Filter>
+    </ClInclude>
+    <ClInclude Include="GameManager.h">
+      <Filter>Archivos de encabezado\Core\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityManager.h">
+      <Filter>Archivos de encabezado\Core\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="DxComponent.h">
+      <Filter>Archivos de encabezado\Core\WindowDx</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh3D.h">
+      <Filter>Archivos de encabezado\Core\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera3D.h">
+      <Filter>Archivos de encabezado\Core\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>Archivos de encabezado\Core\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderClass.h">
+      <Filter>Archivos de encabezado\Core\Components</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="SpecsDx.cpp">
+      <Filter>Archivos de origen\Core\WindowDx</Filter>
+    </ClCompile>
+    <ClCompile Include="Behaviour.cpp">
+      <Filter>Archivos de origen\Core\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Core.cpp">
+      <Filter>Archivos de origen\Core\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Archivos de origen\Generales</Filter>
+    </ClCompile>
+    <ClCompile Include="GameManager.cpp">
+      <Filter>Archivos de origen\Core\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="EntityManager.cpp">
+      <Filter>Archivos de origen\Core\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh3D.cpp">
+      <Filter>Archivos de origen\Core\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Archivos de origen\Core\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera3D.cpp">
+      <Filter>Archivos de origen\Core\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderClass.cpp">
+      <Filter>Archivos de origen\Core\Components</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Videojuegos 1.rc">
+      <Filter>Archivos de recursos</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="small.ico">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="Videojuegos 1.ico">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="color.ps">
+      <Filter>Archivos de recursos\Shaders</Filter>
+    </None>
+    <None Include="color.vs">
+      <Filter>Archivos de recursos\Shaders</Filter>
+    </None>
+  </ItemGroup>
+</Project>
