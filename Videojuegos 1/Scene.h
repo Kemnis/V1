@@ -13,6 +13,9 @@ public:
 	virtual string CreateScene();
 	virtual string ProcessScene();
 	virtual string RenderScene();
+	
+	string NewGameObject(int , int , string );
+	GameObject* GetGameObject(string);
 	virtual void DestroyScene();
 
 public:				//Descripción: Variables Globales
@@ -26,6 +29,8 @@ protected:
 	
 private:
 	XMMATRIX CameraMatrix;
+	
+
 	Mesh3D* TestMesh3D;
 	ShaderClass* TestShader;
 };

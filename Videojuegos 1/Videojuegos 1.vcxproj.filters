@@ -78,10 +78,25 @@
     <ClInclude Include="ShaderClass.h">
       <Filter>Archivos de encabezado\Core\Components</Filter>
     </ClInclude>
+    <ClInclude Include="ResourceManager.h">
+      <Filter>Archivos de encabezado\Core\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Vertex.h">
+      <Filter>Archivos de encabezado\Core\Components</Filter>
+    </ClInclude>
     <ClInclude Include="GameObject.h">
       <Filter>Archivos de encabezado\Core\Components</Filter>
     </ClInclude>
-    <ClInclude Include="ResourceManager.h">
+    <ClInclude Include="Model.h">
+      <Filter>Archivos de encabezado\Core\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Archivos de encabezado\Core\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="WICTextureLoader.h">
+      <Filter>Archivos de encabezado\Core\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Transforms.h">
       <Filter>Archivos de encabezado\Core\Components</Filter>
     </ClInclude>
   </ItemGroup>
@@ -113,10 +128,25 @@
     <ClCompile Include="ShaderClass.cpp">
       <Filter>Archivos de origen\Core\Components</Filter>
     </ClCompile>
+    <ClCompile Include="ResourceManager.cpp">
+      <Filter>Archivos de origen\Core\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Vertex.cpp">
+      <Filter>Archivos de origen\Core\Components</Filter>
+    </ClCompile>
     <ClCompile Include="GameObject.cpp">
       <Filter>Archivos de origen\Core\Components</Filter>
     </ClCompile>
-    <ClCompile Include="ResourceManager.cpp">
+    <ClCompile Include="Model.cpp">
+      <Filter>Archivos de origen\Core\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Archivos de origen\Core\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="WICTextureLoader.cpp">
+      <Filter>Archivos de origen\Core\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Transforms.cpp">
       <Filter>Archivos de origen\Core\Components</Filter>
     </ClCompile>
   </ItemGroup>

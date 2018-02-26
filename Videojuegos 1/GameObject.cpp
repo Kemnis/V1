@@ -1,26 +1,41 @@
 #include "stdafx.h"
 
-GameObject::GameObject()
+GameObject::GameObject(string name)
 {
+	Name = name;
 }
 
 GameObject::~GameObject()
 {
 }
 
-bool GameObject::AssignMesh()
+string GameObject::GetName()
 {
-	return false;
+	return Name;
 }
 
-bool GameObject::AssignShader()
+bool GameObject::AssignModel(Model* model)
 {
-	return false;
+	Modelo = model;
+	return true;
 }
 
-bool GameObject::AssignTexture()
+bool GameObject::AssignMesh(Mesh3D* mesh)
 {
-	return false;
+	Mesh = mesh;
+	return true;
+}
+
+bool GameObject::AssignShader(ShaderClass* shader)
+{
+	Shader = shader;
+	return true;
+}
+
+bool GameObject::AssignTexture(Texture * texture)
+{
+	Tex = texture;
+	return true;
 }
 
 void GameObject::Shutdown()

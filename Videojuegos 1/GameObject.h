@@ -1,25 +1,33 @@
 #pragma once
 #ifndef _GameObject_H_
 #define _GameObject_H_
+#include "Model.h"
+#include "Mesh3D.h"
+#include "Texture.h"
+#include "ShaderClass.h"
 class GameObject
 {
 public:
-	GameObject();
+	GameObject(string);
 	~GameObject();
 
-	bool AssignMesh();
-	bool AssignShader();
-	bool AssignTexture();
+	
+
+	string GetName();
+	bool AssignModel(Model*);
+	bool AssignMesh(Mesh3D*);
+	bool AssignShader(ShaderClass*);
+	bool AssignTexture(Texture*);
 
 	void Shutdown();	
 
-protected:
-	//Variables de respuesta
-	bool RB;
-	string RS;
-	// Variables de respuesta
 
-	
+protected:
+	string Name;
+	Model* Modelo;
+	Mesh3D* Mesh;
+	Texture* Tex;
+	ShaderClass* Shader;
 private:
 };
 

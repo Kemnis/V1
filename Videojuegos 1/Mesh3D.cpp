@@ -126,27 +126,20 @@ void Mesh3D::BindMesh()
 	deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
-void Mesh3D::Render()
+void Mesh3D::Draw()
 {
-	BindMesh();
-	// Render the triangle.
 	deviceContext->DrawIndexed(m_indexCount, 0, 0);
-		
-	return;
-
 	return;
 }
 
 void Mesh3D::Shutdown()
 {
-	// Release the index buffer.
 	if (m_indexBuffer)
 	{
 		m_indexBuffer->Release();
 		m_indexBuffer = 0;
 	}
 
-	// Release the vertex buffer.
 	if (m_vertexBuffer)
 	{
 		m_vertexBuffer->Release();

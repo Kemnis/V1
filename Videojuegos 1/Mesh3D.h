@@ -4,8 +4,9 @@
 #include "ShaderClass.h"
 #include <d3d11.h>
 #include <directxmath.h>
+#include "Transforms.h"
 using namespace DirectX;
-class Mesh3D : DxComponent<Mesh3D>
+class Mesh3D : DxComponent<Mesh3D>, Transforms
 {
 private:
 	struct VertexType
@@ -20,9 +21,10 @@ public:
 
 	bool Initialize();
 	void Shutdown();
-	void Render();
+	void Draw();
 	void BindMesh();
 
+	Transforms* transform;
 private:
 	int m_vertexCount, m_indexCount;
 

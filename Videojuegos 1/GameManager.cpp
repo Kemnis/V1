@@ -16,12 +16,11 @@ GameManager::GameManager(){
 GameManager::~GameManager(){
 }
 
-
 string GameManager::FrameProcess()
 {
 	RS = CurrentScene->ProcessScene();
 	if (RS != "S_OK")
-		return Error("Las actualizaciones y procesos de la escena tuvieron un error\n");
+		return ErrorFnc("Las actualizaciones y procesos de la escena tuvieron un error\n");
 	else
 		_RPT0(0, "Scene Calculated!\n");
 	return "S_OK";
@@ -31,7 +30,7 @@ string GameManager::FrameRender()
 {
 	RS = CurrentScene->RenderScene();
 	if (RS != "S_OK")
-		return Error("No fue poisble renderizar el frame\n");
+		return ErrorFnc("No fue poisble renderizar el frame\n");
 	else
 		_RPT0(0, "Scene Rendered!\n");
 	return "S_OK";

@@ -13,22 +13,17 @@ Scene::~Scene() {}
 
 string Scene::CreateScene() {
 
-	// Set the initial position of the camera.
 	SceneCamera->SetPosition(0.0f, 0.0f, -5.0f);
-	//SceneCamera->Watch();
-	/*SceneCamera->SetViewMatrix(CameraMatrix);*/
 
-	// Initialize the model object.
 	bool res = TestMesh3D->Initialize();
 	if (!res)
-		Error("No se pudo generar el triangulo");
+		ErrorFnc("No se pudo generar el triangulo");
 	else
 		_RPT0(0,"Triangle created!\n");
 
-	// Initialize the color shader object.
 	res = TestShader->Initialize();
 	if (!res)
-		Error("No se pudo inicializar el shader");
+		ErrorFnc("No se pudo inicializar el shader");
 	else
 		_RPT0(0, "Shader created!\n");
 
@@ -64,7 +59,7 @@ string Scene::RenderScene()
 	ResourceManager::bindMesh(TestMesh3D);
 
 	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
-	TestMesh3D->Render();
+	TestMesh3D->Draw();
 
 	// Present the rendered scene to the screen.
 	specsDx->EndScene();

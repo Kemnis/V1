@@ -16,11 +16,11 @@ public:
 	~GameManager();
 	virtual string FrameProcess();
 	virtual string FrameRender();
-	string AddScene(Scene newScene, int indexScene);
+	string AddScene(Scene, int);
 	Scene GetCurrentScene();
-	void ChangeScene(int index);
+	void ChangeScene(int);
 	virtual void Shutdown();
-
+	string Name;
 protected:
 	//Variables de respuesta
 	bool RB;
@@ -33,8 +33,9 @@ protected:
 	std::map<int, Scene> Niveles;
 	Scene* CurrentScene;
 	int CurrentSceneIndex;
-
+	
 private:
+
 };
 
 #endif
