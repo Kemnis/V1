@@ -16,9 +16,9 @@ GameManager::GameManager(){
 GameManager::~GameManager(){
 }
 
-string GameManager::FrameProcess()
+string GameManager::FrameProcess(double dt)
 {
-	RS = CurrentScene->ProcessScene();
+	RS = CurrentScene->ProcessScene(dt);
 	if (RS != "S_OK")
 		return ErrorFnc("Las actualizaciones y procesos de la escena tuvieron un error\n");
 	else
@@ -59,7 +59,6 @@ void GameManager::ChangeScene(int index)
 	CurrentScene->CreateScene();
 }
 
-//Every object call  it's shutdown process
 void GameManager::Shutdown()
 {
 	CurrentScene->DestroyScene();

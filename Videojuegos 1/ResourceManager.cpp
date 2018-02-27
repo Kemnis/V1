@@ -37,23 +37,29 @@ bool ResourceManager::AddGameObject(GameObject Gameobject)
 	return true;
 }
 
-bool ResourceManager::AddModel(Model model)
+bool ResourceManager::AddModel(string path, string name)
 {
-	ModelIdentifier.insert(std::pair<int, Model>(ModelIndex, model));
+	Model nuevo(path);
+	nuevo.Name = name;
+	ModelIdentifier.insert(std::pair<int, Model>(ModelIndex, nuevo));
 	ModelIndex++;
 	return true;
 }
 
-bool ResourceManager::AddMesh(Mesh3D mesh)
+bool ResourceManager::AddMesh(int primitive, string name)
 {
-	MeshIdentifier.insert(std::pair<int, Mesh3D>(MeshIndex, mesh));
+	Mesh3D Primitive;
+
+	//MeshIdentifier.insert(std::pair<int, Mesh3D>(MeshIndex, mesh));
 	MeshIndex++;
 	return true;
 }
 
-bool ResourceManager::AddTexture(Texture texture)
+bool ResourceManager::AddTexture(string path, string name)
 {
-	TextureIdentifier.insert(std::pair<int, Texture>(TextureIndex, texture));
+	Texture nuevo;
+	nuevo.Name = name;
+	//TextureIdentifier.insert(std::pair<int, Texture>(TextureIndex, texture));
 	TextureIndex++;
 	return true;
 }

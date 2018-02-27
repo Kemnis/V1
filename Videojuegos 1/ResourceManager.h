@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _ResourceManager_H_
-#define _ResourceManager_H_
+//#ifndef _ResourceManager_H_
+//#define _ResourceManager_H_
 #include "GameObject.h"
 #include "Model.h"
 #include "Mesh3D.h"
@@ -12,9 +12,9 @@ public:
 	ResourceManager();
 	~ResourceManager();
 
-	static bool AddModel(Model);
-	static bool AddMesh(Mesh3D);
-	static bool AddTexture(Texture);
+	static bool AddModel(string, string);
+	static bool AddMesh(int, string);
+	static bool AddTexture(string, string);
 	static string BuildGameObject(int, int, int, string);
 	static GameObject GetObjectByName(string);
 	static bool AddShader();
@@ -51,4 +51,4 @@ protected:
 	static int ShaderIndex;
 };
 
-#endif
+//#endif

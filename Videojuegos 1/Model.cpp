@@ -24,18 +24,17 @@ bool Model::Initialize()
 	int i;
 
 	//Create the vertex array
-	vertices = new VertexType[MeshVertex.IndexCount()];
+	vertices = new VertexType[MeshVertex.VertexCount];
 	if (!vertices)
 		ErrorFnc("No se pudo crear el arreglo de vertices");
 
 	//Create the index array
-	indices = new unsigned long[MeshVertex.IndexCount()];
+	indices = new unsigned long[MeshVertex.IndexCount];
 	if (!indices)
 		ErrorFnc("No se pudo crear el arreglo de indices");
 
 	//Load the vertex and index array with data
-	for (i = 0; i < (MeshVertex.IndexCount()); i++) {
-
+	for (i = 0; i < (MeshVertex.IndexCount); i++) {
 		vertices[i].position = XMFLOAT3(MeshVertex.GetVertex(i).x, MeshVertex.GetVertex(i).y, MeshVertex.GetVertex(i).z);
 		vertices[i].texture = XMFLOAT2(MeshVertex.GetTexture(i).x, MeshVertex.GetTexture(i).y);
 		vertices[i].normal = XMFLOAT3(MeshVertex.GetNormal(i).x, MeshVertex.GetNormal(i).y, MeshVertex.GetNormal(i).z);
@@ -45,7 +44,7 @@ bool Model::Initialize()
 
 	//Set up the description of the static vertex buffer
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	vertexBufferDesc.ByteWidth = sizeof(VertexType)* MeshVertex.IndexCount();
+	vertexBufferDesc.ByteWidth = sizeof(VertexType)* MeshVertex.IndexCount;
 	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	vertexBufferDesc.CPUAccessFlags = 0;
 	vertexBufferDesc.MiscFlags = 0;
@@ -63,7 +62,7 @@ bool Model::Initialize()
 
 	//Set up the description of the static index buffer
 	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	indexBufferDesc.ByteWidth = sizeof(unsigned long)* MeshVertex.IndexCount();
+	indexBufferDesc.ByteWidth = sizeof(unsigned long)* MeshVertex.IndexCount;
 	indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	indexBufferDesc.CPUAccessFlags = 0;
 	indexBufferDesc.MiscFlags = 0;
@@ -91,7 +90,7 @@ bool Model::Initialize()
 
 void Model::Draw()
 {
-	deviceContext->DrawIndexed(MeshVertex.IndexCount(), 0, 0);
+	deviceContext->DrawIndexed(MeshVertex.IndexCount, 0, 0);
 	return;
 }
 
@@ -214,7 +213,7 @@ bool Model::LoadModel(string path)
 		fin.close();
 
 		int i;
-		for (i = 0; i < Array.IndexCount(); i++)
+		for (i = 0; i < Array.IndexCount; i++)
 		{
 			//_RPT1(0, "i %d\n", i);
 			FaceIndex.x = Array.GetTriangleFV(i).x;

@@ -29,6 +29,7 @@ private:
 
 public:
 	Vertex();
+	int VertexCount;
 	void AddNewTriangle(float, float, float, float, float, float, float, float, float);
 
 	void AddNewTriangle(vec3, vec3, vec3);
@@ -82,7 +83,7 @@ public:
 
 	vec4 Count();
 
-	int IndexCount();
+	int IndexCount;
 
 	vec4 Count(int Index);
 

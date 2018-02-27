@@ -14,7 +14,7 @@ public:
 	
 	GameManager();
 	~GameManager();
-	virtual string FrameProcess();
+	virtual string FrameProcess(double);
 	virtual string FrameRender();
 	string AddScene(Scene, int);
 	Scene GetCurrentScene();

@@ -31,8 +31,12 @@ string Scene::CreateScene() {
 	return "S_OK";
 }
 
-string Scene::ProcessScene()
+string Scene::ProcessScene(double dt)
 {
+	vec3 rot;
+	rot.y = 4*dt;
+	TestMesh3D->transform->Rotate(rot);
+
 	return "S_OK";
 }
 
@@ -49,7 +53,7 @@ string Scene::RenderScene()
 	SceneCamera->Watch();
 
 	// Get the world, view, and projection matrices from the camera and d3d objects.
-	worldMatrix = XMMatrixIdentity();
+	worldMatrix = TestMesh3D->transform->ToMatrix();
 	SceneCamera->GetViewMatrix(viewMatrix);
 	projectionMatrix = SceneCamera->GetProjectionMatrix();
 

@@ -6,67 +6,90 @@ Mesh3D::Mesh3D()
 {
 	m_vertexBuffer = 0;
 	m_indexBuffer = 0;
+	transform= new Transforms();
 }
 
 Mesh3D::~Mesh3D()
 {
 }
 
+Mesh3D::InfoPrimitive Mesh3D::DefineTriangle()
+{
+	InfoPrimitive Info;
+
+	MeshVertex.VertexCount = 3;
+	MeshVertex.IndexCount = 3;
+
+	Info.vertices = new VertexType[MeshVertex.VertexCount];
+
+	Info.indices = new unsigned long[MeshVertex.IndexCount];
+
+	Info.vertices[0].position = XMFLOAT3(-1.0f, -1.0f, 0.0f);  // Bottom left.
+	Info.vertices[0].color = XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
+
+	Info.vertices[1].position = XMFLOAT3(0.0f, 1.0f, 0.0f);  // Top middle.
+	Info.vertices[1].color = XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
+
+	Info.vertices[2].position = XMFLOAT3(1.0f, -1.0f, 0.0f);  // Bottom right.
+	Info.vertices[2].color = XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
+
+	Info.indices[0] = 0;  // Bottom left.
+	Info.indices[1] = 1;  // Top middle.
+	Info.indices[2] = 2;  // Bottom right.
+	return Info;
+}
+
+Mesh3D::InfoPrimitive Mesh3D::DefineSquare()
+{
+	InfoPrimitive Info;
+
+	MeshVertex.VertexCount = 4;
+	MeshVertex.IndexCount = 6;
+
+	Info.vertices = new VertexType[MeshVertex.VertexCount];
+
+	Info.indices = new unsigned long[MeshVertex.IndexCount];
+
+	Info.vertices[0].position = XMFLOAT3(-1.0f, 1.0f, 0.0f);  // Top left.
+	Info.vertices[0].color = XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
+
+	Info.vertices[1].position = XMFLOAT3(1.0f, 1.0f, 0.0f);  // Top right.
+	Info.vertices[1].color = XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
+
+	Info.vertices[2].position = XMFLOAT3(1.0f, -1.0f, 0.0f);  // Bottom right.
+	Info.vertices[2].color = XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
+
+	Info.vertices[3].position = XMFLOAT3(-1.0f, -1.0f, 0.0f);  // Bottom left.
+	Info.vertices[3].color = XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
+
+	Info.indices[0] = 0;  // Top left.
+	Info.indices[1] = 1;  // Top right.
+	Info.indices[2] = 3;  // Bottom left.
+
+	Info.indices[3] = 3;  // Bottom left.
+	Info.indices[4] = 1;  // Top right.
+	Info.indices[5] = 2;  // Bottom right.
+	return Info;
+}
 
 bool Mesh3D::Initialize()
 {
-	VertexType* vertices;
-	unsigned long* indices;
 	D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
 	D3D11_SUBRESOURCE_DATA vertexData, indexData;
 	HRESULT result;
+	
+	InfoPrimitive Primitive=DefineTriangle();
 
-
-	// Set the number of vertices in the vertex array.
-	m_vertexCount = 3;
-
-	// Set the number of indices in the index array.
-	m_indexCount = 3;
-
-	// Create the vertex array.
-	vertices = new VertexType[m_vertexCount];
-	if (!vertices)
-	{
-		return false;
-	}
-
-	// Create the index array.
-	indices = new unsigned long[m_indexCount];
-	if (!indices)
-	{
-		return false;
-	}
-
-	// Load the vertex array with data.
-	vertices[0].position = XMFLOAT3(-1.0f, -1.0f, 0.0f);  // Bottom left.
-	vertices[0].color = XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
-
-	vertices[1].position = XMFLOAT3(0.0f, 1.0f, 0.0f);  // Top middle.
-	vertices[1].color = XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
-
-	vertices[2].position = XMFLOAT3(1.0f, -1.0f, 0.0f);  // Bottom right.
-	vertices[2].color = XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
-
-	// Load the index array with data.
-	indices[0] = 0;  // Bottom left.
-	indices[1] = 1;  // Top middle.
-	indices[2] = 2;  // Bottom right.
-
-					 // Set up the description of the static vertex buffer.
+	// Set up the description of the static vertex buffer.
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	vertexBufferDesc.ByteWidth = sizeof(VertexType) * m_vertexCount;
+	vertexBufferDesc.ByteWidth = sizeof(VertexType) * MeshVertex.VertexCount;
 	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	vertexBufferDesc.CPUAccessFlags = 0;
 	vertexBufferDesc.MiscFlags = 0;
 	vertexBufferDesc.StructureByteStride = 0;
 
 	// Give the subresource structure a pointer to the vertex data.
-	vertexData.pSysMem = vertices;
+	vertexData.pSysMem = Primitive.vertices;
 	vertexData.SysMemPitch = 0;
 	vertexData.SysMemSlicePitch = 0;
 
@@ -79,14 +102,14 @@ bool Mesh3D::Initialize()
 
 	// Set up the description of the static index buffer.
 	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	indexBufferDesc.ByteWidth = sizeof(unsigned long) * m_indexCount;
+	indexBufferDesc.ByteWidth = sizeof(unsigned long) * MeshVertex.IndexCount;
 	indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	indexBufferDesc.CPUAccessFlags = 0;
 	indexBufferDesc.MiscFlags = 0;
 	indexBufferDesc.StructureByteStride = 0;
 
 	// Give the subresource structure a pointer to the index data.
-	indexData.pSysMem = indices;
+	indexData.pSysMem = Primitive.indices;
 	indexData.SysMemPitch = 0;
 	indexData.SysMemSlicePitch = 0;
 
@@ -98,11 +121,11 @@ bool Mesh3D::Initialize()
 	}
 
 	// Release the arrays now that the vertex and index buffers have been created and loaded.
-	delete[] vertices;
-	vertices = 0;
+	delete[] Primitive.vertices;
+	Primitive.vertices = 0;
 
-	delete[] indices;
-	indices = 0;
+	delete[] Primitive.indices;
+	Primitive.indices = 0;
 
 	return true;
 }
@@ -128,7 +151,7 @@ void Mesh3D::BindMesh()
 
 void Mesh3D::Draw()
 {
-	deviceContext->DrawIndexed(m_indexCount, 0, 0);
+	deviceContext->DrawIndexed(MeshVertex.VertexCount, 0, 0);
 	return;
 }
 

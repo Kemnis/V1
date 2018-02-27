@@ -10,9 +10,7 @@ class GameObject
 public:
 	GameObject(string);
 	~GameObject();
-
 	
-
 	string GetName();
 	bool AssignModel(Model*);
 	bool AssignMesh(Mesh3D*);
@@ -20,8 +18,7 @@ public:
 	bool AssignTexture(Texture*);
 
 	void Shutdown();	
-
-
+	
 protected:
 	string Name;
 	Model* Modelo;

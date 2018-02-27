@@ -252,11 +252,6 @@ vec4 Vertex::Count()
 	return indices;
 }
 
-int Vertex::IndexCount()
-{
-	return (indexVertex);
-}
-
 vec4 Vertex::Count(int Index)
 {
 	vec4 indices;

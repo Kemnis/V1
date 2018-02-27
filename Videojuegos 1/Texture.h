@@ -26,6 +26,7 @@ public:
 	bool Initialize(WCHAR*);
 	void Shutdown();
 
+	string Name;
 	ID3D11ShaderResourceView* GetTexture();
 
 private:

@@ -11,7 +11,7 @@ public:
 	~Scene();
 
 	virtual string CreateScene();
-	virtual string ProcessScene();
+	virtual string ProcessScene(double);
 	virtual string RenderScene();
 	
 	string NewGameObject(int , int , string );
