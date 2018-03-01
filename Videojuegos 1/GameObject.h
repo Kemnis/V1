@@ -16,10 +16,14 @@ public:
 	bool AssignMesh(Mesh3D*);
 	bool AssignShader(ShaderClass*);
 	bool AssignTexture(Texture*);
-
+	Mesh3D* GetMesh();
+	Model* GetModel();
+	Texture* GetTexture();
+	ShaderClass* GetShader();
 	void Shutdown();	
 	
 protected:
+	
 	string Name;
 	Model* Modelo;
 	Mesh3D* Mesh;

@@ -6,7 +6,7 @@
 class Model : DxComponent<Model>, Transforms
 {
 public:
-	Model(string);
+	Model(string path);
 	~Model();
 	bool Initialize();
 	void Draw();
@@ -15,12 +15,7 @@ public:
 	string Name;
 	Transforms* transform;
 protected:
-	struct VertexType
-	{
-		XMFLOAT3 position;
-		XMFLOAT2 texture;
-		XMFLOAT3 normal;
-	};
+
 	ID3D11Buffer *VertexBuffer, *IndexBuffer;
 private:
 	Vertex MeshVertex;

@@ -2,13 +2,18 @@
 
 Vertex::Vertex()
 {
-	indexVertex = 0;
+	Color.clear();
+	VertexCount = 0;
 	indexNormals = 0;
 	indexUv = 0;
 	indexTriangles = 0;
 	vertices.clear();
+	indices.clear();
 	normal.clear();
 	uv.clear();
+	IndexCount = 0;
+	VertexCount = 0;
+	indices.clear();
 	TriangleFaceVertex.clear();
 	TriangleFaceTexture.clear();
 	TriangleFaceNormal.clear();
@@ -16,25 +21,72 @@ Vertex::Vertex()
 	Nullable2 = { 0,0 };
 }
 
+vector<unsigned long> Vertex::IndexResult() {
+	vector<unsigned long> resulti;
+	resulti.reserve(IndexCount);
+
+	for (int i = 0; i < (IndexCount); i++) {
+		resulti.push_back(i);
+	}
+	return resulti;
+}
+
+vector<unsigned long> Vertex::GetIndex() {
+	return indices;
+}
+
+vector<Vertex::VertexType> Vertex::VertexResult()
+{
+	vector<Vertex::VertexType> result;
+		
+	result.reserve(VertexCount);
+	
+	for (int i = 0; i < (VertexCount); i++) {
+		VertexType nuevo;
+		nuevo.position = XMFLOAT3(GetVertex(i).x, GetVertex(i).y, GetVertex(i).z);
+		nuevo.color = XMFLOAT4(GetColor(i).x, GetColor(i).y, GetColor(i).z, GetColor(i).w);
+		nuevo.texture = XMFLOAT2(GetTexture(i).x, GetTexture(i).y);
+		nuevo.normal = XMFLOAT3(GetNormal(i).x, GetNormal(i).y, GetNormal(i).z);
+		result.push_back(nuevo);
+	}
+	return result;
+}
+
+vec4 Vertex::GetColor(int index)
+{
+	if (VertexCount == 0)
+		return vec4();
+	else
+		return Color[index];
+}
+
 void Vertex::AddVertex(vec3 InfoVertex)
 {
-	indexVertex++;
-	vertices.resize(indexVertex);
-	vertices.at(indexVertex - 1) = InfoVertex;
+	VertexCount++;
+	vertices.push_back(InfoVertex);
+}
+
+void Vertex::AddIndex(int InfoIndex)
+{
+	IndexCount++;
+	indices.push_back(InfoIndex);
 }
 
 void Vertex::AddNormals(vec3 InfoNormal)
 {
 	indexNormals++;
-	normal.resize(indexNormals);
-	normal.at(indexNormals - 1) = InfoNormal;
+	normal.push_back(InfoNormal);
 }
 
 void Vertex::AddUV(vec2 InfoUv)
 {
 	indexUv++;
-	uv.resize(indexUv);
-	uv.at(indexUv - 1) = InfoUv;
+	uv.push_back(InfoUv);
+}
+
+void Vertex::AddColor(vec4 InfoColor)
+{
+	Color.push_back(InfoColor);
 }
 
 void Vertex::AddTriangleFaces(vec3 InfoTriangleFaceVertex, vec3 InfoTriangleFaceTexture, vec3 InfoTriangleFaceNormal)
@@ -91,9 +143,25 @@ void Vertex::AddNewVertex(float x, float y, float z)
 	AddNew(Vertice, Nullable3, Nullable2, Nullable3, Nullable3, Nullable3);
 }
 
+void Vertex::AddNewIndex(int value)
+{
+	AddIndex(value);
+}
+
 void Vertex::AddNewVertex(vec3 Vertice)
 {
 	AddNew(Vertice, Nullable3, Nullable2, Nullable3, Nullable3, Nullable3);
+}
+
+void Vertex::AddNewVertex(XMFLOAT4 Vertice)
+{
+	AddNew(vec3(Vertice.x,Vertice.y,Vertice.z), Nullable3, Nullable2, Nullable3, Nullable3, Nullable3);
+}
+
+void Vertex::AddNewColor(float r, float g, float b, float a)
+{
+	vec4 Texture = { r, g, b,a };
+	AddNew(Nullable3, Nullable3, Texture, Nullable3, Nullable3, Nullable3);
 }
 
 void Vertex::AddNewTexture(float x, float y, float z)
@@ -107,6 +175,11 @@ void Vertex::AddNewTexture(vec2 Texture)
 	AddNew(Nullable3, Nullable3, Texture, Nullable3, Nullable3, Nullable3);
 }
 
+void Vertex::AddNewTexture(XMFLOAT4 Texture)
+{
+	AddNew(Nullable3, Nullable3, vec2(Texture.x,Texture.y), Nullable3, Nullable3, Nullable3);
+}
+
 void Vertex::AddNewNormals(float x, float y, float z)
 {
 	vec3 Normals = { x, y, z };
@@ -117,6 +190,12 @@ void Vertex::AddNewNormals(vec3 Normals)
 {
 	AddNew(Nullable3, Normals, Nullable2, Nullable3, Nullable3, Nullable3);
 }
+
+void Vertex::AddNewNormals(XMFLOAT4 Normals)
+{
+	AddNew(Nullable3, vec3(Normals.x,Normals.y,Normals.z), Nullable2, Nullable3, Nullable3, Nullable3);
+}
+
 
 
 void Vertex::AddPack(float x, float y, float z, float nx, float ny, float nz, float tx, float ty, float tz, float u, float v)
@@ -150,7 +229,7 @@ void Vertex::AddPack(vec3 Vertice, vec2 Uvs, vec3 Normales)
 
 vec3 Vertex::GetVertex(int index)
 {
-	if (indexVertex == 0)
+	if (VertexCount == 0)
 		return Nullable3;
 	else
 		return vertices[index];
@@ -158,7 +237,7 @@ vec3 Vertex::GetVertex(int index)
 
 vec3 Vertex::GetFirstVertex()
 {
-	if (indexVertex == 0)
+	if (VertexCount == 0)
 		return Nullable3;
 	else
 		return vertices[0];
@@ -166,10 +245,10 @@ vec3 Vertex::GetFirstVertex()
 
 vec3 Vertex::GetLastVertex()
 {
-	if (indexVertex == 0)
+	if (VertexCount == 0)
 		return Nullable3;
 	else
-		return vertices.at(indexVertex - 1);
+		return vertices.at(VertexCount - 1);
 }
 
 vec2 Vertex::GetTexture(int index)
@@ -245,7 +324,7 @@ vec3 Vertex::GetTriangleFN(int index)
 vec4 Vertex::Count()
 {
 	vec4 indices;
-	indices.x = indexVertex;
+	indices.x = VertexCount;
 	indices.y = indexUv;
 	indices.z = indexNormals;
 	indices.w = indexTriangles;

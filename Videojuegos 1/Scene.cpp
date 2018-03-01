@@ -14,13 +14,16 @@ Scene::~Scene() {}
 string Scene::CreateScene() {
 
 	SceneCamera->SetPosition(0.0f, 0.0f, -5.0f);
-
-	bool res = TestMesh3D->Initialize();
+	bool res;
+	/*res = TestMesh3D->Initialize();
 	if (!res)
 		ErrorFnc("No se pudo generar el triangulo");
 	else
-		_RPT0(0,"Triangle created!\n");
-
+		_RPT0(0,"Triangle created!\n");*/
+	ResourceManager::AddMesh("Sphere", "triangle");
+	ResourceManager::BuildGameObject("triangle", -1, 0, -1, -1);
+	GObj = ResourceManager::GetObjectByName("triangle");
+	//ResourceManager::AddMesh(*TestMesh3D,"triangulo");
 	res = TestShader->Initialize();
 	if (!res)
 		ErrorFnc("No se pudo inicializar el shader");
@@ -60,10 +63,12 @@ string Scene::RenderScene()
 	TestShader->SetShaderParameters(worldMatrix, viewMatrix, *projectionMatrix);
 
 	ResourceManager::bindShader(TestShader);
-	ResourceManager::bindMesh(TestMesh3D);
+	//ResourceManager::AddTexture("tex1","World");
+	//ResourceManager::BuildGameObject(0,0,0,"modelo1");
+	ResourceManager::bindMesh(GObj->GetMesh());
 
 	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
-	TestMesh3D->Draw();
+	GObj->GetMesh()->Draw();
 
 	// Present the rendered scene to the screen.
 	specsDx->EndScene();

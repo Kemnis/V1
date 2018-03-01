@@ -8,13 +8,18 @@ using namespace glm;
 class Vertex {
 protected:
 	vector<vec3> vertices, normal, TriangleFaceVertex, TriangleFaceTexture, TriangleFaceNormal;
+	vector<unsigned long> indices;
 	vector<vec2> uv;
+	vector<vec4> Color;
 	vec3 Nullable3;
 	vec2 Nullable2;
-	int indexVertex, indexNormals, indexUv, indexTriangles;
+	int indexNormals, indexUv, indexTriangles;
+	
 private:
 
 	void AddVertex(vec3);
+
+	void AddIndex(int);
 
 	void AddNormals(vec3);
 
@@ -29,22 +34,45 @@ private:
 
 public:
 	Vertex();
-	int VertexCount;
+	int IndexCount, VertexCount;
+	struct VertexType
+	{
+		XMFLOAT3 position;
+		XMFLOAT4 color;
+		XMFLOAT2 texture;
+		XMFLOAT3 normal;
+	};
+	vector<VertexType> VertexResult();
+	vector<unsigned long> IndexResult();
+	vector<unsigned long> GetIndex();
+
+	void AddColor(vec4);
+
 	void AddNewTriangle(float, float, float, float, float, float, float, float, float);
 
 	void AddNewTriangle(vec3, vec3, vec3);
 
 	void AddNewVertex(float, float, float);
 
+	void AddNewIndex(int);
+
 	void AddNewVertex(vec3);
+
+	void AddNewVertex(XMFLOAT4);
+
+	void AddNewColor(float, float, float, float);
 
 	void AddNewTexture(float, float, float);
 
 	void AddNewTexture(vec2);
 
+	void AddNewTexture(XMFLOAT4);
+
 	void AddNewNormals(float, float, float);
 
 	void AddNewNormals(vec3);
+
+	void AddNewNormals(XMFLOAT4);
 
 	void AddPack(float, float, float, float, float, float, float, float, float, float, float);
 
@@ -62,6 +90,8 @@ public:
 	vec3 GetLastVertex();
 
 	vec2 GetTexture(int);
+
+	vec4 GetColor(int);
 
 	vec2 GetFirstTexture();
 
@@ -83,7 +113,6 @@ public:
 
 	vec4 Count();
 
-	int IndexCount;
 
 	vec4 Count(int Index);
 

@@ -9,18 +9,17 @@ class Scene : DxComponent<Scene>
 public:
 	Scene();
 	~Scene();
-
+	Mesh3D* TestMesh3D;
+	ShaderClass* TestShader;
 	virtual string CreateScene();
 	virtual string ProcessScene(double);
 	virtual string RenderScene();
 	
-	string NewGameObject(int , int , string );
-	GameObject* GetGameObject(string);
 	virtual void DestroyScene();
 
 public:				//Descripción: Variables Globales
 	Camera3D * SceneCamera;
-
+	GameObject* GObj;
 protected:
 	//Variables de respuesta
 	bool RB;
@@ -31,8 +30,7 @@ private:
 	XMMATRIX CameraMatrix;
 	
 
-	Mesh3D* TestMesh3D;
-	ShaderClass* TestShader;
+	
 };
 
 #endif

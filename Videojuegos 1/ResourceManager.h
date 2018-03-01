@@ -12,15 +12,16 @@ public:
 	ResourceManager();
 	~ResourceManager();
 
-	static bool AddModel(string, string);
-	static bool AddMesh(int, string);
-	static bool AddTexture(string, string);
-	static string BuildGameObject(int, int, int, string);
-	static GameObject GetObjectByName(string);
+	static bool AddModel(string path, string name);
+	static void AddMesh(string primitive, string name);
+	static bool AddTexture(string path, string name);
+	static string BuildGameObject(string nameGameObject, int modelindex, int meshindex, int textureindex, int shaderindex);
+	static GameObject* GetObjectByName(string);
 	static bool AddShader();
 
 	static bool bindShader(ShaderClass* shader);
 	static bool bindMesh(Mesh3D* mesh);
+	static bool bindMesh(GameObject * GO);
 
 	static void Shutdown();
 
@@ -42,6 +43,7 @@ protected:
 	static int ModelIndex;
 	//Meshes
 	static std::map<int, Mesh3D> MeshIdentifier;
+	static std::map<string, int> MeshSearcher;
 	static int MeshIndex;
 	//Texture
 	static std::map<int, Texture> TextureIdentifier;

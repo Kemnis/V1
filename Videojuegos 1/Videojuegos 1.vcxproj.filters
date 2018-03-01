@@ -170,5 +170,12 @@
     <None Include="color.vs">
       <Filter>Archivos de recursos\Shaders</Filter>
     </None>
+    <None Include="packages.config" />
+    <None Include="Model.ps">
+      <Filter>Archivos de recursos\Shaders</Filter>
+    </None>
+    <None Include="Model.vs">
+      <Filter>Archivos de recursos\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -10,17 +10,12 @@ using namespace DirectX;
 class Mesh3D : DxComponent<Mesh3D>, Transforms
 {
 private:
-	struct VertexType
-	{
-		XMFLOAT3 position;
-		XMFLOAT4 color;
-	};
 	
 public:
 	Mesh3D();
 	~Mesh3D();
 
-	bool Initialize();
+	bool Initialize(string NameOfFigure);
 	void Shutdown();
 	void Draw();
 	void BindMesh();
@@ -30,13 +25,9 @@ public:
 private:
 	Vertex MeshVertex;
 private:
-	struct InfoPrimitive
-	{
-		VertexType* vertices;
-		unsigned long* indices;
-	};
-	InfoPrimitive DefineTriangle();
-	InfoPrimitive DefineSquare();
+	void DefineTriangle();
+	void DefineSquare();
+	void DefineSphere();
 	ID3D11Buffer * m_vertexBuffer, *m_indexBuffer;
 };
 

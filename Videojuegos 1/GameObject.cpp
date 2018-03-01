@@ -41,3 +41,23 @@ bool GameObject::AssignTexture(Texture * texture)
 void GameObject::Shutdown()
 {
 }
+
+Mesh3D* GameObject::GetMesh()
+{
+	return Mesh;
+}
+
+Model* GameObject::GetModel()
+{
+	return Modelo;
+}
+
+Texture* GameObject::GetTexture()
+{
+	return Tex;
+}
+
+ShaderClass* GameObject::GetShader()
+{
+	return Shader;
+}

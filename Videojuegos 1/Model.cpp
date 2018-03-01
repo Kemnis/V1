@@ -16,35 +16,35 @@ Model::~Model()
 
 bool Model::Initialize()
 {
-	VertexType* vertices;
-	unsigned long* indices;
+	Vertex::VertexType* vertices=nullptr;
+	unsigned long* indices=nullptr;
 	D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
 	D3D11_SUBRESOURCE_DATA vertexData, indexData;
 	HRESULT result;
 	int i;
 
-	//Create the vertex array
-	vertices = new VertexType[MeshVertex.VertexCount];
-	if (!vertices)
-		ErrorFnc("No se pudo crear el arreglo de vertices");
+	////Create the vertex array
+	//vertices = new VertexType[MeshVertex.VertexCount];
+	//if (!vertices)
+	//	ErrorFnc("No se pudo crear el arreglo de vertices");
 
-	//Create the index array
-	indices = new unsigned long[MeshVertex.IndexCount];
-	if (!indices)
-		ErrorFnc("No se pudo crear el arreglo de indices");
+	////Create the index array
+	//indices = new unsigned long[MeshVertex.IndexCount];
+	//if (!indices)
+	//	ErrorFnc("No se pudo crear el arreglo de indices");
 
-	//Load the vertex and index array with data
-	for (i = 0; i < (MeshVertex.IndexCount); i++) {
-		vertices[i].position = XMFLOAT3(MeshVertex.GetVertex(i).x, MeshVertex.GetVertex(i).y, MeshVertex.GetVertex(i).z);
-		vertices[i].texture = XMFLOAT2(MeshVertex.GetTexture(i).x, MeshVertex.GetTexture(i).y);
-		vertices[i].normal = XMFLOAT3(MeshVertex.GetNormal(i).x, MeshVertex.GetNormal(i).y, MeshVertex.GetNormal(i).z);
+	////Load the vertex and index array with data
+	//for (i = 0; i < (MeshVertex.IndexCount); i++) {
+	//	vertices[i].position = XMFLOAT3(MeshVertex.GetVertex(i).x, MeshVertex.GetVertex(i).y, MeshVertex.GetVertex(i).z);
+	//	vertices[i].texture = XMFLOAT2(MeshVertex.GetTexture(i).x, MeshVertex.GetTexture(i).y);
+	//	vertices[i].normal = XMFLOAT3(MeshVertex.GetNormal(i).x, MeshVertex.GetNormal(i).y, MeshVertex.GetNormal(i).z);
 
-		indices[i] = i;
-	}
+	//	indices[i] = i;
+	//}
 
 	//Set up the description of the static vertex buffer
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	vertexBufferDesc.ByteWidth = sizeof(VertexType)* MeshVertex.IndexCount;
+	vertexBufferDesc.ByteWidth = sizeof(Vertex::VertexType)* MeshVertex.IndexCount;
 	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	vertexBufferDesc.CPUAccessFlags = 0;
 	vertexBufferDesc.MiscFlags = 0;
@@ -100,7 +100,7 @@ void Model::BindMesh()
 	unsigned int offset;
 
 	// Set vertex buffer stride and offset.
-	stride = sizeof(VertexType);
+	stride = sizeof(Vertex::VertexType);
 	offset = 0;
 
 	// Set the vertex buffer to active in the input assembler so it can be rendered.
