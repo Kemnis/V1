@@ -159,21 +159,21 @@ bool Model::LoadModel(string path)
 					vec3 temp;
 					fin >> temp.x >> temp.y >> temp.z;
 					temp.z = -1.0f *temp.z;
-					Array.AddNewVertex(temp);
+					Array.AddVertex(temp);
 				}
 				if (input == 't')
 				{
 					vec2 temp;
 					fin >> temp.x >> temp.y;
 					temp.y = 1.0f - temp.y;
-					Array.AddNewTexture(temp);
+					Array.AddUV(temp);
 				}
 				if (input == 'n')
 				{
 					vec3 temp;
 					fin >> temp.x >> temp.y >> temp.z;
 					temp.z = -1.0f * temp.z;
-					Array.AddNewNormals(temp);
+					Array.AddNormals(temp);
 				}
 			}
 
@@ -186,7 +186,7 @@ bool Model::LoadModel(string path)
 					fin >> Vertice.z >> in >> Tex.z >> in >> Normal.z
 						>> Vertice.y >> in >> Tex.y >> in >> Normal.y
 						>> Vertice.x >> in >> Tex.x >> in >> Normal.x;
-					Array.AddNewTriangle(Vertice, Tex, Normal);
+					Array.AddTriangleFaces(Vertice, Tex, Normal);
 				}
 			}
 
@@ -207,29 +207,30 @@ bool Model::LoadModel(string path)
 		_RPT2(0, "Last UVs: %f, %f\n", Array.GetFirstTexture().x, Array.GetFirstTexture().y);
 		_RPT3(0, "Last Normals: %f,%f,%f\n", Array.GetLastNormal().x, Array.GetLastNormal().y, Array.GetLastNormal().z);
 
-		_RPT4(0, "#V: %f   #T: %f   #N: %f   #F: %f\n", Array.Count().x, Array.Count().y, Array.Count().z, Array.Count().w);
+		//_RPT4(0, "#V: %f   #T: %f   #N: %f   #F: %f\n", Array.GetVertex(), Array.GetTexture(), Array.GetNormal(), Array.GetTriangleFN());
 		//------------------------------------------------------------------------------------------
 
 		fin.close();
 
 		int i;
-		for (i = 0; i < Array.IndexCount; i++)
+		for (i = 0; i < Array.VertexCount; i++)
 		{
 			//_RPT1(0, "i %d\n", i);
+			vec3 TVertice, TTex, TNormal;
 			FaceIndex.x = Array.GetTriangleFV(i).x;
 			FaceIndex.y = Array.GetTriangleFT(i).x;
 			FaceIndex.z = Array.GetTriangleFN(i).x;
-			MeshVertex.AddPack(Array.GetVertex(FaceIndex.x), Array.GetTexture(FaceIndex.y), Array.GetNormal(FaceIndex.z));
+			MeshVertex.ConstructIndexFromTriangles(Array.GetVertex(FaceIndex.x), vec4(1.0f, 1.0f, 1.0f, 1.0f), Array.GetTexture(FaceIndex.y), Array.GetNormal(FaceIndex.z));
 
 			FaceIndex.x = Array.GetTriangleFV(i).y;
 			FaceIndex.y = Array.GetTriangleFT(i).y;
 			FaceIndex.z = Array.GetTriangleFN(i).y;
-			MeshVertex.AddPack(Array.GetVertex(FaceIndex.x), Array.GetTexture(FaceIndex.y), Array.GetNormal(FaceIndex.z));
+			MeshVertex.ConstructIndexFromTriangles(Array.GetVertex(FaceIndex.x), vec4(1.0f, 1.0f, 1.0f, 1.0f), Array.GetTexture(FaceIndex.y), Array.GetNormal(FaceIndex.z));
 
 			FaceIndex.x = Array.GetTriangleFV(i).z;
 			FaceIndex.y = Array.GetTriangleFT(i).z;
 			FaceIndex.z = Array.GetTriangleFN(i).z;
-			MeshVertex.AddPack(Array.GetVertex(FaceIndex.x), Array.GetTexture(FaceIndex.y), Array.GetNormal(FaceIndex.z));
+			MeshVertex.ConstructIndexFromTriangles(Array.GetVertex(FaceIndex.x), vec4(1.0f, 1.0f, 1.0f, 1.0f), Array.GetTexture(FaceIndex.y), Array.GetNormal(FaceIndex.z));
 		}
 	}
 	catch (std::exception& e)
@@ -241,10 +242,10 @@ bool Model::LoadModel(string path)
 	if (result != "")
 		ErrorFnc("no se logro cargar en ram.");
 
-	_RPT1(0, "Vertices: %f\n", MeshVertex.Count().x);
-	_RPT1(0, "UVs: %f\n", MeshVertex.Count().y);
-	_RPT1(0, "Normals: %f\n", MeshVertex.Count().z);
-	_RPT1(0, "Faces: %f\n", MeshVertex.Count().w);
+	_RPT1(0, "Vertices: %f\n", MeshVertex.GetAllIndex().x);
+	_RPT1(0, "UVs: %f\n", MeshVertex.GetAllIndex().y);
+	_RPT1(0, "Normals: %f\n", MeshVertex.GetAllIndex().z);
+	_RPT1(0, "Faces: %f\n", MeshVertex.GetAllIndex().w);
 	return true;
 }
 

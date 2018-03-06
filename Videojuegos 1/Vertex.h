@@ -10,31 +10,11 @@ protected:
 	vector<vec3> vertices, normal, TriangleFaceVertex, TriangleFaceTexture, TriangleFaceNormal;
 	vector<unsigned long> indices;
 	vector<vec2> uv;
-	vector<vec4> Color;
-	vec3 Nullable3;
-	vec2 Nullable2;
+	vector<vec4> color;
 	int indexNormals, indexUv, indexTriangles;
-	
-private:
-
-	void AddVertex(vec3);
-
-	void AddIndex(int);
-
-	void AddNormals(vec3);
-
-	void AddUV(vec2);
-
-	void AddTriangleFaces(vec3, vec3, vec3);
-
-	void AddNew(vec3, vec3, vec2, vec3, vec3, vec3);
-
-	void AddNew(float, float, float, float, float, float, float, float, vec3, vec3, vec3);
-
-
 public:
 	Vertex();
-	int IndexCount, VertexCount;
+	unsigned long IndexCount, VertexCount;
 	struct VertexType
 	{
 		XMFLOAT3 position;
@@ -42,68 +22,35 @@ public:
 		XMFLOAT2 texture;
 		XMFLOAT3 normal;
 	};
+	vector<VertexType> FinalMesh;
 	vector<VertexType> VertexResult();
 	vector<unsigned long> IndexResult();
 	vector<unsigned long> GetIndex();
 
-	void AddColor(vec4);
+	vec3 GetVertex(int indexArray);
 
-	void AddNewTriangle(float, float, float, float, float, float, float, float, float);
+	vec4 GetColor(int indexArray);
 
-	void AddNewTriangle(vec3, vec3, vec3);
+	vec2 GetTexture(int indexArray);
 
-	void AddNewVertex(float, float, float);
-
-	void AddNewIndex(int);
-
-	void AddNewVertex(vec3);
-
-	void AddNewVertex(XMFLOAT4);
-
-	void AddNewColor(float, float, float, float);
-
-	void AddNewTexture(float, float, float);
-
-	void AddNewTexture(vec2);
-
-	void AddNewTexture(XMFLOAT4);
-
-	void AddNewNormals(float, float, float);
-
-	void AddNewNormals(vec3);
-
-	void AddNewNormals(XMFLOAT4);
-
-	void AddPack(float, float, float, float, float, float, float, float, float, float, float);
-
-	void AddPack(float, float, float, float, float, float, float, float);
-
-	void AddPack(vec3, vec2, vec3);
-
-	void AddPack(vec3, vec3, vec3, vec2);
-
-
-	vec3 GetVertex(int);
+	vec3 GetNormal(int indexArray);
 
 	vec3 GetFirstVertex();
 
-	vec3 GetLastVertex();
-
-	vec2 GetTexture(int);
-
-	vec4 GetColor(int);
-
 	vec2 GetFirstTexture();
 
-	vec2 GetLastTexture();
-
-	vec3 GetNormal(int);
-
 	vec3 GetFirstNormal();
+
+	vec3 GetLastVertex();
+
+	vec2 GetLastTexture();
 
 	vec3 GetLastNormal();
 
 
+	void SetVertexTextureNormalColor(int index, vec3 vertex, vec2 uv, vec3 normal, vec4 col);
+
+	vec4 GetAllIndex();
 
 	vec3 GetTriangleFV(int);
 
@@ -111,15 +58,53 @@ public:
 
 	vec3 GetTriangleFN(int);
 
-	vec4 Count();
+	void AddVertex(float x, float y, float z);
 
+	void AddVertex(vec3 VertexVec);
 
-	vec4 Count(int Index);
+	void AddVertex(XMFLOAT3 VertexVec);
 
+	void AddVertex(XMFLOAT4 VertexVec);
 
+	void AddColor(float r, float g, float b, float a);
 
-	int GetSizeComponents();
+	void AddColor(vec4 ColorVec);
 
+	void AddColor(XMFLOAT4 ColorVec);
+
+	void AddUV(float u, float v);
+
+	void AddUV(vec2 UvVec);
+
+	void AddUV(XMFLOAT2 UvVec);
+
+	void AddNormals(float x, float y, float z);
+
+	void AddNormals(vec3 NormalVec);
+
+	void AddNormals(XMFLOAT3 NormalVec);
+
+	void AddNormals(XMFLOAT4 NormalVec);
+	
+	void AddIndex(int value);
+
+	void AddTriangleFaces(float TIndex1, float TIndex2, float TIndex3,
+		float TTextures1, float TTextures2, float TTextures3,
+		float TNormal1, float TNormal2, float TNormal3);
+
+	void AddTriangleFaces(vec3 TriangleVertex, vec3 TriangleTexture, vec3 TriangleNormal);
+
+	void ConstructIndexFromTriangles(vec3 Vertex, vec4 color, vec2 Uv, vec3 Normal);
+
+	int sizeClass();
+
+	void SpecialIndexVector();
+
+	vector<vec3> SpecialGetVertex();
+
+	vector<vec2> SpecialGetUV();
+
+	vector<unsigned long>* SpecialGetIndexVector();
 
 };
 #endif

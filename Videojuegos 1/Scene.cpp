@@ -21,8 +21,9 @@ string Scene::CreateScene() {
 	else
 		_RPT0(0,"Triangle created!\n");*/
 	ResourceManager::AddMesh("Sphere", "triangle");
-	ResourceManager::BuildGameObject("triangle", -1, 0, -1, -1);
-	GObj = ResourceManager::GetObjectByName("triangle");
+	ResourceManager::AddModel("circle.obj", "Sphere");
+	ResourceManager::BuildGameObject("Sphere", 0, -1, -1, -1);
+	GObj = ResourceManager::GetObjectByName("Sphere");
 	//ResourceManager::AddMesh(*TestMesh3D,"triangulo");
 	res = TestShader->Initialize();
 	if (!res)
@@ -65,10 +66,10 @@ string Scene::RenderScene()
 	ResourceManager::bindShader(TestShader);
 	//ResourceManager::AddTexture("tex1","World");
 	//ResourceManager::BuildGameObject(0,0,0,"modelo1");
-	ResourceManager::bindMesh(GObj->GetMesh());
+	ResourceManager::bindMesh(GObj);
 
 	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
-	GObj->GetMesh()->Draw();
+	GObj->GetModel()->Draw();
 
 	// Present the rendered scene to the screen.
 	specsDx->EndScene();

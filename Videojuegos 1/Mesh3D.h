@@ -22,12 +22,15 @@ public:
 
 	string Name;
 	Transforms* transform;
-private:
 	Vertex MeshVertex;
+protected:
+
 private:
 	void DefineTriangle();
 	void DefineSquare();
-	void DefineSphere();
+	void DefineCube(XMFLOAT3 size);
+	void DefineSphere(float diameter, size_t tessellation);
+	void DefineGeoSphere(float diameter, size_t tessellation);
 	ID3D11Buffer * m_vertexBuffer, *m_indexBuffer;
 };
 
