@@ -18,7 +18,7 @@ string Scene::CreateScene() {
 	ResourceManager::AddTexture("tex1.jpg", "World");
 
 	//Then Build a GameObject
-	ResourceManager::BuildGameObject("SphereMod", "SphereModel", "", "World", "Shader");
+	ResourceManager::BuildGameObject("SphereMod", "SphereModel", "", "", "Shader");
 	ResourceManager::BuildGameObject("SphereMes", "", "SphereMesh", "", "Shader");
 
 	_RPT0(0, "Scene Created!\n");
@@ -59,9 +59,9 @@ string Scene::RenderScene()
 	GameObject* GObjMesh = ResourceManager::GetObjectByName("SphereMes");
 	GameObject* GObjModel = ResourceManager::GetObjectByName("SphereMod");
 
-	GObjModel->GetShader()->SetShaderParameters(worldMatrix, viewMatrix, *projectionMatrix,GObjModel->GetTexture()->m_textureView);
+	GObjModel->GetShader()->SetShaderParameters(worldMatrix, viewMatrix, *projectionMatrix);
 	ResourceManager::bindShader(GObjModel);
-	GObjMesh->GetShader()->SetShaderParameters(Worldobj2, viewMatrix, *projectionMatrix,0);
+	GObjMesh->GetShader()->SetShaderParameters(Worldobj2, viewMatrix, *projectionMatrix);
 	ResourceManager::bindShader(GObjMesh);
 
 

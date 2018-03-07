@@ -8,7 +8,6 @@ ShaderClass::ShaderClass()
 	PixelShader = 0;
 	Layout = 0;
 	m_matrixBuffer = 0;
-	lightBuffer = 0;
 }
 
 ShaderClass::~ShaderClass()
@@ -26,7 +25,6 @@ bool ShaderClass::Initialize()
 	D3D11_INPUT_ELEMENT_DESC polygonLayout[2];
 	unsigned int numElements;
 	D3D11_BUFFER_DESC matrixBufferDesc;
-	D3D11_BUFFER_DESC lightBufferDesc;
 
 
 	// Initialize the pointers this function will use to null.
@@ -142,27 +140,6 @@ bool ShaderClass::Initialize()
 		return false;
 	}
 
-	//Sampler
-
-
-
-
-
-
-
-
-	// Setup the description of the light dynamic constant buffer that is in the pixel shader.
-	// Note that ByteWidth always needs to be a multiple of 16 if using D3D11_BIND_CONSTANT_BUFFER or CreateBuffer will fail.
-	lightBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-	lightBufferDesc.ByteWidth = sizeof(LightBufferType);
-	lightBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	lightBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	lightBufferDesc.MiscFlags = 0;
-	lightBufferDesc.StructureByteStride = 0;
-
-	// Create the constant buffer pointer so we can access the vertex shader constant buffer from within this class.
-	result = device->CreateBuffer(&lightBufferDesc, NULL, &lightBuffer);
-
 	return true;
 }
 
@@ -213,7 +190,7 @@ void ShaderClass::OutputShaderErrorMessage(ID3D10Blob* errorMessage, LPCTSTR  sh
 	return;
 }
 
-bool ShaderClass::SetShaderParameters(XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix, ID3D11ShaderResourceView* texture)
+bool ShaderClass::SetShaderParameters(XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix)
 {
 	HRESULT result;
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
@@ -249,18 +226,6 @@ bool ShaderClass::SetShaderParameters(XMMATRIX worldMatrix, XMMATRIX viewMatrix,
 
 		// Finanly set the constant buffer in the vertex shader with the updated values.
     deviceContext->VSSetConstantBuffers(bufferNumber, 1, &m_matrixBuffer);
-
-	// Set shader Light resource in the pixel shader.
-	deviceContext->PSSetShaderResources(0, 1, &texture);
-
-	//Lock the light constant buffer so it can be written to
-	result = deviceContext->Map(lightBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
-
-	//Unlock the constant buffer
-	deviceContext->Unmap(lightBuffer, 0);
-
-	//Finally set the light constant buffer in the pixel shader with the updated values
-	deviceContext->PSSetConstantBuffers(bufferNumber, 1, &lightBuffer);
 
 	return true;
 }
