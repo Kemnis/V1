@@ -4,43 +4,28 @@ Model::Model(string path)
 {
 	VertexBuffer = 0;
 	IndexBuffer = 0;
-	if (!LoadModel(path))
-		ErrorFnc("No se pudo cargar el modelo");
+	transform = new Transforms();
+	if (path.substr(path.find_last_of(".") + 1) == "obj")
+	{
+		if (!LoadModel(path))
+			ErrorFnc("No se pudo cargar el modelo");
+		else
+			Initialize("");
+	}
 	else
-		Initialize();
+		Initialize(path);
 }
 
 Model::~Model()
 {
 }
 
-bool Model::Initialize()
+bool Model::Initialize(string primitive)
 {
-	Vertex::VertexType* vertices=nullptr;
-	unsigned long* indices=nullptr;
 	D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
 	D3D11_SUBRESOURCE_DATA vertexData, indexData;
 	HRESULT result;
 	int i;
-
-	////Create the vertex array
-	//vertices = new VertexType[MeshVertex.VertexCount];
-	//if (!vertices)
-	//	ErrorFnc("No se pudo crear el arreglo de vertices");
-
-	////Create the index array
-	//indices = new unsigned long[MeshVertex.IndexCount];
-	//if (!indices)
-	//	ErrorFnc("No se pudo crear el arreglo de indices");
-
-	////Load the vertex and index array with data
-	//for (i = 0; i < (MeshVertex.IndexCount); i++) {
-	//	vertices[i].position = XMFLOAT3(MeshVertex.GetVertex(i).x, MeshVertex.GetVertex(i).y, MeshVertex.GetVertex(i).z);
-	//	vertices[i].texture = XMFLOAT2(MeshVertex.GetTexture(i).x, MeshVertex.GetTexture(i).y);
-	//	vertices[i].normal = XMFLOAT3(MeshVertex.GetNormal(i).x, MeshVertex.GetNormal(i).y, MeshVertex.GetNormal(i).z);
-
-	//	indices[i] = i;
-	//}
 
 	//Set up the description of the static vertex buffer
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
@@ -49,9 +34,17 @@ bool Model::Initialize()
 	vertexBufferDesc.CPUAccessFlags = 0;
 	vertexBufferDesc.MiscFlags = 0;
 	vertexBufferDesc.StructureByteStride = 0;
-
-	//Give the subresource structure a pointer to the vertex data
-	vertexData.pSysMem = vertices;
+	
+	// Give the subresource structure a pointer to the vertex data.
+	if (primitive != "")
+	{
+		vector<Vertex::VertexType> vertices = MeshVertex.VertexResult();
+		vertexData.pSysMem = &vertices[0];
+	}
+	else
+	{
+		vertexData.pSysMem = &MeshVertex.FinalMesh[0];
+	}
 	vertexData.SysMemPitch = 0;
 	vertexData.SysMemSlicePitch = 0;
 
@@ -68,8 +61,9 @@ bool Model::Initialize()
 	indexBufferDesc.MiscFlags = 0;
 	indexBufferDesc.StructureByteStride = 0;
 
+	vector<unsigned long> indices = MeshVertex.IndexResult();
 	//Give the subresource structure a pointer to the index data
-	indexData.pSysMem = indices;
+	indexData.pSysMem = &indices[0];
 	indexData.SysMemPitch = 0;
 	indexData.SysMemSlicePitch = 0;
 
@@ -78,12 +72,6 @@ bool Model::Initialize()
 	if (FAILED(result))
 		ErrorFnc("No se pudo crear el buffer de indices");
 
-	//Release the arrays now that the vertex and index buffers have been created and loaded
-	delete[]vertices;
-	vertices = 0;
-
-	delete[]indices;
-	indices = 0;
 
 	return true;
 }
@@ -113,6 +101,11 @@ void Model::BindMesh()
 	deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
+Vertex Model::GetMesh()
+{
+	return MeshVertex;
+}
+
 bool Model::LoadModel(string path)
 {
 	string result = "";
@@ -123,7 +116,6 @@ bool Model::LoadModel(string path)
 
 	ifstream fin;
 	char input, in;
-	Vertex Array;
 	vec3 FaceIndex;
 
 	try {
@@ -159,21 +151,21 @@ bool Model::LoadModel(string path)
 					vec3 temp;
 					fin >> temp.x >> temp.y >> temp.z;
 					temp.z = -1.0f *temp.z;
-					Array.AddVertex(temp);
+					MeshVertex.AddVertex(temp);
 				}
 				if (input == 't')
 				{
 					vec2 temp;
 					fin >> temp.x >> temp.y;
 					temp.y = 1.0f - temp.y;
-					Array.AddUV(temp);
+					MeshVertex.AddUV(temp);
 				}
 				if (input == 'n')
 				{
 					vec3 temp;
 					fin >> temp.x >> temp.y >> temp.z;
 					temp.z = -1.0f * temp.z;
-					Array.AddNormals(temp);
+					MeshVertex.AddNormals(temp);
 				}
 			}
 
@@ -186,7 +178,7 @@ bool Model::LoadModel(string path)
 					fin >> Vertice.z >> in >> Tex.z >> in >> Normal.z
 						>> Vertice.y >> in >> Tex.y >> in >> Normal.y
 						>> Vertice.x >> in >> Tex.x >> in >> Normal.x;
-					Array.AddTriangleFaces(Vertice, Tex, Normal);
+					MeshVertex.AddTriangleFaces(Vertice, Tex, Normal);
 				}
 			}
 
@@ -199,38 +191,37 @@ bool Model::LoadModel(string path)
 		}
 
 		//Solo para fines de debugeo en caso de errores... Este codigo puede decir cosas relevantes
-		_RPT3(0, "First Vertex: %f,%f,%f\n", Array.GetFirstVertex().x, Array.GetFirstVertex().y, Array.GetFirstVertex().z);
-		_RPT2(0, "First UVs: %f, %f\n", Array.GetFirstTexture().x, Array.GetFirstTexture().y);
-		_RPT3(0, "First Normals: %f,%f,%f\n", Array.GetFirstNormal().x, Array.GetFirstNormal().y, Array.GetFirstNormal().z);
+		_RPT3(0, "First Vertex: %f,%f,%f\n", MeshVertex.GetFirstVertex().x, MeshVertex.GetFirstVertex().y, MeshVertex.GetFirstVertex().z);
+		_RPT2(0, "First UVs: %f, %f\n", MeshVertex.GetFirstTexture().x, MeshVertex.GetFirstTexture().y);
+		_RPT3(0, "First Normals: %f,%f,%f\n", MeshVertex.GetFirstNormal().x, MeshVertex.GetFirstNormal().y, MeshVertex.GetFirstNormal().z);
 
-		_RPT3(0, "Last Vertex: %f,%f,%f\n", Array.GetLastVertex().x, Array.GetLastVertex().y, Array.GetLastVertex().z);
-		_RPT2(0, "Last UVs: %f, %f\n", Array.GetFirstTexture().x, Array.GetFirstTexture().y);
-		_RPT3(0, "Last Normals: %f,%f,%f\n", Array.GetLastNormal().x, Array.GetLastNormal().y, Array.GetLastNormal().z);
+		_RPT3(0, "Last Vertex: %f,%f,%f\n", MeshVertex.GetLastVertex().x, MeshVertex.GetLastVertex().y, MeshVertex.GetLastVertex().z);
+		_RPT2(0, "Last UVs: %f, %f\n", MeshVertex.GetFirstTexture().x, MeshVertex.GetFirstTexture().y);
+		_RPT3(0, "Last Normals: %f,%f,%f\n", MeshVertex.GetLastNormal().x, MeshVertex.GetLastNormal().y, MeshVertex.GetLastNormal().z);
 
-		//_RPT4(0, "#V: %f   #T: %f   #N: %f   #F: %f\n", Array.GetVertex(), Array.GetTexture(), Array.GetNormal(), Array.GetTriangleFN());
+		//_RPT4(0, "#V: %f   #T: %f   #N: %f   #F: %f\n", MeshVertex.GetVertex(), MeshVertex.GetTexture(), MeshVertex.GetNormal(), MeshVertex.GetTriangleFN());
 		//------------------------------------------------------------------------------------------
 
 		fin.close();
 
 		int i;
-		for (i = 0; i < Array.VertexCount; i++)
+		for (i = 0; i < MeshVertex.VertexCount; i++)
 		{
 			//_RPT1(0, "i %d\n", i);
-			vec3 TVertice, TTex, TNormal;
-			FaceIndex.x = Array.GetTriangleFV(i).x;
-			FaceIndex.y = Array.GetTriangleFT(i).x;
-			FaceIndex.z = Array.GetTriangleFN(i).x;
-			MeshVertex.ConstructIndexFromTriangles(Array.GetVertex(FaceIndex.x), vec4(1.0f, 1.0f, 1.0f, 1.0f), Array.GetTexture(FaceIndex.y), Array.GetNormal(FaceIndex.z));
+			FaceIndex.x = MeshVertex.GetTriangleFV(i).x-1;
+			FaceIndex.y = MeshVertex.GetTriangleFT(i).x-1;
+			FaceIndex.z = MeshVertex.GetTriangleFN(i).x-1;
+			MeshVertex.ConstructIndexFromTriangles(MeshVertex.GetVertex(FaceIndex.x), vec4(1.0f, 1.0f, 1.0f, 1.0f), MeshVertex.GetTexture(FaceIndex.y), MeshVertex.GetNormal(FaceIndex.z));
 
-			FaceIndex.x = Array.GetTriangleFV(i).y;
-			FaceIndex.y = Array.GetTriangleFT(i).y;
-			FaceIndex.z = Array.GetTriangleFN(i).y;
-			MeshVertex.ConstructIndexFromTriangles(Array.GetVertex(FaceIndex.x), vec4(1.0f, 1.0f, 1.0f, 1.0f), Array.GetTexture(FaceIndex.y), Array.GetNormal(FaceIndex.z));
+			FaceIndex.x = MeshVertex.GetTriangleFV(i).y-1;
+			FaceIndex.y = MeshVertex.GetTriangleFT(i).y-1;
+			FaceIndex.z = MeshVertex.GetTriangleFN(i).y-1;
+			MeshVertex.ConstructIndexFromTriangles(MeshVertex.GetVertex(FaceIndex.x), vec4(1.0f, 1.0f, 1.0f, 1.0f), MeshVertex.GetTexture(FaceIndex.y), MeshVertex.GetNormal(FaceIndex.z));
 
-			FaceIndex.x = Array.GetTriangleFV(i).z;
-			FaceIndex.y = Array.GetTriangleFT(i).z;
-			FaceIndex.z = Array.GetTriangleFN(i).z;
-			MeshVertex.ConstructIndexFromTriangles(Array.GetVertex(FaceIndex.x), vec4(1.0f, 1.0f, 1.0f, 1.0f), Array.GetTexture(FaceIndex.y), Array.GetNormal(FaceIndex.z));
+			FaceIndex.x = MeshVertex.GetTriangleFV(i).z-1;
+			FaceIndex.y = MeshVertex.GetTriangleFT(i).z-1;
+			FaceIndex.z = MeshVertex.GetTriangleFN(i).z-1;
+			MeshVertex.ConstructIndexFromTriangles(MeshVertex.GetVertex(FaceIndex.x), vec4(1.0f, 1.0f, 1.0f, 1.0f), MeshVertex.GetTexture(FaceIndex.y), MeshVertex.GetNormal(FaceIndex.z));
 		}
 	}
 	catch (std::exception& e)

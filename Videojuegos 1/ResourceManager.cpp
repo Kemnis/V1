@@ -11,18 +11,21 @@ string ResourceManager::RS = "";
 // Variables de respuesta
 ShaderClass* ResourceManager::ShaderActual = nullptr;
 Mesh3D* ResourceManager::MeshActual = nullptr;
-std::map<int, GameObject> ResourceManager::GameObjectIdentifier;
-std::map<string, int> ResourceManager::GameObjectSearcher;
-std::map<int, Model> ResourceManager::ModelIdentifier;
-std::map<int, Mesh3D> ResourceManager::MeshIdentifier;
-std::map<string, int> ResourceManager::MeshSearcher;
-std::map<int, Texture> ResourceManager::TextureIdentifier;
-std::map<int, ShaderClass> ResourceManager::ShaderIdentifier;
+Model* ResourceManager::ModeloActual = nullptr;
+
+ResourceManager::GameObjectMap ResourceManager::GameObjectIdentifier;
+//std::map<string, int> ResourceManager::GameObjectSearcher;
+ResourceManager::ModelMap ResourceManager::ModelIdentifier;
+ResourceManager::MeshMap ResourceManager::MeshIdentifier;
+//std::map<string, int> ResourceManager::MeshSearcher;
+ResourceManager::TextureMap ResourceManager::TextureIdentifier;
+ResourceManager::ShaderMap ResourceManager::ShaderIdentifier;
 int ResourceManager::GameObjectIndex = 0;
 int ResourceManager::ModelIndex = 0;
 int ResourceManager::MeshIndex = 0;
 int ResourceManager::TextureIndex = 0;
 int ResourceManager::ShaderIndex = 0;
+char ResourceManager::ChangeBinder = 0;
 
 ResourceManager::ResourceManager()
 {
@@ -33,8 +36,8 @@ ResourceManager::~ResourceManager()
 }
 bool ResourceManager::AddGameObject(GameObject Gameobject)
 {
-	GameObjectIdentifier.insert(std::pair<int, GameObject>(GameObjectIndex, Gameobject));
-	GameObjectSearcher.insert(std::pair<string, int>(Gameobject.GetName(), GameObjectIndex));
+	GameObjectIdentifier.insert(std::pair<string, GameObject>(Gameobject.GetName(), Gameobject));
+	//GameObjectSearcher.insert(std::pair<string, int>(Gameobject.GetName(), GameObjectIndex));
 	GameObjectIndex++;
 	return true;
 }
@@ -43,7 +46,7 @@ bool ResourceManager::AddModel(string path, string name)
 {
 	Model nuevo(path);
 	nuevo.Name = name;
-	ModelIdentifier.insert(std::pair<int, Model>(ModelIndex, nuevo));
+	ModelIdentifier.insert(std::pair<string, Model>(name, nuevo));
 	ModelIndex++;
 	return true;
 }
@@ -53,8 +56,8 @@ void ResourceManager::AddMesh(string primitive, string name)
 	Mesh3D nuevo;
 	nuevo.Name = name;
 	nuevo.Initialize(primitive);
-	MeshIdentifier.insert(std::pair<int, Mesh3D>(MeshIndex, nuevo));
-	MeshSearcher.insert(std::pair<string, int>(name, MeshIndex));
+	MeshIdentifier.insert(std::pair<string, Mesh3D>(name, nuevo));
+	//MeshSearcher.insert(std::pair<string, int>(name, MeshIndex));
 	MeshIndex++;
 }
 
@@ -67,19 +70,22 @@ bool ResourceManager::AddTexture(string path, string name)
 	return true;
 }
 
-string ResourceManager::BuildGameObject(string nameGameObject, int modelindex=-1, int meshindex=-1, int textureindex=-1, int shaderindex=-1)
+string ResourceManager::BuildGameObject(string nameGameObject, string modelname, string meshname , string texturename , string shadername )
 {
 	GameObject nuevo(nameGameObject);
-	if (modelindex != -1)
+	if (modelname != "")
 	{
-		if (ModelIdentifier.size() >= modelindex)
-		{
-			nuevo.AssignModel(&ModelIdentifier.find(modelindex)->second);
-		}
-		else
+		nuevo.AssignModel(&ModelIdentifier.find(modelname)->second);
+		if (nuevo.GetModel() == nullptr)
 			return "E_Fail";
 	}
-	if (meshindex != -1)
+	if (meshname != "")
+	{
+		nuevo.AssignMesh(&MeshIdentifier.find(meshname)->second);
+		if (nuevo.GetMesh() == nullptr)
+			return "E_Fail";
+	}
+	/*if (meshindex != -1)
 	{
 		if (MeshIdentifier.size() >= meshindex)
 		{
@@ -87,33 +93,24 @@ string ResourceManager::BuildGameObject(string nameGameObject, int modelindex=-1
 		}
 		else
 			return "E_Fail";
-	}
-	if (textureindex != -1)
+	}*/
+	if (texturename != "")
 	{
-		if (TextureIdentifier.size() >= textureindex)
-		{
-			nuevo.AssignTexture(&TextureIdentifier.find(textureindex)->second);
-		}
-		else
+		nuevo.AssignTexture(&TextureIdentifier.find(texturename)->second);
+		if (nuevo.GetTexture() == nullptr)
 			return "E_Fail";
 	}
-	if (shaderindex != -1)
-	{
-		if (ShaderIdentifier.size() >= shaderindex)
-		{
-			nuevo.AssignModel(&ModelIdentifier.find(modelindex)->second);
-		}
-		else
-			return "E_Fail";
-	}
+	/*nuevo.AssignModel(&ModelIdentifier.find(modelindex)->second);
+	if (nuevo.GetModel == nullptr && textureindex != "")
+		return "E_Fail";*/
 	AddGameObject(nuevo);
 	return "S_OK";
 }
 
 GameObject* ResourceManager::GetObjectByName(string nameSearch)
 {
-	int GOIndex = GameObjectSearcher.find(nameSearch)->second;
-	return &GameObjectIdentifier.find(GOIndex)->second;
+	//int GOIndex = GameObjectSearcher.find(nameSearch)->second;
+	return &GameObjectIdentifier.find(nameSearch)->second;
 }
 
 bool ResourceManager::AddShader()
@@ -134,23 +131,42 @@ bool ResourceManager::bindShader(ShaderClass * shader)
 
 bool ResourceManager::bindMesh(Mesh3D * mesh)
 {
-	if (MeshActual != mesh)
+	if (ChangeBinder == 0 || ChangeBinder == 'M')
 	{
-		mesh->BindMesh();
-		MeshActual = mesh;
-		return true;
+		if (MeshActual != mesh)
+		{
+			mesh->BindMesh();
+			MeshActual = mesh;
+			ChangeBinder = 'm';
+			return true;
+		}
+		else
+		{
+			MeshActual->BindMesh();
+			ChangeBinder = 'm';
+			return true;
+		}
 	}
 	return false;
 }
 
-bool ResourceManager::bindMesh(GameObject * GO)
+bool ResourceManager::bindModel(GameObject * GO)
 {
-	if (MeshActual != GO->GetMesh())
+	if (ChangeBinder == 0 || ChangeBinder == 'm')
 	{
-		Mesh3D* mesh = GO->GetMesh();
-		mesh->BindMesh();
-		MeshActual = mesh;
-		return true;
+		if (ModeloActual != GO->GetModel())
+		{
+			ModeloActual = GO->GetModel();
+			ModeloActual->BindMesh();
+			ChangeBinder = 'M';
+			return true;
+		}
+		else
+		{
+			ModeloActual->BindMesh();
+			ChangeBinder = 'M';
+			return true;
+		}
 	}
 	return false;
 }

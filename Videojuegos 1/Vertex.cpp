@@ -321,11 +321,11 @@ void Vertex::AddTriangleFaces(vec3 InfoTriangleFaceVertex, vec3 InfoTriangleFace
 void Vertex::ConstructIndexFromTriangles(vec3 Vertex, vec4 color, vec2 Uv, vec3 Normal)
 {
 	FinalMesh.reserve(indexTriangles);
-
 	VertexType nuevo;
 	nuevo.position = XMFLOAT3(Vertex.x, Vertex.y, Vertex.z);
 	nuevo.color = XMFLOAT4(color.x, color.y, color.z, color.w);
 	nuevo.texture = XMFLOAT2(Uv.x, Uv.y);
 	nuevo.normal = XMFLOAT3(Normal.x, Normal.y, Normal.z);
 	FinalMesh.push_back(nuevo);
+	IndexCount++;
 }

@@ -519,15 +519,16 @@ bool Mesh3D::Initialize(string NameOfFigure)
 	D3D11_SUBRESOURCE_DATA vertexData, indexData;
 	HRESULT result;
 
-	//if (NameOfFigure == "Triangle")
-	//DefineTriangle();
-	//DefineSquare();
-	DefineSphere(2,5);
-	//DefineCube(XMFLOAT3(1,1,1));
-	//DefineGeoSphere(2, 100);
-	/*else if (NameOfFigure == "Square")
-	else if (NameOfFigure == "Sphere")
-		Primitive = DefineSphere();*/
+	if (NameOfFigure == "Triangle")
+		DefineTriangle();
+	if (NameOfFigure == "Square")
+		DefineSquare();
+	if (NameOfFigure == "Sphere")
+		DefineSphere(2, 5);
+	if (NameOfFigure == "Cube")
+		DefineCube(XMFLOAT3(1, 1, 1));
+	if (NameOfFigure == "Geosphere")
+		DefineGeoSphere(2, 10);
 
 	// Set up the description of the static vertex buffer.
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;

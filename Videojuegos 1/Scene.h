@@ -19,7 +19,6 @@ public:
 
 public:				//Descripción: Variables Globales
 	Camera3D * SceneCamera;
-	GameObject* GObj;
 protected:
 	//Variables de respuesta
 	bool RB;

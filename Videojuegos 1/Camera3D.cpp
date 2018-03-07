@@ -69,8 +69,9 @@ void Camera3D::Watch()
 
 	// Finally create the view matrix from the three updated vectors.
 	viewMatrix = XMMatrixLookAtLH(positionVector, lookAtVector, upVector);
-
-	m_projetionViewMatrix = XMMatrixMultiply(m_projectionMatrix, viewMatrix);
+	
+	//No se porque no funciona pero marca error de acceso a memoria... puede ser porque le falte un Transpose
+	//m_projetionViewMatrix = XMMatrixMultiply(m_projectionMatrix, viewMatrix);
 
 	//posicion = XMFLOAT3(posX, posY, posZ);
 	XMStoreFloat4(&view, lookAtVector);
