@@ -15,24 +15,19 @@ Texture::~Texture()
 }
 
 
-bool Texture::Initialize(WCHAR* filename)
+bool Texture::Initialize(string filename)
 {
 	string result;
-	//Compara el tipo de archivo que cargara obj cualquier otro no lo permitira
-	std::string fn;
-	char ch[260];
-	char DefChar = ' ';
 
 	//*************Conversion WCHAR a Char*, de Char* a Char y de Char a String*******************
-	WideCharToMultiByte(CP_ACP, 0, filename, -1, ch, 260, &DefChar, NULL);
+	//WideCharToMultiByte(CP_ACP, 0, filename, -1, ch, 260, &DefChar, NULL);
 	//--------------------------------------------------------------------------------------------
-	fn = ch;
 
 
 	// Carga la textura del modelo, tiene 2 modos, tga y otros.
-	if (fn != "")
+	if (filename != "")
 	{
-		if (fn.substr(fn.find_last_of(".") + 1) == "tga")
+		if (filename.substr(filename.find_last_of(".") + 1) == "tga")
 			result = LoadTextureTarga(filename);
 		else
 			result = LoadTextureWic(filename);
@@ -44,15 +39,17 @@ bool Texture::Initialize(WCHAR* filename)
 }
 
 
-string Texture::LoadTextureWic(WCHAR* filename)
+string Texture::LoadTextureWic(string filename)
 {
 	//Debugg Vars
 	Microsoft::WRL::ComPtr<ID3D11Resource> res;
 	Microsoft::WRL::ComPtr<ID3D11Texture2D> tex;
 	D3D11_TEXTURE2D_DESC desc;
 	//-----------------------
+	std::wstring widestr = std::wstring(filename.begin(), filename.end());
+	const wchar_t* szName = widestr.c_str();
 	HRESULT TextureWic = CreateWICTextureFromFile(device, deviceContext,
-		filename, res.GetAddressOf(), &m_textureView);
+		szName, res.GetAddressOf(), &m_textureView);
 	//Debugg
 	if (SUCCEEDED(TextureWic))
 	{
@@ -64,7 +61,7 @@ string Texture::LoadTextureWic(WCHAR* filename)
 		return "\nNo se pudo crear el Wic de Textura";
 }
 
-string Texture::LoadTextureTarga(WCHAR* filename)
+string Texture::LoadTextureTarga(string filename)
 {
 	string result;
 	int height, width;
@@ -135,14 +132,16 @@ ID3D11ShaderResourceView* Texture::GetTexture()
 }
 
 
-string Texture::LoadTarga(WCHAR* filename, int& height, int& width)
+string Texture::LoadTarga(string filename, int& height, int& width)
 {
 	int error, bpp, imageSize, index, i, j, k;
 	FILE* filePtr;
 	unsigned int count;
 	TargaHeader targaFileHeader;
 	unsigned char* targaImage;
-	_bstr_t b(filename);
+	std::wstring widestr = std::wstring(filename.begin(), filename.end());
+	const wchar_t* szName = widestr.c_str();
+	_bstr_t b(szName);
 	const char* c = b;
 	// Open the targa file for reading in binary.
 	error = fopen_s(&filePtr, c, "rb");

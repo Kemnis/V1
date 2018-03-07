@@ -22,9 +22,10 @@ public:
 	ShaderClass* GetShader();
 	void Shutdown();	
 	
+	Transforms* Transform;
 protected:
 	
-	string Name;
+	string Name, Status;
 	Model* Modelo;
 	Mesh3D* Mesh;
 	Texture* Tex;

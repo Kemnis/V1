@@ -23,20 +23,20 @@ public:
 	Texture();
 	~Texture();
 
-	bool Initialize(WCHAR*);
+	bool Initialize(string);
 	void Shutdown();
 
 	string Name;
 	ID3D11ShaderResourceView* GetTexture();
 
+	ID3D11ShaderResourceView* m_textureView;
 private:
-	string LoadTarga(WCHAR*, int&, int&);
-	string LoadTextureTarga(WCHAR*);
-	string LoadTextureWic(WCHAR*);
+	string LoadTarga(string, int&, int&);
+	string LoadTextureTarga(string);
+	string LoadTextureWic(string);
 private:
 	unsigned char* m_targaData;
 	ID3D11Texture2D* m_texture;
-	ID3D11ShaderResourceView* m_textureView;
 
 };
 

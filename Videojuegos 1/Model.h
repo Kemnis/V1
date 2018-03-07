@@ -14,7 +14,6 @@ public:
 	void ShutdownModel();
 	Vertex GetMesh();
 	string Name;
-	Transforms* transform;
 protected:
 
 	Vertex MeshVertex;

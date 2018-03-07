@@ -19,7 +19,7 @@ public:
 	static GameObject* GetObjectByName(string);
 	static bool AddShader();
 
-	static bool bindShader(ShaderClass* shader);
+	static bool bindShader(GameObject* GO);
 	static bool bindMesh(Mesh3D* mesh);
 	static bool bindModel(GameObject * GO);
 

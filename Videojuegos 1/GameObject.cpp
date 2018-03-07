@@ -2,6 +2,7 @@
 
 GameObject::GameObject(string name)
 {
+	Transform = new Transforms();
 	Name = name;
 }
 
@@ -40,6 +41,11 @@ bool GameObject::AssignTexture(Texture * texture)
 
 void GameObject::Shutdown()
 {
+	delete Modelo;
+	delete Mesh;
+	delete Tex;
+	delete Shader;
+	delete Transform;
 }
 
 Mesh3D* GameObject::GetMesh()

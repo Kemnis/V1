@@ -9,8 +9,6 @@ class Scene : DxComponent<Scene>
 public:
 	Scene();
 	~Scene();
-	Mesh3D* TestMesh3D;
-	ShaderClass* TestShader;
 	virtual string CreateScene();
 	virtual string ProcessScene(double);
 	virtual string RenderScene();

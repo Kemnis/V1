@@ -6,7 +6,6 @@ Mesh3D::Mesh3D()
 {
 	m_vertexBuffer = 0;
 	m_indexBuffer = 0;
-	transform= new Transforms();
 }
 
 Mesh3D::~Mesh3D()

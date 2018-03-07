@@ -2,32 +2,24 @@
 
 Scene::Scene() {
 	SceneCamera = 0;
-	TestMesh3D = 0;
-	TestShader = 0;
 	SceneCamera = new Camera3D(specsDx->GetScreenWidth(), specsDx->GetScreenHeight(), 0.01f, 100.0f);
-	TestMesh3D = new Mesh3D;
-	TestShader = new ShaderClass;
 }
 
 Scene::~Scene() {}
 
 string Scene::CreateScene() {
-
 	SceneCamera->SetPosition(0.0f, 0.0f, -5.0f);
 	bool res;
 
-	//Load all objects you need
+	//Load all objects you need First add all the resources
 	ResourceManager::AddMesh("Triangle", "SphereMesh");
 	ResourceManager::AddModel("Sphere.obj", "SphereModel");
-	ResourceManager::BuildGameObject("SphereMod", "SphereModel", "", "", "");
-	ResourceManager::BuildGameObject("SphereMes", "", "SphereMesh", "", "");
+	ResourceManager::AddShader();
+	ResourceManager::AddTexture("tex1.jpg", "World");
 
-
-	res = TestShader->Initialize();
-	if (!res)
-		ErrorFnc("No se pudo inicializar el shader");
-	else
-		_RPT0(0, "Shader created!\n");
+	//Then Build a GameObject
+	ResourceManager::BuildGameObject("SphereMod", "SphereModel", "", "World", "Shader");
+	ResourceManager::BuildGameObject("SphereMes", "", "SphereMesh", "", "Shader");
 
 	_RPT0(0, "Scene Created!\n");
 	return "S_OK";
@@ -36,15 +28,17 @@ string Scene::CreateScene() {
 string Scene::ProcessScene(double dt)
 {
 	vec3 rot;
-	rot.y = 4*dt;
-	TestMesh3D->transform->Rotate(rot);
+	rot.y = 4 * dt;
+	ResourceManager::GetObjectByName("SphereMod")->Transform->Rotate(rot);
+	rot.y = 2 * dt;
+	ResourceManager::GetObjectByName("SphereMes")->Transform->Rotate(rot);
 
 	return "S_OK";
 }
 
 string Scene::RenderScene()
 {
-	XMMATRIX worldMatrix;//, viewMatrix, projectionMatrix;
+	XMMATRIX worldMatrix, Worldobj2;//, viewMatrix, projectionMatrix;
 	XMMATRIX viewMatrix;
 	XMMATRIX* projectionMatrix;
 
@@ -55,17 +49,20 @@ string Scene::RenderScene()
 	SceneCamera->Watch();
 
 	// Get the world, view, and projection matrices from the camera and d3d objects.
-	worldMatrix = TestMesh3D->transform->ToMatrix();
+	worldMatrix = ResourceManager::GetObjectByName("SphereMod")->Transform->ToMatrix();
+	Worldobj2 = ResourceManager::GetObjectByName("SphereMes")->Transform->ToMatrix();
 	SceneCamera->GetViewMatrix(viewMatrix);
 	projectionMatrix = SceneCamera->GetProjectionMatrix();
 
 
-	TestShader->SetShaderParameters(worldMatrix, viewMatrix, *projectionMatrix);
-	ResourceManager::bindShader(TestShader);
 	//Define and create all Objects
 	GameObject* GObjMesh = ResourceManager::GetObjectByName("SphereMes");
 	GameObject* GObjModel = ResourceManager::GetObjectByName("SphereMod");
 
+	GObjModel->GetShader()->SetShaderParameters(worldMatrix, viewMatrix, *projectionMatrix,GObjModel->GetTexture()->m_textureView);
+	ResourceManager::bindShader(GObjModel);
+	GObjMesh->GetShader()->SetShaderParameters(Worldobj2, viewMatrix, *projectionMatrix,0);
+	ResourceManager::bindShader(GObjMesh);
 
 
 	ResourceManager::bindMesh(GObjMesh->GetMesh());
@@ -82,19 +79,4 @@ string Scene::RenderScene()
 
 void Scene::DestroyScene()
 {
-	// Release the model object.
-	if (TestMesh3D)
-	{
-		TestMesh3D->Shutdown();
-		delete TestMesh3D;
-		TestMesh3D = 0;
-	}
-
-	// Release the color shader object.
-	if (TestShader)
-	{
-		TestShader->Shutdown();
-		delete TestShader;
-		TestShader = 0;
-	}
 }

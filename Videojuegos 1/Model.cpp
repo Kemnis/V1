@@ -4,7 +4,6 @@ Model::Model(string path)
 {
 	VertexBuffer = 0;
 	IndexBuffer = 0;
-	transform = new Transforms();
 	if (path.substr(path.find_last_of(".") + 1) == "obj")
 	{
 		if (!LoadModel(path))

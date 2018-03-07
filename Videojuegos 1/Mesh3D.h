@@ -21,7 +21,6 @@ public:
 	void BindMesh();
 
 	string Name;
-	Transforms* transform;
 	Vertex MeshVertex;
 protected:
 
