@@ -152,12 +152,13 @@
     <ClInclude Include="DxComponent.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="MaterialShader.h" />
     <ClInclude Include="Mesh3D.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Scene.h" />
-    <ClInclude Include="ShaderClass.h" />
+    <ClInclude Include="BasicShader.h" />
     <ClInclude Include="SpecsDx.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
@@ -172,11 +173,12 @@
     <ClCompile Include="Camera3D.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="MaterialShader.cpp" />
     <ClCompile Include="Mesh3D.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Scene.cpp" />
-    <ClCompile Include="ShaderClass.cpp" />
+    <ClCompile Include="BasicShader.cpp" />
     <ClCompile Include="SpecsDx.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -198,8 +200,10 @@
     <Image Include="Videojuegos 1.ico" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="color.ps" />
-    <None Include="color.vs" />
+    <None Include="BasicShader.ps" />
+    <None Include="BasicShader.vs" />
+    <None Include="MaterialShader.ps" />
+    <None Include="MaterialShader.vs" />
     <None Include="Model.ps" />
     <None Include="Model.vs" />
   </ItemGroup>

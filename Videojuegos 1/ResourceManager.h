@@ -5,7 +5,7 @@
 #include "Model.h"
 #include "Mesh3D.h"
 #include "Texture.h"
-#include "ShaderClass.h"
+#include "BasicShader.h"
 class ResourceManager
 {
 public:
@@ -29,7 +29,7 @@ public:
 	using ModelMap = std::map<string, Model>;
 	using MeshMap = std::map<string, Mesh3D>;
 	using TextureMap = std::map<string, Texture>;
-	using ShaderMap = std::map<string, ShaderClass>;
+	using ShaderMap = std::map<string, BasicShader>;
 
 protected:
 	static bool AddGameObject(GameObject);
@@ -40,7 +40,7 @@ protected:
 	static string RS;
 	// Variables de respuesta
 	//Actuales
-	static ShaderClass* ShaderActual;
+	static BasicShader* ShaderActual;
 	static Mesh3D* MeshActual;
 	static Model* ModeloActual;
 	//Objetos

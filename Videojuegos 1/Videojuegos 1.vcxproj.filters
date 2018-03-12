@@ -66,9 +66,6 @@
     <ClInclude Include="Scene.h">
       <Filter>Archivos de encabezado\Core</Filter>
     </ClInclude>
-    <ClInclude Include="ShaderClass.h">
-      <Filter>Archivos de encabezado\Core</Filter>
-    </ClInclude>
     <ClInclude Include="Texture.h">
       <Filter>Archivos de encabezado\Core</Filter>
     </ClInclude>
@@ -88,6 +85,12 @@
       <Filter>Archivos de encabezado\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Core.h">
+      <Filter>Archivos de encabezado\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="BasicShader.h">
+      <Filter>Archivos de encabezado\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="MaterialShader.h">
       <Filter>Archivos de encabezado\Core</Filter>
     </ClInclude>
   </ItemGroup>
@@ -119,9 +122,6 @@
     <ClCompile Include="Scene.cpp">
       <Filter>Archivos de origen\Core</Filter>
     </ClCompile>
-    <ClCompile Include="ShaderClass.cpp">
-      <Filter>Archivos de origen\Core</Filter>
-    </ClCompile>
     <ClCompile Include="Texture.cpp">
       <Filter>Archivos de origen\Core</Filter>
     </ClCompile>
@@ -140,6 +140,12 @@
     <ClCompile Include="Core.cpp">
       <Filter>Archivos de origen\Core</Filter>
     </ClCompile>
+    <ClCompile Include="BasicShader.cpp">
+      <Filter>Archivos de origen\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="MaterialShader.cpp">
+      <Filter>Archivos de origen\Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Videojuegos 1.rc">
@@ -155,16 +161,22 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <None Include="color.ps">
-      <Filter>Archivos de recursos</Filter>
-    </None>
     <None Include="Model.ps">
       <Filter>Archivos de recursos</Filter>
     </None>
-    <None Include="color.vs">
+    <None Include="Model.vs">
       <Filter>Archivos de recursos</Filter>
     </None>
-    <None Include="Model.vs">
+    <None Include="BasicShader.ps">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="BasicShader.vs">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="MaterialShader.ps">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="MaterialShader.vs">
       <Filter>Archivos de recursos</Filter>
     </None>
   </ItemGroup>

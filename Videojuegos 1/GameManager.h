@@ -4,7 +4,7 @@
 #include <map>
 #include "Camera3D.h"
 #include "Mesh3D.h"
-#include "ShaderClass.h"
+#include "BasicShader.h"
 #include "GameObject.h"
 #include "SpecsDx.h"
 #include "Scene.h"

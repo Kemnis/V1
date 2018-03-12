@@ -1,7 +1,7 @@
 #pragma once
 //#ifndef _Mesh3D_H_
 //#define _Mesh3D_H_
-#include "ShaderClass.h"
+#include "BasicShader.h"
 #include <d3d11.h>
 #include <directxmath.h>
 #include "Transforms.h"

@@ -3,7 +3,7 @@
 #define _Scene_H_
 #include "Camera3D.h"
 #include "Mesh3D.h"
-#include "ShaderClass.h"
+#include "BasicShader.h"
 class Scene : DxComponent<Scene>
 {
 public:

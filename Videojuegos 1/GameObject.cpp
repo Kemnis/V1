@@ -27,7 +27,7 @@ bool GameObject::AssignMesh(Mesh3D* mesh)
 	return true;
 }
 
-bool GameObject::AssignShader(ShaderClass* shader)
+bool GameObject::AssignShader(BasicShader* shader)
 {
 	Shader = shader;
 	return true;
@@ -63,7 +63,7 @@ Texture* GameObject::GetTexture()
 	return Tex;
 }
 
-ShaderClass* GameObject::GetShader()
+BasicShader* GameObject::GetShader()
 {
 	return Shader;
 }

@@ -4,7 +4,7 @@
 #include "Model.h"
 #include "Mesh3D.h"
 #include "Texture.h"
-#include "ShaderClass.h"
+#include "BasicShader.h"
 class GameObject
 {
 public:
@@ -14,12 +14,12 @@ public:
 	string GetName();
 	bool AssignModel(Model*);
 	bool AssignMesh(Mesh3D*);
-	bool AssignShader(ShaderClass*);
+	bool AssignShader(BasicShader*);
 	bool AssignTexture(Texture*);
 	Mesh3D* GetMesh();
 	Model* GetModel();
 	Texture* GetTexture();
-	ShaderClass* GetShader();
+	BasicShader* GetShader();
 	void Shutdown();	
 	
 	Transforms* Transform;
@@ -29,7 +29,7 @@ protected:
 	Model* Modelo;
 	Mesh3D* Mesh;
 	Texture* Tex;
-	ShaderClass* Shader;
+	BasicShader* Shader;
 private:
 };
 

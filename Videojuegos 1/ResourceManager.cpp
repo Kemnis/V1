@@ -4,12 +4,12 @@
 #include "Model.h"
 #include "Mesh3D.h"
 #include "Texture.h"
-#include "ShaderClass.h"
+#include "BasicShader.h"
 //Variables de respuesta
 bool ResourceManager::RB = false;
 string ResourceManager::RS = "";
 // Variables de respuesta
-ShaderClass* ResourceManager::ShaderActual = nullptr;
+BasicShader* ResourceManager::ShaderActual = nullptr;
 Mesh3D* ResourceManager::MeshActual = nullptr;
 Model* ResourceManager::ModeloActual = nullptr;
 
@@ -105,10 +105,10 @@ GameObject* ResourceManager::GetObjectByName(string nameSearch)
 
 bool ResourceManager::AddShader()
 {
-	ShaderClass nuevo;
+	BasicShader nuevo;
 	nuevo.Name = "Shader";
 	nuevo.Initialize();
-	ShaderIdentifier.insert(std::pair<string, ShaderClass>("Shader", nuevo));
+	ShaderIdentifier.insert(std::pair<string, BasicShader>("Shader", nuevo));
 	TextureIndex++;
 	return true;
 }

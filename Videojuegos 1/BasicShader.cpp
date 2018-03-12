@@ -1,8 +1,7 @@
-#include "ShaderClass.h"
-#include "Texture.h"
+#include "BasicShader.h"
 #include "stdafx.h"
 
-ShaderClass::ShaderClass()
+BasicShader::BasicShader()
 {
 	VertexShader = 0;
 	PixelShader = 0;
@@ -10,14 +9,14 @@ ShaderClass::ShaderClass()
 	m_matrixBuffer = 0;
 }
 
-ShaderClass::~ShaderClass()
+BasicShader::~BasicShader()
 {
 }
 
-bool ShaderClass::Initialize()
+bool BasicShader::Initialize()
 {
-	string vsFilename = "color.vs";
-	string psFilename = "color.ps";
+	string vsFilename = "BasicShader.vs";
+	string psFilename = "BasicShader.ps";
 	HRESULT result;
 	ID3D10Blob* errorMessage;
 	ID3D10Blob* vertexShaderBuffer;
@@ -38,7 +37,7 @@ bool ShaderClass::Initialize()
 	LPCWSTR lp1 = stemp1.c_str();
 
 	// Compile the vertex shader code.
-	result = D3DCompileFromFile(lp, NULL, NULL, "ColorVertexShader", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0,
+	result = D3DCompileFromFile(lp, NULL, NULL, "BasicVertexShader", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0,
 		&vertexShaderBuffer, &errorMessage);
 	if (FAILED(result))
 	{
@@ -57,7 +56,7 @@ bool ShaderClass::Initialize()
 	}
 
 	// Compile the pixel shader code.
-	result = D3DCompileFromFile(lp1, NULL, NULL, "ColorPixelShader", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0,
+	result = D3DCompileFromFile(lp1, NULL, NULL, "BasicPixelShader", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0,
 		&pixelShaderBuffer, &errorMessage);
 	if (FAILED(result))
 	{
@@ -143,7 +142,7 @@ bool ShaderClass::Initialize()
 	return true;
 }
 
-std::wstring ShaderClass::s2ws(const std::string& s)
+std::wstring BasicShader::s2ws(const std::string& s)
 {
 	int len;
 	int slength = (int)s.length() + 1;
@@ -155,7 +154,7 @@ std::wstring ShaderClass::s2ws(const std::string& s)
 	return r;
 }
 
-void ShaderClass::OutputShaderErrorMessage(ID3D10Blob* errorMessage, LPCTSTR  shaderFilename)
+void BasicShader::OutputShaderErrorMessage(ID3D10Blob* errorMessage, LPCTSTR  shaderFilename)
 {
 	char* compileErrors;
 	unsigned long long bufferSize, i;
@@ -190,7 +189,7 @@ void ShaderClass::OutputShaderErrorMessage(ID3D10Blob* errorMessage, LPCTSTR  sh
 	return;
 }
 
-bool ShaderClass::SetShaderParameters(XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix)
+bool BasicShader::SetShaderParameters(XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix)
 {
 	HRESULT result;
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
@@ -230,7 +229,7 @@ bool ShaderClass::SetShaderParameters(XMMATRIX worldMatrix, XMMATRIX viewMatrix,
 	return true;
 }
 
-void ShaderClass::BindShader()
+void BasicShader::BindShader()
 {
 	// Set the vertex input layout.
 	deviceContext->IASetInputLayout(Layout);
@@ -240,7 +239,7 @@ void ShaderClass::BindShader()
 	deviceContext->PSSetShader(PixelShader, NULL, 0);
 }
 
-void ShaderClass::Shutdown()
+void BasicShader::Shutdown()
 {
 	// Release the matrix constant buffer.
 	if (m_matrixBuffer)
