@@ -5,6 +5,7 @@
 #include "Mesh3D.h"
 #include "Texture.h"
 #include "BasicShader.h"
+#include "MaterialShader.h"
 class GameObject
 {
 public:
@@ -15,6 +16,7 @@ public:
 	bool AssignModel(Model*);
 	bool AssignMesh(Mesh3D*);
 	bool AssignShader(BasicShader*);
+	bool AssignMaterialShader();
 	bool AssignTexture(Texture*);
 	Mesh3D* GetMesh();
 	Model* GetModel();
@@ -30,6 +32,7 @@ protected:
 	Mesh3D* Mesh;
 	Texture* Tex;
 	BasicShader* Shader;
+	MaterialShader* materialShader;
 private:
 };
 

@@ -23,7 +23,7 @@ public:
 	void Shutdown();
 	void BindShader();
 
-	bool SetShaderParameters(XMMATRIX, XMMATRIX, XMMATRIX);
+	bool SetShaderParameters(XMMATRIX, XMMATRIX, XMMATRIX, ID3D11ShaderResourceView*);
 	string Name;
 private:
 	void OutputShaderErrorMessage(ID3D10Blob*, LPCTSTR);
@@ -34,6 +34,7 @@ private:
 	ID3D11PixelShader* PixelShader;
 	ID3D11InputLayout* Layout;
 	ID3D11Buffer* m_matrixBuffer;
+	ID3D11SamplerState* Sampler;
 };
 
 #endif

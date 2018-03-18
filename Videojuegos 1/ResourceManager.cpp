@@ -5,6 +5,7 @@
 #include "Mesh3D.h"
 #include "Texture.h"
 #include "BasicShader.h"
+#include "MaterialShader.h"
 //Variables de respuesta
 bool ResourceManager::RB = false;
 string ResourceManager::RS = "";
@@ -24,6 +25,7 @@ int ResourceManager::MeshIndex = 0;
 int ResourceManager::TextureIndex = 0;
 int ResourceManager::ShaderIndex = 0;
 char ResourceManager::ChangeBinder = 0;
+MaterialShader* ResourceManager::MatShader = 0;
 
 ResourceManager::ResourceManager()
 {
@@ -90,9 +92,16 @@ string ResourceManager::BuildGameObject(string nameGameObject, string modelname,
 	}
 	if (shadername != "")
 	{
-		nuevo.AssignShader(&ShaderIdentifier.find(shadername)->second);
-		if (nuevo.GetShader() == nullptr)
-			return "E_Fail";
+		if (shadername == "Material")
+		{
+			nuevo.AssignMaterialShader();
+		}
+		else
+		{
+			nuevo.AssignShader(&ShaderIdentifier.find(shadername)->second);
+			if (nuevo.GetShader() == nullptr)
+				return "E_Fail";
+		}
 	}
 	AddGameObject(nuevo);
 	return "S_OK";
@@ -109,7 +118,15 @@ bool ResourceManager::AddShader()
 	nuevo.Name = "Shader";
 	nuevo.Initialize();
 	ShaderIdentifier.insert(std::pair<string, BasicShader>("Shader", nuevo));
-	TextureIndex++;
+	ShaderIndex++;
+	return true;
+}
+
+bool ResourceManager::InitMaterialshader()
+{
+	MatShader->Name = "MaterialShader";
+	MatShader->Initialize();
+	ShaderIndex++;
 	return true;
 }
 

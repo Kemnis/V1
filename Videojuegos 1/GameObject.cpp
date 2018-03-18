@@ -33,6 +33,13 @@ bool GameObject::AssignShader(BasicShader* shader)
 	return true;
 }
 
+bool GameObject::AssignMaterialShader()
+{
+	//Temporalmente no se usa la variable de referencia
+	materialShader = ResourceManager::MatShader;
+	return true;
+}
+
 bool GameObject::AssignTexture(Texture * texture)
 {
 	Tex = texture;

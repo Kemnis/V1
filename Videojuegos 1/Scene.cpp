@@ -21,6 +21,10 @@ string Scene::CreateScene() {
 	ResourceManager::BuildGameObject("SphereMod", "SphereModel", "", "", "Shader");
 	ResourceManager::BuildGameObject("SphereMes", "", "SphereMesh", "", "Shader");
 
+				//Descripción:
+	ResourceManager::GetObjectByName("SphereMes")->Transform->SetTranslation(vec3(2, 0, 0));
+				//Descripción:
+
 	_RPT0(0, "Scene Created!\n");
 	return "S_OK";
 }
@@ -32,7 +36,6 @@ string Scene::ProcessScene(double dt)
 	ResourceManager::GetObjectByName("SphereMod")->Transform->Rotate(rot);
 	rot.y = 2 * dt;
 	ResourceManager::GetObjectByName("SphereMes")->Transform->Rotate(rot);
-
 	return "S_OK";
 }
 
@@ -59,14 +62,13 @@ string Scene::RenderScene()
 	GameObject* GObjMesh = ResourceManager::GetObjectByName("SphereMes");
 	GameObject* GObjModel = ResourceManager::GetObjectByName("SphereMod");
 
-	GObjModel->GetShader()->SetShaderParameters(worldMatrix, viewMatrix, *projectionMatrix);
-	ResourceManager::bindShader(GObjModel);
 	GObjMesh->GetShader()->SetShaderParameters(Worldobj2, viewMatrix, *projectionMatrix);
 	ResourceManager::bindShader(GObjMesh);
-
-
 	ResourceManager::bindMesh(GObjMesh->GetMesh());
 	GObjMesh->GetMesh()->Draw();
+
+	GObjModel->GetShader()->SetShaderParameters(worldMatrix, viewMatrix, *projectionMatrix);
+	ResourceManager::bindShader(GObjModel);
 	ResourceManager::bindModel(GObjModel);
 	GObjModel->GetModel()->Draw();
 

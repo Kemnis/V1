@@ -6,6 +6,7 @@
 #include "Mesh3D.h"
 #include "Texture.h"
 #include "BasicShader.h"
+#include "MaterialShader.h"
 class ResourceManager
 {
 public:
@@ -18,6 +19,7 @@ public:
 	static string BuildGameObject(string nameGameObject, string modelname, string meshname, string texturename, string shadername);
 	static GameObject* GetObjectByName(string);
 	static bool AddShader();
+	static bool InitMaterialshader();
 
 	static bool bindShader(GameObject* GO);
 	static bool bindMesh(Mesh3D* mesh);
@@ -30,6 +32,9 @@ public:
 	using MeshMap = std::map<string, Mesh3D>;
 	using TextureMap = std::map<string, Texture>;
 	using ShaderMap = std::map<string, BasicShader>;
+
+	static MaterialShader* MatShader;
+
 
 protected:
 	static bool AddGameObject(GameObject);
