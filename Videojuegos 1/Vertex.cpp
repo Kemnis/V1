@@ -9,28 +9,25 @@ Vertex::Vertex()
 	indexTriangles = 0;
 
 	vertices.clear();
-	color.clear();
 	uv.clear();
 	normal.clear();
 	indices.clear();
 	
 	TriangleFaceVertex.clear();
 	TriangleFaceTexture.clear();
-	TriangleFaceNormal.clear();
-	//?
-	
+	TriangleFaceNormal.clear();	
 }
 
 
-vector<unsigned long> Vertex::IndexResult() {
-	vector<unsigned long> resulti;
-	resulti.reserve(IndexCount);
-
-	for (int i = 0; i < (IndexCount); i++) {
-		resulti.push_back(i);
-	}
-	return resulti;
-}
+//vector<unsigned long> Vertex::IndexResult() {
+//	vector<unsigned long> resulti;
+//	resulti.reserve(IndexCount);
+//
+//	for (int i = 0; i < (IndexCount); i++) {
+//		resulti.push_back(i);
+//	}
+//	return resulti;
+//}
 
 vector<unsigned long> Vertex::GetIndex() {
 	return indices;
@@ -45,7 +42,6 @@ vector<Vertex::VertexType> Vertex::VertexResult()
 	for (int i = 0; i < (VertexCount); i++) {
 		VertexType nuevo;
 		nuevo.position = XMFLOAT3(GetVertex(i).x, GetVertex(i).y, GetVertex(i).z);
-		nuevo.color = XMFLOAT4(GetColor(i).x, GetColor(i).y, GetColor(i).z, GetColor(i).w);
 		nuevo.texture = XMFLOAT2(GetTexture(i).x, GetTexture(i).y);
 		nuevo.normal = XMFLOAT3(GetNormal(i).x, GetNormal(i).y, GetNormal(i).z);
 		result.push_back(nuevo);
@@ -64,14 +60,6 @@ vec3 Vertex::GetVertex(int index)
 		return vec3(0, 0, 0);
 	else
 		return vertices[index];
-}
-
-vec4 Vertex::GetColor(int index)
-{
-	if (VertexCount == 0)
-		return vec4();
-	else
-		return color[index];
 }
 
 vec2 Vertex::GetTexture(int index)
@@ -151,12 +139,11 @@ vec3 Vertex::GetLastNormal()
 		return normal.at(indexNormals - 1);
 }
 
-void Vertex::SetVertexTextureNormalColor(int index, vec3 vertex, vec2 uv, vec3 normal, vec4 col)
+void Vertex::SetVertexTextureNormal(int index, vec3 vertex, vec2 uv, vec3 normal)
 {
 	vertices[index] = vertex;
 	this->uv[index] = uv;
 	this->normal[index] = normal;
-	this->color[index] = col;
 }
 
 //X=Vertex Y=Index Z=Uv W=Normals 
@@ -235,22 +222,6 @@ void Vertex::AddVertex(XMFLOAT4 VertexVec)
 	vertices.push_back(vec3(VertexVec.x, VertexVec.y, VertexVec.z));
 }
 
-void Vertex::AddColor(float r, float g, float b, float a)
-{
-	vec4 col(r, g, b, a);
-	color.push_back(col);
-}
-
-void Vertex::AddColor(vec4 ColorVec)
-{
-	color.push_back(ColorVec);
-}
-
-void Vertex::AddColor(XMFLOAT4 ColorVec)
-{
-	color.push_back(vec4(ColorVec.x, ColorVec.y, ColorVec.z, ColorVec.w));
-}
-
 void Vertex::AddUV(float u, float v)
 {
 	indexUv++;
@@ -318,14 +289,14 @@ void Vertex::AddTriangleFaces(vec3 InfoTriangleFaceVertex, vec3 InfoTriangleFace
 	TriangleFaceNormal.push_back(InfoTriangleFaceNormal);
 }
 
-void Vertex::ConstructIndexFromTriangles(vec3 Vertex, vec4 color, vec2 Uv, vec3 Normal)
+void Vertex::ConstructIndexFromTriangles(vec3 Vertex, vec2 Uv, vec3 Normal, int Index)
 {
 	FinalMesh.reserve(indexTriangles);
 	VertexType nuevo;
 	nuevo.position = XMFLOAT3(Vertex.x, Vertex.y, Vertex.z);
-	nuevo.color = XMFLOAT4(color.x, color.y, color.z, color.w);
 	nuevo.texture = XMFLOAT2(Uv.x, Uv.y);
 	nuevo.normal = XMFLOAT3(Normal.x, Normal.y, Normal.z);
 	FinalMesh.push_back(nuevo);
 	IndexCount++;
+	indices.push_back(Index);
 }

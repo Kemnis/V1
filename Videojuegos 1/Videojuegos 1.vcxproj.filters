@@ -54,9 +54,6 @@
     <ClInclude Include="GameObject.h">
       <Filter>Archivos de encabezado\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Mesh3D.h">
-      <Filter>Archivos de encabezado\Core</Filter>
-    </ClInclude>
     <ClInclude Include="Model.h">
       <Filter>Archivos de encabezado\Core</Filter>
     </ClInclude>
@@ -93,6 +90,9 @@
     <ClInclude Include="MaterialShader.h">
       <Filter>Archivos de encabezado\Core</Filter>
     </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>Archivos de encabezado\Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -108,9 +108,6 @@
       <Filter>Archivos de origen\Core</Filter>
     </ClCompile>
     <ClCompile Include="GameObject.cpp">
-      <Filter>Archivos de origen\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Mesh3D.cpp">
       <Filter>Archivos de origen\Core</Filter>
     </ClCompile>
     <ClCompile Include="Model.cpp">

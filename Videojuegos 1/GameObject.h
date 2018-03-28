@@ -2,10 +2,10 @@
 #ifndef _GameObject_H_
 #define _GameObject_H_
 #include "Model.h"
-#include "Mesh3D.h"
 #include "Texture.h"
 #include "BasicShader.h"
 #include "MaterialShader.h"
+#include "Material.h"
 class GameObject
 {
 public:
@@ -14,14 +14,14 @@ public:
 	
 	string GetName();
 	bool AssignModel(Model*);
-	bool AssignMesh(Mesh3D*);
 	bool AssignShader(BasicShader*);
 	bool AssignMaterialShader();
+	bool AssignMaterial(Material* mat);
 	bool AssignTexture(Texture*);
-	Mesh3D* GetMesh();
 	Model* GetModel();
 	Texture* GetTexture();
 	BasicShader* GetShader();
+	Material* GetMaterial();
 	void Shutdown();	
 	
 	Transforms* Transform;
@@ -29,10 +29,10 @@ protected:
 	
 	string Name, Status;
 	Model* Modelo;
-	Mesh3D* Mesh;
 	Texture* Tex;
 	BasicShader* Shader;
 	MaterialShader* materialShader;
+	Material* material;
 private:
 };
 

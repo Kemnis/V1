@@ -15,13 +15,10 @@ Mesh3D::~Mesh3D()
 void Mesh3D::DefineTriangle()
 {
 	MeshVertex.AddVertex(-1.0f, -1.0f, 0.0f);  // Bottom left.
-	MeshVertex.AddColor(0.0f, 1.0f, 0.0f, 1.0f);
 
 	MeshVertex.AddVertex(0.0f, 1.0f, 0.0f);  // Top middle.
-	MeshVertex.AddColor(0.0f, 1.0f, 0.0f, 1.0f);
 
 	MeshVertex.AddVertex(1.0f, -1.0f, 0.0f);  // Bottom right.
-	MeshVertex.AddColor(0.0f, 1.0f, 0.0f, 1.0f);
 
 	MeshVertex.AddIndex(0); // Bottom left.
 	MeshVertex.AddIndex(1);  // Top middle.
@@ -31,16 +28,12 @@ void Mesh3D::DefineTriangle()
 void Mesh3D::DefineSquare()
 {
 	MeshVertex.AddVertex(-1.0f, -1.0f, 0.0f);  // Top left.
-	MeshVertex.AddColor(0.0f, 1.0f, 0.0f, 1.0f);
 
 	MeshVertex.AddVertex(-1.0f, 1.0f, 0.0f);  // Top right.
-	MeshVertex.AddColor(0.0f, 1.0f, 0.0f, 1.0f);
 
 	MeshVertex.AddVertex(1.0f, 1.0f, 0.0f);  // Bottom right.
-	MeshVertex.AddColor(0.0f, 1.0f, 0.0f, 1.0f);
 
 	MeshVertex.AddVertex(1.0f, -1.0f, 0.0f);  // Bottom left.
-	MeshVertex.AddColor(0.0f, 1.0f, 0.0f, 1.0f);
 
 	MeshVertex.AddIndex(0); // Bottom left.
 	MeshVertex.AddIndex(1);  // Top middle.
@@ -100,17 +93,17 @@ void Mesh3D::DefineCube(XMFLOAT3 size)
 		// Four vertices per face.
 		XMVECTOR Result = (normal - side1 - side2) * tsize;
 		XMFLOAT4 Res;
-		XMStoreFloat4(&Res, Result); 	MeshVertex.AddVertex(Res);		MeshVertex.AddColor(1, 1, 1, 0.5);
+		XMStoreFloat4(&Res, Result); 	MeshVertex.AddVertex(Res);
 		MeshVertex.AddUV(1,0);	XMStoreFloat4(&Res, normal);	MeshVertex.AddNormals(Res);
 
 		Result = (normal - side1 + side2) * tsize;		XMStoreFloat4(&Res, Result);	MeshVertex.AddVertex(Res);
-		MeshVertex.AddColor(1, 1, 1, 0.5);		MeshVertex.AddUV(1, 1);	XMStoreFloat4(&Res, normal);	MeshVertex.AddNormals(Res);
+		MeshVertex.AddUV(1, 1);	XMStoreFloat4(&Res, normal);	MeshVertex.AddNormals(Res);
 
 		Result = (normal + side1 + side2) * tsize;		XMStoreFloat4(&Res, Result);	MeshVertex.AddVertex(Res);
-		MeshVertex.AddColor(1, 1, 1, 0.5);		MeshVertex.AddUV(0, 1);	XMStoreFloat4(&Res, normal);	MeshVertex.AddNormals(Res);
+		MeshVertex.AddUV(0, 1);	XMStoreFloat4(&Res, normal);	MeshVertex.AddNormals(Res);
 		
 		Result = (normal + side1 - side2) * tsize;		XMStoreFloat4(&Res, Result);	MeshVertex.AddVertex(Res);
-		MeshVertex.AddColor(1, 1, 1, 0.5);		MeshVertex.AddUV(0, 0);	XMStoreFloat4(&Res, normal);	MeshVertex.AddNormals(Res);
+		MeshVertex.AddUV(0, 0);	XMStoreFloat4(&Res, normal);	MeshVertex.AddNormals(Res);
 	}
 }
 
@@ -150,7 +143,6 @@ void Mesh3D::DefineSphere(float diameter,size_t tessellation)
 			XMFLOAT4 res;
 			XMStoreFloat4(&res, result);
 			MeshVertex.AddVertex(res);
-			MeshVertex.AddColor(1.0f, 1.0f, 1.0f, 0.5f);
 			MeshVertex.AddUV(u, v);
 			XMStoreFloat4(&res, normal);
 			MeshVertex.AddNormals(res);
@@ -345,7 +337,6 @@ void Mesh3D::DefineGeoSphere(float diameter, size_t tessellation)
 		XMFLOAT4 Res;
 		XMStoreFloat4(&Res, pos);
 		MeshVertex.AddVertex(Res);
-		MeshVertex.AddColor(1, 1, 1, 1);
 		XMStoreFloat4(&Res, normal);
 		MeshVertex.AddNormals(Res);
 		MeshVertex.AddUV(u,v);
@@ -378,10 +369,8 @@ void Mesh3D::DefineGeoSphere(float diameter, size_t tessellation)
 			glm::vec3 pos = MeshVertex.GetVertex(i);
 			glm::vec2 tex = MeshVertex.GetTexture(i);
 			glm::vec3 norm = MeshVertex.GetNormal(i);
-			glm::vec4 col = MeshVertex.GetColor(i);
 			tex.x = 1.0f;
 			MeshVertex.AddVertex(pos);
-			MeshVertex.AddColor(col);
 			MeshVertex.AddUV(tex);
 			MeshVertex.AddNormals(norm);
 
@@ -443,7 +432,6 @@ void Mesh3D::DefineGeoSphere(float diameter, size_t tessellation)
 	{
 		glm::vec3 poleVertexPos = MeshVertex.GetVertex(poleIndex);
 		glm::vec2 poleVertexTex = MeshVertex.GetTexture(poleIndex);
-		glm::vec4 poleVertexCol = MeshVertex.GetColor(poleIndex);
 		glm::vec3 poleVertexNorm = MeshVertex.GetNormal(poleIndex);
 
 		bool overwrittenPoleVertex = false; // overwriting the original pole vertex saves us one vertex
@@ -486,14 +474,13 @@ void Mesh3D::DefineGeoSphere(float diameter, size_t tessellation)
 			glm::vec3 newPoleVertexPos = poleVertexPos;
 			glm::vec2 newPoleVertexTex = poleVertexTex;
 			glm::vec3 newPoleVertexNorm = poleVertexNorm;
-			glm::vec4 newPoleVertexCol = poleVertexCol;
 
 			newPoleVertexTex.x = (otherVertexTex0.x + otherVertexTex1.x) / 2;
 			newPoleVertexTex.y = poleVertexTex.y;
 
 			if (!overwrittenPoleVertex)
 			{
-				MeshVertex.SetVertexTextureNormalColor(poleIndex, newPoleVertexPos, newPoleVertexTex, newPoleVertexNorm, newPoleVertexCol);
+				MeshVertex.SetVertexTextureNormal(poleIndex, newPoleVertexPos, newPoleVertexTex, newPoleVertexNorm);
 				overwrittenPoleVertex = true;
 			}
 			else
@@ -501,7 +488,6 @@ void Mesh3D::DefineGeoSphere(float diameter, size_t tessellation)
 
 				*pPoleIndex = static_cast<uint16_t>(MeshVertex.VertexCount);
 				MeshVertex.AddVertex(newPoleVertexPos);
-				MeshVertex.AddColor(newPoleVertexCol);
 				MeshVertex.AddUV(newPoleVertexTex);
 				MeshVertex.AddNormals(newPoleVertexNorm);
 			}

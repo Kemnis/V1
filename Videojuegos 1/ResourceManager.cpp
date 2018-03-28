@@ -2,29 +2,27 @@
 #include "stdafx.h"
 #include "GameObject.h"
 #include "Model.h"
-#include "Mesh3D.h"
 #include "Texture.h"
 #include "BasicShader.h"
 #include "MaterialShader.h"
+#include "Material.h"
 //Variables de respuesta
 bool ResourceManager::RB = false;
 string ResourceManager::RS = "";
 // Variables de respuesta
 BasicShader* ResourceManager::ShaderActual = nullptr;
-Mesh3D* ResourceManager::MeshActual = nullptr;
 Model* ResourceManager::ModeloActual = nullptr;
 
 ResourceManager::GameObjectMap ResourceManager::GameObjectIdentifier;
 ResourceManager::ModelMap ResourceManager::ModelIdentifier;
-ResourceManager::MeshMap ResourceManager::MeshIdentifier;
 ResourceManager::TextureMap ResourceManager::TextureIdentifier;
 ResourceManager::ShaderMap ResourceManager::ShaderIdentifier;
+ResourceManager::MaterialMap ResourceManager::MaterialIdentifier;
 int ResourceManager::GameObjectIndex = 0;
 int ResourceManager::ModelIndex = 0;
-int ResourceManager::MeshIndex = 0;
 int ResourceManager::TextureIndex = 0;
 int ResourceManager::ShaderIndex = 0;
-char ResourceManager::ChangeBinder = 0;
+int ResourceManager::MaterialIndex = 0;
 MaterialShader* ResourceManager::MatShader = 0;
 
 ResourceManager::ResourceManager()
@@ -50,15 +48,6 @@ bool ResourceManager::AddModel(string path, string name)
 	return true;
 }
 
-void ResourceManager::AddMesh(string primitive, string name)
-{
-	Mesh3D nuevo;
-	nuevo.Name = name;
-	nuevo.Initialize(primitive);
-	MeshIdentifier.insert(std::pair<string, Mesh3D>(name, nuevo));
-	MeshIndex++;
-}
-
 bool ResourceManager::AddTexture(string path, string name)
 {
 	Texture nuevo;
@@ -69,19 +58,13 @@ bool ResourceManager::AddTexture(string path, string name)
 	return true;
 }
 
-string ResourceManager::BuildGameObject(string nameGameObject, string modelname, string meshname , string texturename , string shadername )
+string ResourceManager::BuildGameObject(string nameGameObject, string modelname, string texturename , string shadername, string materialname)
 {
 	GameObject nuevo(nameGameObject);
 	if (modelname != "")
 	{
 		nuevo.AssignModel(&ModelIdentifier.find(modelname)->second);
 		if (nuevo.GetModel() == nullptr)
-			return "E_Fail";
-	}
-	if (meshname != "")
-	{
-		nuevo.AssignMesh(&MeshIdentifier.find(meshname)->second);
-		if (nuevo.GetMesh() == nullptr)
 			return "E_Fail";
 	}
 	if (texturename != "")
@@ -103,6 +86,12 @@ string ResourceManager::BuildGameObject(string nameGameObject, string modelname,
 				return "E_Fail";
 		}
 	}
+	if (materialname != "")
+	{
+		nuevo.AssignMaterial(&MaterialIdentifier.find(materialname)->second);
+		if(nuevo.GetMaterial() == nullptr)
+			return "E_Fail";
+	}
 	AddGameObject(nuevo);
 	return "S_OK";
 }
@@ -119,6 +108,16 @@ bool ResourceManager::AddShader()
 	nuevo.Initialize();
 	ShaderIdentifier.insert(std::pair<string, BasicShader>("Shader", nuevo));
 	ShaderIndex++;
+	return true;
+}
+
+bool ResourceManager::AddMaterial(string Nombre, vec3 Color)
+{
+	Material nuevo;
+	nuevo.Name = Nombre;
+	nuevo.color = Color;
+	MaterialIdentifier.insert(std::pair<string, Material>(Nombre, nuevo));
+	MaterialIndex++;
 	return true;
 }
 
@@ -141,44 +140,12 @@ bool ResourceManager::bindShader(GameObject * GO)
 	return false;
 }
 
-bool ResourceManager::bindMesh(Mesh3D * mesh)
-{
-	if (ChangeBinder == 0 || ChangeBinder == 'M')
-	{
-		if (MeshActual != mesh)
-		{
-			mesh->BindMesh();
-			MeshActual = mesh;
-			ChangeBinder = 'm';
-			return true;
-		}
-		else
-		{
-			MeshActual->BindMesh();
-			ChangeBinder = 'm';
-			return true;
-		}
-	}
-	return false;
-}
-
 bool ResourceManager::bindModel(GameObject * GO)
 {
-	if (ChangeBinder == 0 || ChangeBinder == 'm')
+	if (ModeloActual != GO->GetModel())
 	{
-		if (ModeloActual != GO->GetModel())
-		{
-			ModeloActual = GO->GetModel();
-			ModeloActual->BindMesh();
-			ChangeBinder = 'M';
-			return true;
-		}
-		else
-		{
-			ModeloActual->BindMesh();
-			ChangeBinder = 'M';
-			return true;
-		}
+		ModeloActual = GO->GetModel();
+		return true;
 	}
 	return false;
 }
@@ -187,14 +154,11 @@ void ResourceManager::Shutdown()
 {
 	GameObjectIdentifier.clear();
 	ModelIdentifier.clear();
-	MeshIdentifier.clear();
 	TextureIdentifier.clear();
 	ShaderIdentifier.clear();
 	ShaderActual = nullptr;
-	MeshActual = nullptr;
 	GameObjectIndex = 0;
 	ModelIndex = 0;
-	MeshIndex = 0;
 	TextureIndex = 0;
 	ShaderIndex = 0;
 }

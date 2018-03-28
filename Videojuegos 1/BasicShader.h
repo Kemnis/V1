@@ -1,17 +1,18 @@
-#ifndef _BasicShader_H_
-#define _BasicShader_H_
+#pragma once
 #include <d3d11.h>
 #include <d3dcompiler.h>
 #include <directxmath.h>
 #include <fstream>
+#include "Material.h"
 using namespace DirectX;
 using namespace std;
 class BasicShader : public DxComponent<BasicShader>
 {
 private:
-	struct MatrixBufferType
+	struct InfoBufferType
 	{
 		XMMATRIX projectionViewWorld;
+		Material* material;
 	};
 
 public:
@@ -22,7 +23,7 @@ public:
 	void Shutdown();
 	void BindShader();
 
-	bool SetShaderParameters(XMMATRIX, XMMATRIX, XMMATRIX);
+	bool SetShaderParameters(XMMATRIX, XMMATRIX, XMMATRIX, Material* material);
 	string Name;
 private:
 	void OutputShaderErrorMessage(ID3D10Blob*, LPCTSTR);
@@ -35,4 +36,3 @@ private:
 	ID3D11Buffer* m_matrixBuffer;
 };
 
-#endif

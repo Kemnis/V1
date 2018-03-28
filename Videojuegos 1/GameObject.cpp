@@ -21,12 +21,6 @@ bool GameObject::AssignModel(Model* model)
 	return true;
 }
 
-bool GameObject::AssignMesh(Mesh3D* mesh)
-{
-	Mesh = mesh;
-	return true;
-}
-
 bool GameObject::AssignShader(BasicShader* shader)
 {
 	Shader = shader;
@@ -40,6 +34,12 @@ bool GameObject::AssignMaterialShader()
 	return true;
 }
 
+bool GameObject::AssignMaterial(Material * mat)
+{
+	material = mat;
+	return true;
+}
+
 bool GameObject::AssignTexture(Texture * texture)
 {
 	Tex = texture;
@@ -49,15 +49,9 @@ bool GameObject::AssignTexture(Texture * texture)
 void GameObject::Shutdown()
 {
 	delete Modelo;
-	delete Mesh;
 	delete Tex;
 	delete Shader;
 	delete Transform;
-}
-
-Mesh3D* GameObject::GetMesh()
-{
-	return Mesh;
 }
 
 Model* GameObject::GetModel()
@@ -73,4 +67,9 @@ Texture* GameObject::GetTexture()
 BasicShader* GameObject::GetShader()
 {
 	return Shader;
+}
+
+Material* GameObject::GetMaterial()
+{
+	return material;
 }

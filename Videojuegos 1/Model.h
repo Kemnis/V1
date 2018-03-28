@@ -20,6 +20,11 @@ protected:
 	ID3D11Buffer *VertexBuffer, *IndexBuffer;
 private:
 	bool LoadModel(string);
+	void DefineTriangle();
+	void DefineSquare();
+	void DefineCube(XMFLOAT3 size);
+	void DefineSphere(float diameter, size_t tessellation);
+	void DefineGeoSphere(float diameter, size_t tessellation);
 };
 
 

@@ -12,14 +12,16 @@ string Scene::CreateScene() {
 	bool res;
 
 	//Load all objects you need First add all the resources
-	ResourceManager::AddMesh("Triangle", "SphereMesh");
+	//ResourceManager::AddMesh("Triangle", "SphereMesh");
+	ResourceManager::AddModel("Triangle", "SphereMesh");
 	ResourceManager::AddModel("Sphere.obj", "SphereModel");
 	ResourceManager::AddShader();
 	ResourceManager::AddTexture("tex1.jpg", "World");
+	ResourceManager::AddMaterial("ColorBlanco", vec3(1, 1, 1));
 
 	//Then Build a GameObject
-	ResourceManager::BuildGameObject("SphereMod", "SphereModel", "", "", "Shader");
-	ResourceManager::BuildGameObject("SphereMes", "", "SphereMesh", "", "Shader");
+	ResourceManager::BuildGameObject("SphereMod", "SphereModel", "", "Shader", "ColorBlanco");
+	ResourceManager::BuildGameObject("SphereMes", "SphereMesh", "", "Shader", "ColorBlanco");
 
 				//Descripción:
 	ResourceManager::GetObjectByName("SphereMes")->Transform->SetTranslation(vec3(2, 0, 0));
@@ -62,12 +64,12 @@ string Scene::RenderScene()
 	GameObject* GObjMesh = ResourceManager::GetObjectByName("SphereMes");
 	GameObject* GObjModel = ResourceManager::GetObjectByName("SphereMod");
 
-	GObjMesh->GetShader()->SetShaderParameters(Worldobj2, viewMatrix, *projectionMatrix);
+	GObjMesh->GetShader()->SetShaderParameters(Worldobj2, viewMatrix, *projectionMatrix, GObjMesh->GetMaterial());
 	ResourceManager::bindShader(GObjMesh);
-	ResourceManager::bindMesh(GObjMesh->GetMesh());
-	GObjMesh->GetMesh()->Draw();
+	ResourceManager::bindModel(GObjModel);
+	GObjMesh->GetModel()->Draw();
 
-	GObjModel->GetShader()->SetShaderParameters(worldMatrix, viewMatrix, *projectionMatrix);
+	GObjModel->GetShader()->SetShaderParameters(worldMatrix, viewMatrix, *projectionMatrix, GObjModel->GetMaterial());
 	ResourceManager::bindShader(GObjModel);
 	ResourceManager::bindModel(GObjModel);
 	GObjModel->GetModel()->Draw();
