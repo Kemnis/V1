@@ -18,11 +18,13 @@ Model* ResourceManager::ModeloActual = nullptr;
 ResourceManager::GameObjectMap ResourceManager::GameObjectIdentifier;
 ResourceManager::ModelMap ResourceManager::ModelIdentifier;
 ResourceManager::TextureMap ResourceManager::TextureIdentifier;
+ResourceManager::TerrainMap ResourceManager::TerrainIdentifier;
 ResourceManager::ShaderMap ResourceManager::ShaderIdentifier;
 ResourceManager::MaterialMap ResourceManager::MaterialIdentifier;
 int ResourceManager::GameObjectIndex = 0;
 int ResourceManager::ModelIndex = 0;
 int ResourceManager::TextureIndex = 0;
+int ResourceManager::TerrainIndex = 0;
 int ResourceManager::MaterialIndex = 0;
 BasicShader* ResourceManager::BasShader = 0;
 MaterialShader* ResourceManager::MatShader = 0;
@@ -70,12 +72,22 @@ bool ResourceManager::AddTexture(string path, string name)
 	return true;
 }
 
-string ResourceManager::BuildGameObject(string nameGameObject, string modelname, string texturename , string shadername, string materialname)
+bool ResourceManager::AddStage(string name, int Cells, int CellSize, int Size)
+{
+	Terrain nuevo;
+	nuevo.Name = name;
+	nuevo.Initialize(Cells,CellSize,Size);
+	TerrainIdentifier.insert(std::pair<string, Terrain>(name, nuevo));
+	TerrainIndex++;
+	return true;
+}
+
+string ResourceManager::BuildGameObject(string nameGameObject, string meshname, string texturename , string shadername, string materialname)
 {
 	GameObject nuevo(nameGameObject);
-	if (modelname != "")
+	if (meshname != "")
 	{
-		nuevo.AssignModel(&ModelIdentifier.find(modelname)->second);
+		nuevo.AssignModel(&ModelIdentifier.find(meshname)->second);
 		if (nuevo.GetModel() == nullptr)
 			return "E_Fail";
 	}

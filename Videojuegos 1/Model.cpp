@@ -21,48 +21,48 @@ Model::~Model()
 
 void Model::DefineTriangle()
 {
-	MeshVertex.AddVertex(-1.0f, -1.0f, 0.0f);  // Bottom left.
+	Mesh.AddVertex(-1.0f, -1.0f, 0.0f);  // Bottom left.
 
-	MeshVertex.AddVertex(0.0f, 1.0f, 0.0f);  // Top middle.
+	Mesh.AddVertex(0.0f, 1.0f, 0.0f);  // Top middle.
 
-	MeshVertex.AddVertex(1.0f, -1.0f, 0.0f);  // Bottom right.
+	Mesh.AddVertex(1.0f, -1.0f, 0.0f);  // Bottom right.
 
-	MeshVertex.AddIndex(0); // Bottom left.
-	MeshVertex.AddIndex(1);  // Top middle.
-	MeshVertex.AddIndex(2);  // Bottom right.
-	MeshVertex.AddUV(0.0, 1.0);
-	MeshVertex.AddUV(0.0, 0.0);
-	MeshVertex.AddUV(1.0, 1.0);
+	Mesh.AddIndex(0); // Bottom left.
+	Mesh.AddIndex(1);  // Top middle.
+	Mesh.AddIndex(2);  // Bottom right.
+	Mesh.AddUV(0.0, 1.0);
+	Mesh.AddUV(0.0, 0.0);
+	Mesh.AddUV(1.0, 1.0);
 	//All primitives must to generate the Final Mesh
-	MeshVertex.DoFinalMesh();
+	Mesh.DoFinalMesh();
 }
 
 void Model::DefineSquare()
 {
-	MeshVertex.AddVertex(-1.0f, -1.0f, 0.0f);  // Top left.
-	MeshVertex.AddUV(0.0, 0.0);
-	MeshVertex.AddNormals(0.0, 0.0, -1.0);
+	Mesh.AddVertex(-1.0f, -1.0f, 0.0f);  // Bottom Left.
+	Mesh.AddUV(0.0, 1.0);
+	Mesh.AddNormals(0.0, 0.0, -1.0);
 
-	MeshVertex.AddVertex(-1.0f, 1.0f, 0.0f);  // Top right.
-	MeshVertex.AddUV(1.0, 0.0);
-	MeshVertex.AddNormals(0.0, 0.0, -1.0);
+	Mesh.AddVertex(-1.0f, 1.0f, 0.0f);  // Top Left.
+	Mesh.AddUV(0.0, 0.0);
+	Mesh.AddNormals(0.0, 0.0, -1.0);
 
-	MeshVertex.AddVertex(1.0f, 1.0f, 0.0f);  // Bottom right.
-	MeshVertex.AddUV(1.0, 1.0);
-	MeshVertex.AddNormals(0.0, 0.0, -1.0);
+	Mesh.AddVertex(1.0f, 1.0f, 0.0f);  // Top Right.
+	Mesh.AddUV(1.0, 0.0);
+	Mesh.AddNormals(0.0, 0.0, -1.0);
 
-	MeshVertex.AddVertex(1.0f, -1.0f, 0.0f);  // Bottom left.
-	MeshVertex.AddUV(0.0, 1.0);
-	MeshVertex.AddNormals(0.0, 0.0, -1.0);
+	Mesh.AddVertex(1.0f, -1.0f, 0.0f);  // Bottom Right.
+	Mesh.AddUV(1.0, 1.0);
+	Mesh.AddNormals(0.0, 0.0, -1.0);
 
-	MeshVertex.AddIndex(0); // Bottom left.
-	MeshVertex.AddIndex(1);  // Top left.
-	MeshVertex.AddIndex(2);  // Bottom right.
+	Mesh.AddIndex(0); // Bottom left.
+	Mesh.AddIndex(1);  // Top left.
+	Mesh.AddIndex(2);  // Bottom right.
 
-	MeshVertex.AddIndex(0);  // Bottom left.
-	MeshVertex.AddIndex(2);  // Top right.
-	MeshVertex.AddIndex(3);  // Bottom right.
-	MeshVertex.DoFinalMesh();
+	Mesh.AddIndex(0);  // Bottom left.
+	Mesh.AddIndex(2);  // Top right.
+	Mesh.AddIndex(3);  // Bottom right.
+	Mesh.DoFinalMesh();
 }
 void Model::DefineCube(XMFLOAT3 size)
 {
@@ -102,29 +102,30 @@ void Model::DefineCube(XMFLOAT3 size)
 		XMVECTOR side2 = XMVector3Cross(normal, side1);
 
 		// Six indices (two triangles) per face.
-		size_t vbase = MeshVertex.GetAllIndex().x;
-		MeshVertex.AddIndex(vbase + 0);
-		MeshVertex.AddIndex(vbase + 1);
-		MeshVertex.AddIndex(vbase + 2);
+		size_t vbase = Mesh.GetAllIndex().x;
+		Mesh.AddIndex(vbase + 2);
+		Mesh.AddIndex(vbase + 1);
+		Mesh.AddIndex(vbase + 0);
 
-		MeshVertex.AddIndex(vbase + 0);
-		MeshVertex.AddIndex(vbase + 2);
-		MeshVertex.AddIndex(vbase + 3);
+		Mesh.AddIndex(vbase + 3);
+		Mesh.AddIndex(vbase + 2);
+		Mesh.AddIndex(vbase + 0);
 
 		// Four vertices per face.
 		XMVECTOR Result = (normal - side1 - side2) * tsize;
 		XMFLOAT4 Res;
-		XMStoreFloat4(&Res, Result); 	MeshVertex.AddVertex(Res);
-		MeshVertex.AddUV(1, 0);	XMStoreFloat4(&Res, normal);	MeshVertex.AddNormals(Res);
+		XMStoreFloat4(&Res, Result); 	Mesh.AddVertex(Res);
+		Mesh.AddUV(1, 0);	XMStoreFloat4(&Res, normal);	Mesh.AddNormals(Res);
 
-		Result = (normal - side1 + side2) * tsize;		XMStoreFloat4(&Res, Result);	MeshVertex.AddVertex(Res);
-		MeshVertex.AddUV(1, 1);	XMStoreFloat4(&Res, normal);	MeshVertex.AddNormals(Res);
+		Result = (normal - side1 + side2) * tsize;		XMStoreFloat4(&Res, Result);	Mesh.AddVertex(Res);
+		Mesh.AddUV(1, 1);	XMStoreFloat4(&Res, normal);	Mesh.AddNormals(Res);
 
-		Result = (normal + side1 + side2) * tsize;		XMStoreFloat4(&Res, Result);	MeshVertex.AddVertex(Res);
-		MeshVertex.AddUV(0, 1);	XMStoreFloat4(&Res, normal);	MeshVertex.AddNormals(Res);
+		Result = (normal + side1 + side2) * tsize;		XMStoreFloat4(&Res, Result);	Mesh.AddVertex(Res);
+		Mesh.AddUV(0, 1);	XMStoreFloat4(&Res, normal);	Mesh.AddNormals(Res);
 
-		Result = (normal + side1 - side2) * tsize;		XMStoreFloat4(&Res, Result);	MeshVertex.AddVertex(Res);
-		MeshVertex.AddUV(0, 0);	XMStoreFloat4(&Res, normal);	MeshVertex.AddNormals(Res);
+		Result = (normal + side1 - side2) * tsize;		XMStoreFloat4(&Res, Result);	Mesh.AddVertex(Res);
+		Mesh.AddUV(0, 0);	XMStoreFloat4(&Res, normal);	Mesh.AddNormals(Res);
+		Mesh.DoFinalMesh();
 	}
 }
 
@@ -163,10 +164,10 @@ void Model::DefineSphere(float diameter, size_t tessellation)
 			XMVECTOR result = normal * radius;
 			XMFLOAT4 res;
 			XMStoreFloat4(&res, result);
-			MeshVertex.AddVertex(res);
-			MeshVertex.AddUV(u, v);
+			Mesh.AddVertex(res);
+			Mesh.AddUV(u, v);
 			XMStoreFloat4(&res, normal);
-			MeshVertex.AddNormals(res);
+			Mesh.AddNormals(res);
 		}
 	}
 
@@ -180,13 +181,13 @@ void Model::DefineSphere(float diameter, size_t tessellation)
 			size_t nextI = i + 1;
 			size_t nextJ = (j + 1) % stride;
 
-			MeshVertex.AddIndex(i * stride + j);
-			MeshVertex.AddIndex(nextI * stride + j);
-			MeshVertex.AddIndex(i * stride + nextJ);
+			Mesh.AddIndex(i * stride + j);
+			Mesh.AddIndex(nextI * stride + j);
+			Mesh.AddIndex(i * stride + nextJ);
 
-			MeshVertex.AddIndex(i * stride + nextJ);
-			MeshVertex.AddIndex(nextI * stride + j);
-			MeshVertex.AddIndex(nextI * stride + nextJ);
+			Mesh.AddIndex(i * stride + nextJ);
+			Mesh.AddIndex(nextI * stride + j);
+			Mesh.AddIndex(nextI * stride + nextJ);
 		}
 	}
 }
@@ -238,8 +239,8 @@ void Model::DefineGeoSphere(float diameter, size_t tessellation)
 
 	std::vector<XMFLOAT3> vertexPositions(std::begin(OctahedronVertices), std::end(OctahedronVertices));
 	//Checar como implementar en Vertex
-	MeshVertex.SpecialGetIndexVector()->insert(MeshVertex.SpecialGetIndexVector()->begin(), std::begin(OctahedronIndices), std::end(OctahedronIndices));
-	MeshVertex.SpecialIndexVector();
+	Mesh.SpecialGetIndexVector()->insert(Mesh.SpecialGetIndexVector()->begin(), std::begin(OctahedronIndices), std::end(OctahedronIndices));
+	Mesh.SpecialIndexVector();
 	// We know these values by looking at the above index list for the octahedron. Despite the subdivisions that are
 	// about to go on, these values aren't ever going to change because the vertices don't move around in the array.
 	// We'll need these values later on to fix the singularities that show up at the poles.
@@ -248,7 +249,7 @@ void Model::DefineGeoSphere(float diameter, size_t tessellation)
 
 	for (size_t iSubdivision = 0; iSubdivision < tessellation; ++iSubdivision)
 	{
-		assert(MeshVertex.GetIndex().size() % 3 == 0); // sanity
+		assert(Mesh.GetIndex().size() % 3 == 0); // sanity
 
 													   // We use this to keep track of which edges have already been subdivided.
 		EdgeSubdivisionMap subdividedEdges;
@@ -256,16 +257,16 @@ void Model::DefineGeoSphere(float diameter, size_t tessellation)
 		// The new index collection after subdivision.
 		vector<unsigned long> newIndices;
 
-		const size_t triangleCount = MeshVertex.GetIndex().size() / 3;
+		const size_t triangleCount = Mesh.GetIndex().size() / 3;
 		for (size_t iTriangle = 0; iTriangle < triangleCount; ++iTriangle)
 		{
 			// For each edge on this triangle, create a new vertex in the middle of that edge.
 			// The winding order of the triangles we output are the same as the winding order of the inputs.
 
 			// Indices of the vertices making up this triangle
-			uint16_t iv0 = MeshVertex.GetIndex()[iTriangle * 3 + 0];
-			uint16_t iv1 = MeshVertex.GetIndex()[iTriangle * 3 + 1];
-			uint16_t iv2 = MeshVertex.GetIndex()[iTriangle * 3 + 2];
+			uint16_t iv0 = Mesh.GetIndex()[iTriangle * 3 + 0];
+			uint16_t iv1 = Mesh.GetIndex()[iTriangle * 3 + 1];
+			uint16_t iv2 = Mesh.GetIndex()[iTriangle * 3 + 2];
 
 			// Get the new vertices
 			XMFLOAT3 v01; // vertex on the midpoint of v0 and v1
@@ -332,11 +333,11 @@ void Model::DefineGeoSphere(float diameter, size_t tessellation)
 			newIndices.insert(newIndices.end(), std::begin(indicesToAdd), std::end(indicesToAdd));
 		}
 
-		MeshVertex.GetIndex() = std::move(newIndices);
+		Mesh.GetIndex() = std::move(newIndices);
 	}
 
 	// Now that we've completed subdivision, fill in the final vertex collection
-	MeshVertex.SpecialGetVertex().reserve(vertexPositions.size());
+	Mesh.SpecialGetVertex().reserve(vertexPositions.size());
 	for (auto it = vertexPositions.begin(); it != vertexPositions.end(); ++it)
 	{
 		auto vertexValue = *it;
@@ -357,10 +358,10 @@ void Model::DefineGeoSphere(float diameter, size_t tessellation)
 		auto texcoord = XMVectorSet(1.0f - u, v, 0.0f, 0.0f);
 		XMFLOAT4 Res;
 		XMStoreFloat4(&Res, pos);
-		MeshVertex.AddVertex(Res);
+		Mesh.AddVertex(Res);
 		XMStoreFloat4(&Res, normal);
-		MeshVertex.AddNormals(Res);
-		MeshVertex.AddUV(u, v);
+		Mesh.AddNormals(Res);
+		Mesh.AddUV(u, v);
 	}
 
 	// There are a couple of fixes to do. One is a texture coordinate wraparound fixup. At some point, there will be
@@ -373,34 +374,34 @@ void Model::DefineGeoSphere(float diameter, size_t tessellation)
 	// completed sphere. If you imagine the vertices along that edge, they circumscribe a semicircular arc starting at
 	// y=1 and ending at y=-1, and sweeping across the range of z=0 to z=1. x stays zero. It's along this edge that we
 	// need to duplicate our vertices - and provide the correct texture coordinates.
-	size_t preFixupVertexCount = MeshVertex.SpecialGetVertex().size();
+	size_t preFixupVertexCount = Mesh.SpecialGetVertex().size();
 	for (unsigned long i = 0; i < preFixupVertexCount; ++i)
 	{
 		// This vertex is on the prime meridian if position.x and texcoord.u are both zero (allowing for small epsilon).
 		bool isOnPrimeMeridian = XMVector2NearEqual(
-			XMVectorSet(MeshVertex.SpecialGetVertex().at(i).x, MeshVertex.SpecialGetUV().at(i).x, 0.0f, 0.0f),
+			XMVectorSet(Mesh.SpecialGetVertex().at(i).x, Mesh.SpecialGetUV().at(i).x, 0.0f, 0.0f),
 			XMVectorZero(),
 			XMVectorSplatEpsilon());
 
 		if (isOnPrimeMeridian)
 		{
-			size_t newIndex = MeshVertex.SpecialGetVertex().size(); // the index of this vertex that we're about to add
+			size_t newIndex = Mesh.SpecialGetVertex().size(); // the index of this vertex that we're about to add
 
 																	// copy this vertex, correct the texture coordinate, and add the vertex
-			glm::vec3 pos = MeshVertex.GetVertex(i);
-			glm::vec2 tex = MeshVertex.GetTexture(i);
-			glm::vec3 norm = MeshVertex.GetNormal(i);
+			glm::vec3 pos = Mesh.GetVertex(i);
+			glm::vec2 tex = Mesh.GetTexture(i);
+			glm::vec3 norm = Mesh.GetNormal(i);
 			tex.x = 1.0f;
-			MeshVertex.AddVertex(pos);
-			MeshVertex.AddUV(tex);
-			MeshVertex.AddNormals(norm);
+			Mesh.AddVertex(pos);
+			Mesh.AddUV(tex);
+			Mesh.AddNormals(norm);
 
 			// Now find all the triangles which contain this vertex and update them if necessary
-			for (unsigned long j = 0; j < MeshVertex.GetIndex().size(); j += 3)
+			for (unsigned long j = 0; j < Mesh.GetIndex().size(); j += 3)
 			{
-				unsigned long* triIndex0 = &MeshVertex.GetIndex().at(j + 0);
-				unsigned long* triIndex1 = &MeshVertex.GetIndex().at(j + 1);
-				unsigned long* triIndex2 = &MeshVertex.GetIndex().at(j + 2);
+				unsigned long* triIndex0 = &Mesh.GetIndex().at(j + 0);
+				unsigned long* triIndex1 = &Mesh.GetIndex().at(j + 1);
+				unsigned long* triIndex2 = &Mesh.GetIndex().at(j + 2);
 
 				if (*triIndex0 == i)
 				{
@@ -424,9 +425,9 @@ void Model::DefineGeoSphere(float diameter, size_t tessellation)
 				assert(*triIndex0 == i);
 				assert(*triIndex1 != i && *triIndex2 != i); // assume no degenerate triangles
 
-				glm::vec2 tex0 = MeshVertex.GetTexture(*triIndex0);
-				glm::vec2 tex1 = MeshVertex.GetTexture(*triIndex1);
-				glm::vec2 tex2 = MeshVertex.GetTexture(*triIndex2);
+				glm::vec2 tex0 = Mesh.GetTexture(*triIndex0);
+				glm::vec2 tex1 = Mesh.GetTexture(*triIndex1);
+				glm::vec2 tex2 = Mesh.GetTexture(*triIndex2);
 
 				/*const VertexPositionNormalTexture& v0 = vertices[*triIndex0];
 				const VertexPositionNormalTexture& v1 = vertices[*triIndex1];
@@ -451,13 +452,13 @@ void Model::DefineGeoSphere(float diameter, size_t tessellation)
 	// poles, but reduce stretching.
 	auto fixPole = [&](size_t poleIndex)
 	{
-		glm::vec3 poleVertexPos = MeshVertex.GetVertex(poleIndex);
-		glm::vec2 poleVertexTex = MeshVertex.GetTexture(poleIndex);
-		glm::vec3 poleVertexNorm = MeshVertex.GetNormal(poleIndex);
+		glm::vec3 poleVertexPos = Mesh.GetVertex(poleIndex);
+		glm::vec2 poleVertexTex = Mesh.GetTexture(poleIndex);
+		glm::vec3 poleVertexNorm = Mesh.GetNormal(poleIndex);
 
 		bool overwrittenPoleVertex = false; // overwriting the original pole vertex saves us one vertex
-		auto indices = MeshVertex.GetIndex();
-		for (size_t i = 0; i < MeshVertex.IndexCount; i += 3)
+		auto indices = Mesh.GetIndex();
+		for (size_t i = 0; i < Mesh.IndexCount; i += 3)
 		{
 			// These pointers point to the three indices which make up this triangle. pPoleIndex is the pointer to the
 			// entry in the index array which represents the pole index, and the other two pointers point to the other
@@ -488,8 +489,8 @@ void Model::DefineGeoSphere(float diameter, size_t tessellation)
 				continue;
 			}
 
-			glm::vec2 otherVertexTex0 = MeshVertex.GetTexture(*pOtherIndex0);
-			glm::vec2 otherVertexTex1 = MeshVertex.GetTexture(*pOtherIndex1);
+			glm::vec2 otherVertexTex0 = Mesh.GetTexture(*pOtherIndex0);
+			glm::vec2 otherVertexTex1 = Mesh.GetTexture(*pOtherIndex1);
 
 			// Calculate the texcoords for the new pole vertex, add it to the vertices and update the index
 			glm::vec3 newPoleVertexPos = poleVertexPos;
@@ -501,16 +502,16 @@ void Model::DefineGeoSphere(float diameter, size_t tessellation)
 
 			if (!overwrittenPoleVertex)
 			{
-				MeshVertex.SetVertexTextureNormal(poleIndex, newPoleVertexPos, newPoleVertexTex, newPoleVertexNorm);
+				Mesh.SetVertexTextureNormal(poleIndex, newPoleVertexPos, newPoleVertexTex, newPoleVertexNorm);
 				overwrittenPoleVertex = true;
 			}
 			else
 			{
 
-				*pPoleIndex = static_cast<uint16_t>(MeshVertex.VertexCount);
-				MeshVertex.AddVertex(newPoleVertexPos);
-				MeshVertex.AddUV(newPoleVertexTex);
-				MeshVertex.AddNormals(newPoleVertexNorm);
+				*pPoleIndex = static_cast<uint16_t>(Mesh.VertexCount);
+				Mesh.AddVertex(newPoleVertexPos);
+				Mesh.AddUV(newPoleVertexTex);
+				Mesh.AddNormals(newPoleVertexNorm);
 			}
 		}
 	};
@@ -525,7 +526,6 @@ bool Model::Initialize(string NameOfFigure)
 	D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
 	D3D11_SUBRESOURCE_DATA vertexData, indexData;
 	HRESULT result;
-	int i;
 
 	if (NameOfFigure == "Triangle")
 		DefineTriangle();
@@ -541,16 +541,16 @@ bool Model::Initialize(string NameOfFigure)
 	//Set up the description of the static vertex buffer
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	if (NameOfFigure != "")
-		vertexBufferDesc.ByteWidth = sizeof(Vertex::VertexType)* MeshVertex.VertexCount;
+		vertexBufferDesc.ByteWidth = sizeof(Vertex::VertexType)* Mesh.VertexCount;
 	else
-		vertexBufferDesc.ByteWidth = sizeof(Vertex::VertexType)* MeshVertex.IndexCount;
+		vertexBufferDesc.ByteWidth = sizeof(Vertex::VertexType)* Mesh.IndexCount;
 	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	vertexBufferDesc.CPUAccessFlags = 0;
 	vertexBufferDesc.MiscFlags = 0;
 	vertexBufferDesc.StructureByteStride = 0;
 	
 	// Give the subresource structure a pointer to the vertex data.
-	vertexData.pSysMem = &MeshVertex.FinalMesh[0];
+	vertexData.pSysMem = &Mesh.FinalMesh[0];
 	vertexData.SysMemPitch = 0;
 	vertexData.SysMemSlicePitch = 0;
 
@@ -561,7 +561,7 @@ bool Model::Initialize(string NameOfFigure)
 
 	//Set up the description of the static index buffer
 	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	indexBufferDesc.ByteWidth = sizeof(unsigned long)* MeshVertex.IndexCount;
+	indexBufferDesc.ByteWidth = sizeof(unsigned long)* Mesh.IndexCount;
 	indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	indexBufferDesc.CPUAccessFlags = 0;
 	indexBufferDesc.MiscFlags = 0;
@@ -569,9 +569,9 @@ bool Model::Initialize(string NameOfFigure)
 
 	vector<unsigned long> indices;
 	if (NameOfFigure != "")
-		indices = MeshVertex.GetIndex();
+		indices = Mesh.GetIndex();
 	else
-		indices = MeshVertex.IndexResult();
+		indices = Mesh.IndexResult();
 
 	//Give the subresource structure a pointer to the index data
 	indexData.pSysMem = &indices[0];
@@ -589,7 +589,7 @@ bool Model::Initialize(string NameOfFigure)
 
 void Model::Draw()
 {
-	deviceContext->DrawIndexed(MeshVertex.IndexCount, 0, 0);
+	deviceContext->DrawIndexed(Mesh.IndexCount, 0, 0);
 	return;
 }
 
@@ -614,7 +614,7 @@ void Model::BindMesh()
 
 Vertex Model::GetMesh()
 {
-	return MeshVertex;
+	return Mesh;
 }
 
 bool Model::LoadModel(string path)
@@ -662,21 +662,21 @@ bool Model::LoadModel(string path)
 					vec3 temp;
 					fin >> temp.x >> temp.y >> temp.z;
 					temp.z = -1.0f *temp.z;
-					MeshVertex.AddVertex(temp);
+					Mesh.AddVertex(temp);
 				}
 				if (input == 't')
 				{
 					vec2 temp;
 					fin >> temp.x >> temp.y;
 					temp.y = 1.0f - temp.y;
-					MeshVertex.AddUV(temp);
+					Mesh.AddUV(temp);
 				}
 				if (input == 'n')
 				{
 					vec3 temp;
 					fin >> temp.x >> temp.y >> temp.z;
 					temp.z = -1.0f * temp.z;
-					MeshVertex.AddNormals(temp);
+					Mesh.AddNormals(temp);
 				}
 			}
 
@@ -689,7 +689,7 @@ bool Model::LoadModel(string path)
 					fin >> Vertice.z >> in >> Tex.z >> in >> Normal.z
 						>> Vertice.y >> in >> Tex.y >> in >> Normal.y
 						>> Vertice.x >> in >> Tex.x >> in >> Normal.x;
-					MeshVertex.AddTriangleFaces(Vertice, Tex, Normal);
+					Mesh.AddTriangleFaces(Vertice, Tex, Normal);
 				}
 			}
 
@@ -702,39 +702,39 @@ bool Model::LoadModel(string path)
 		}
 
 		//Solo para fines de debugeo en caso de errores... Este codigo puede decir cosas relevantes
-		_RPT3(0, "First Vertex: %f,%f,%f\n", MeshVertex.GetFirstVertex().x, MeshVertex.GetFirstVertex().y, MeshVertex.GetFirstVertex().z);
-		_RPT2(0, "First UVs: %f, %f\n", MeshVertex.GetFirstTexture().x, MeshVertex.GetFirstTexture().y);
-		_RPT3(0, "First Normals: %f,%f,%f\n", MeshVertex.GetFirstNormal().x, MeshVertex.GetFirstNormal().y, MeshVertex.GetFirstNormal().z);
+		_RPT3(0, "First Vertex: %f,%f,%f\n", Mesh.GetFirstVertex().x, Mesh.GetFirstVertex().y, Mesh.GetFirstVertex().z);
+		_RPT2(0, "First UVs: %f, %f\n", Mesh.GetFirstTexture().x, Mesh.GetFirstTexture().y);
+		_RPT3(0, "First Normals: %f,%f,%f\n", Mesh.GetFirstNormal().x, Mesh.GetFirstNormal().y, Mesh.GetFirstNormal().z);
 
-		_RPT3(0, "Last Vertex: %f,%f,%f\n", MeshVertex.GetLastVertex().x, MeshVertex.GetLastVertex().y, MeshVertex.GetLastVertex().z);
-		_RPT2(0, "Last UVs: %f, %f\n", MeshVertex.GetFirstTexture().x, MeshVertex.GetFirstTexture().y);
-		_RPT3(0, "Last Normals: %f,%f,%f\n", MeshVertex.GetLastNormal().x, MeshVertex.GetLastNormal().y, MeshVertex.GetLastNormal().z);
+		_RPT3(0, "Last Vertex: %f,%f,%f\n", Mesh.GetLastVertex().x, Mesh.GetLastVertex().y, Mesh.GetLastVertex().z);
+		_RPT2(0, "Last UVs: %f, %f\n", Mesh.GetFirstTexture().x, Mesh.GetFirstTexture().y);
+		_RPT3(0, "Last Normals: %f,%f,%f\n", Mesh.GetLastNormal().x, Mesh.GetLastNormal().y, Mesh.GetLastNormal().z);
 
-		//_RPT4(0, "#V: %f   #T: %f   #N: %f   #F: %f\n", MeshVertex.GetVertex(), MeshVertex.GetTexture(), MeshVertex.GetNormal(), MeshVertex.GetTriangleFN());
+		//_RPT4(0, "#V: %f   #T: %f   #N: %f   #F: %f\n", Mesh.GetVertex(), Mesh.GetTexture(), Mesh.GetNormal(), Mesh.GetTriangleFN());
 		//------------------------------------------------------------------------------------------
 
 		fin.close();
 
 		int i,j=0;
-		for (i = 0; i < MeshVertex.VertexCount; i++)
+		for (i = 0; i < Mesh.VertexCount; i++)
 		{
 			//_RPT1(0, "i %d\n", i);
-			FaceIndex.x = MeshVertex.GetTriangleFV(i).x-1;
-			FaceIndex.y = MeshVertex.GetTriangleFT(i).x-1;
-			FaceIndex.z = MeshVertex.GetTriangleFN(i).x-1;
-			MeshVertex.DoFinalMeshFromTriangles(MeshVertex.GetVertex(FaceIndex.x), MeshVertex.GetTexture(FaceIndex.y), MeshVertex.GetNormal(FaceIndex.z),j);
+			FaceIndex.x = Mesh.GetTriangleFV(i).x-1;
+			FaceIndex.y = Mesh.GetTriangleFT(i).x-1;
+			FaceIndex.z = Mesh.GetTriangleFN(i).x-1;
+			Mesh.DoFinalMeshFromTriangles(Mesh.GetVertex(FaceIndex.x), Mesh.GetTexture(FaceIndex.y), Mesh.GetNormal(FaceIndex.z),j);
 			j++;
 
-			FaceIndex.x = MeshVertex.GetTriangleFV(i).y-1;
-			FaceIndex.y = MeshVertex.GetTriangleFT(i).y-1;
-			FaceIndex.z = MeshVertex.GetTriangleFN(i).y-1;
-			MeshVertex.DoFinalMeshFromTriangles(MeshVertex.GetVertex(FaceIndex.x), MeshVertex.GetTexture(FaceIndex.y), MeshVertex.GetNormal(FaceIndex.z),j);
+			FaceIndex.x = Mesh.GetTriangleFV(i).y-1;
+			FaceIndex.y = Mesh.GetTriangleFT(i).y-1;
+			FaceIndex.z = Mesh.GetTriangleFN(i).y-1;
+			Mesh.DoFinalMeshFromTriangles(Mesh.GetVertex(FaceIndex.x), Mesh.GetTexture(FaceIndex.y), Mesh.GetNormal(FaceIndex.z),j);
 			j++;
 
-			FaceIndex.x = MeshVertex.GetTriangleFV(i).z-1;
-			FaceIndex.y = MeshVertex.GetTriangleFT(i).z-1;
-			FaceIndex.z = MeshVertex.GetTriangleFN(i).z-1;
-			MeshVertex.DoFinalMeshFromTriangles(MeshVertex.GetVertex(FaceIndex.x), MeshVertex.GetTexture(FaceIndex.y), MeshVertex.GetNormal(FaceIndex.z),j);
+			FaceIndex.x = Mesh.GetTriangleFV(i).z-1;
+			FaceIndex.y = Mesh.GetTriangleFT(i).z-1;
+			FaceIndex.z = Mesh.GetTriangleFN(i).z-1;
+			Mesh.DoFinalMeshFromTriangles(Mesh.GetVertex(FaceIndex.x), Mesh.GetTexture(FaceIndex.y), Mesh.GetNormal(FaceIndex.z),j);
 			j++;
 		}
 	}
@@ -747,10 +747,10 @@ bool Model::LoadModel(string path)
 	if (result != "")
 		ErrorFnc("no se logro cargar en ram.");
 
-	_RPT1(0, "Vertices: %f\n", MeshVertex.GetAllIndex().x);
-	_RPT1(0, "UVs: %f\n", MeshVertex.GetAllIndex().y);
-	_RPT1(0, "Normals: %f\n", MeshVertex.GetAllIndex().z);
-	_RPT1(0, "Faces: %f\n", MeshVertex.GetAllIndex().w);
+	_RPT1(0, "Vertices: %f\n", Mesh.GetAllIndex().x);
+	_RPT1(0, "UVs: %f\n", Mesh.GetAllIndex().y);
+	_RPT1(0, "Normals: %f\n", Mesh.GetAllIndex().z);
+	_RPT1(0, "Faces: %f\n", Mesh.GetAllIndex().w);
 	return true;
 }
 

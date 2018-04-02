@@ -16,7 +16,7 @@ public:
 	string Name;
 protected:
 
-	Vertex MeshVertex;
+	Vertex Mesh;
 	ID3D11Buffer *VertexBuffer, *IndexBuffer;
 private:
 	bool LoadModel(string);

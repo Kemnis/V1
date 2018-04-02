@@ -1,9 +1,7 @@
 #pragma once
-#ifndef _Scene_H_
-#define _Scene_H_
 #include "Camera3D.h"
 #include "Mesh3D.h"
-#include "BasicShader.h"
+#include "Terrain.h"
 class Scene : DxComponent<Scene>
 {
 public:
@@ -17,6 +15,7 @@ public:
 
 public:				//Descripción: Variables Globales
 	Camera3D * SceneCamera;
+	Terrain* Stage1;
 protected:
 	//Variables de respuesta
 	bool RB;
@@ -26,8 +25,4 @@ protected:
 private:
 	XMMATRIX CameraMatrix;
 	
-
-	
 };
-
-#endif

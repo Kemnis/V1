@@ -12,11 +12,14 @@ string Scene::CreateScene() {
 	bool res;
 
 	//Load all objects you need First acubedd all the resources
-	ResourceManager::AddModel("Square", "SphereMesh");
+	ResourceManager::AddModel("Cube", "SphereMesh");
 	ResourceManager::AddModel("Sphere.obj", "SphereModel");
 	ResourceManager::LoadShaders();
 	ResourceManager::AddTexture("tex1.jpg", "World");
 	ResourceManager::AddMaterial("ColorBlanco", vec3(.5, .5, .5));
+	ResourceManager::AddStage("Stage1",4,3,12);
+	//ResourceManager::AddShader(ShaderType.BasicShader, "BasicShader", "BasicShader.vs", "BasicShader.fs");
+
 
 	//Then Build a GameObject
 	ResourceManager::BuildGameObject("SphereMod", "SphereModel", "World", "Material", "ColorBlanco");
@@ -63,7 +66,7 @@ string Scene::RenderScene()
 	SceneCamera->GetViewMatrix(viewMatrix);
 	projectionMatrix = SceneCamera->GetProjectionMatrix();
 
-	specsDx->TurnOnCulling();
+	//specsDx->TurnOffCulling();
 	specsDx->TurnOnAlphaBlending();
 	specsDx->TurnZBufferOn();
 
@@ -79,7 +82,6 @@ string Scene::RenderScene()
 	GObjModel->Draw(worldMatrix, viewMatrix, *projectionMatrix);
 
 	
-
 	// Present the rendered scene to the screen.
 	specsDx->EndScene();
 	return "S_OK";

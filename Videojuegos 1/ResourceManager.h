@@ -4,6 +4,7 @@
 #include "GameObject.h"
 #include "Model.h"
 #include "Texture.h"
+#include "Terrain.h"
 #include "BasicShader.h"
 #include "MaterialShader.h"
 #include "Material.h"
@@ -16,7 +17,8 @@ public:
 
 	static bool AddModel(string path, string name);
 	static bool AddTexture(string path, string name);
-	static string BuildGameObject(string nameGameObject, string modelname, string texturename, string shadername, string materialname);
+	static bool AddStage(string name, int Cells, int CellSize, int Size);
+	static string BuildGameObject(string nameGameObject, string meshname, string texturename, string shadername, string materialname);
 	static GameObject* GetObjectByName(string);
 	static bool LoadShaders();
 	static bool AddMaterial(string Nombre, vec3 Color);
@@ -33,6 +35,7 @@ public:
 	using TextureMap = std::map<string, Texture>;
 	using ShaderMap = std::map<string, int>;
 	using MaterialMap = std::map<string, Material>;
+	using TerrainMap = std::map<string, Terrain>;
 
 	static BasicShader* BasShader;
 	static MaterialShader* MatShader;
@@ -67,6 +70,9 @@ protected:
 	//Texture
 	static TextureMap TextureIdentifier;
 	static int TextureIndex;
+	//Terrain
+	static TerrainMap TerrainIdentifier;
+	static int TerrainIndex;
 	//Shader
 	static ShaderMap ShaderIdentifier;
 	//Material
