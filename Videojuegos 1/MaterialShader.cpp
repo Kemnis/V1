@@ -7,7 +7,8 @@ MaterialShader::MaterialShader()
 	VertexShader = 0;
 	PixelShader = 0;
 	Layout = 0;
-	m_matrixBuffer = 0;
+	MatrixBuf = 0;
+	MaterialBuf = 0;
 	Sampler = 0;
 }
 
@@ -23,9 +24,10 @@ bool MaterialShader::Initialize()
 	ID3D10Blob* errorMessage;
 	ID3D10Blob* vertexShaderBuffer;
 	ID3D10Blob* pixelShaderBuffer;
-	D3D11_INPUT_ELEMENT_DESC polygonLayout[2];
+	D3D11_INPUT_ELEMENT_DESC polygonLayout[3];
 	unsigned int numElements;
 	D3D11_BUFFER_DESC matrixBufferDesc;
+	D3D11_BUFFER_DESC materialBufferDesc;
 	D3D11_SAMPLER_DESC samplerDesc;
 
 
@@ -40,7 +42,7 @@ bool MaterialShader::Initialize()
 	LPCWSTR lp1 = stemp1.c_str();
 
 	// Compile the vertex shader code.
-	result = D3DCompileFromFile(lp, NULL, NULL, "BasicVertexShader", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0,
+	result = D3DCompileFromFile(lp, NULL, NULL, "MaterialVertexShader", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0,
 		&vertexShaderBuffer, &errorMessage);
 	if (FAILED(result))
 	{
@@ -59,7 +61,7 @@ bool MaterialShader::Initialize()
 	}
 
 	// Compile the pixel shader code.
-	result = D3DCompileFromFile(lp1, NULL, NULL, "BasicPixelShader", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0,
+	result = D3DCompileFromFile(lp1, NULL, NULL, "MaterialPixelShader", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0,
 		&pixelShaderBuffer, &errorMessage);
 	if (FAILED(result))
 	{
@@ -101,13 +103,21 @@ bool MaterialShader::Initialize()
 	polygonLayout[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 	polygonLayout[0].InstanceDataStepRate = 0;
 
-	polygonLayout[1].SemanticName = "COLOR";
+	polygonLayout[1].SemanticName = "TEXCOORD";
 	polygonLayout[1].SemanticIndex = 0;
-	polygonLayout[1].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	polygonLayout[1].Format = DXGI_FORMAT_R32G32_FLOAT;
 	polygonLayout[1].InputSlot = 0;
 	polygonLayout[1].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
 	polygonLayout[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 	polygonLayout[1].InstanceDataStepRate = 0;
+
+	polygonLayout[2].SemanticName = "NORMAL";
+	polygonLayout[2].SemanticIndex = 0;
+	polygonLayout[2].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+	polygonLayout[2].InputSlot = 0;
+	polygonLayout[2].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+	polygonLayout[2].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+	polygonLayout[2].InstanceDataStepRate = 0;
 
 	// Get a count of the elements in the layout.
 	numElements = sizeof(polygonLayout) / sizeof(polygonLayout[0]);
@@ -136,7 +146,7 @@ bool MaterialShader::Initialize()
 	matrixBufferDesc.StructureByteStride = 0;
 
 	// Create the constant buffer pointer so we can access the vertex shader constant buffer from within this class.
-	result = device->CreateBuffer(&matrixBufferDesc, NULL, &m_matrixBuffer);
+	result = device->CreateBuffer(&matrixBufferDesc, NULL, &MatrixBuf);
 	if (FAILED(result))
 	{
 		return false;
@@ -159,6 +169,20 @@ bool MaterialShader::Initialize()
 
 	// Create the Texture sampler state.
 	result = device->CreateSamplerState(&samplerDesc, &Sampler);
+	if (FAILED(result))
+		return false;
+
+	// Setup the description of the light dynamic constant buffer that is in the pixel shader.
+	// Note that ByteWidth always needs to be a multiple of 16 if using D3D11_BIND_CONSTANT_BUFFER or CreateBuffer will fail.
+	materialBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+	materialBufferDesc.ByteWidth = sizeof(MaterialBuffer);
+	materialBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	materialBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	materialBufferDesc.MiscFlags = 0;
+	materialBufferDesc.StructureByteStride = 0;
+
+	// Create the constant buffer pointer so we can access the vertex shader constant buffer from within this class.
+	result = device->CreateBuffer(&materialBufferDesc, NULL, &MaterialBuf);
 	if (FAILED(result))
 		return false;
 
@@ -212,11 +236,12 @@ void MaterialShader::OutputShaderErrorMessage(ID3D10Blob* errorMessage, LPCTSTR 
 	return;
 }
 
-bool MaterialShader::SetShaderParameters(XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix, ID3D11ShaderResourceView* texture)
+bool MaterialShader::SetShaderParameters(XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix, ID3D11ShaderResourceView* texture, Material* material)
 {
 	HRESULT result;
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
 	MatrixBufferType* dataPtr;
+	MaterialBuffer* dataPtr2;
 	unsigned int bufferNumber;
 	XMMATRIX projectionViewMatrix;
 	XMMATRIX projectionViewWorldMatrix;
@@ -227,7 +252,7 @@ bool MaterialShader::SetShaderParameters(XMMATRIX worldMatrix, XMMATRIX viewMatr
 	projectionViewWorldMatrix = XMMatrixMultiplyTranspose(projectionViewWorldMatrix, projectionMatrix);
 
 	// Lock the constant buffer so it can be written to.
-	result = deviceContext->Map(m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+	result = deviceContext->Map(MatrixBuf, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 	if (FAILED(result))
 	{
 		return false;
@@ -239,19 +264,37 @@ bool MaterialShader::SetShaderParameters(XMMATRIX worldMatrix, XMMATRIX viewMatr
 	// Copy the matrices into the constant buffer.
 	dataPtr->projectionViewWorld = projectionViewWorldMatrix;
 
-
 	// Unlock the constant buffer.
-	deviceContext->Unmap(m_matrixBuffer, 0);
+	deviceContext->Unmap(MatrixBuf, 0);
 
 	// Set the position of the constant buffer in the vertex shader.
 	bufferNumber = 0;
 
 	// Finanly set the constant buffer in the vertex shader with the updated values.
-	deviceContext->VSSetConstantBuffers(bufferNumber, 1, &m_matrixBuffer);
+	deviceContext->VSSetConstantBuffers(bufferNumber, 1, &MatrixBuf);
 
 	// Set shader Light resource in the pixel shader.
 	deviceContext->PSSetShaderResources(0, 1, &texture);
 
+	//Lock the light constant buffer so it can be written to
+	result = deviceContext->Map(MaterialBuf, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+	if (FAILED(result))
+		return false;
+
+	//Get a pointer to the data in teh constant buffer
+	dataPtr2 = (MaterialBuffer*)mappedResource.pData;
+
+	//Copy the lighting variables into the constant buffer
+	dataPtr2->color = material->color;
+
+	//Unlock the constant buffer
+	deviceContext->Unmap(MaterialBuf, 0);
+
+	//Set the position of the light constant buffer in the pixel shader
+	bufferNumber = 0;
+
+	//Finally set the light constant buffer in the pixel shader with the updated values
+	deviceContext->PSSetConstantBuffers(bufferNumber, 1, &MaterialBuf);
 	return true;
 }
 
@@ -263,15 +306,23 @@ void MaterialShader::BindShader()
 	// Set the vertex and pixel shaders that will be used to render this triangle.
 	deviceContext->VSSetShader(VertexShader, NULL, 0);
 	deviceContext->PSSetShader(PixelShader, NULL, 0);
+
+	// Set the sampler state in the pixel shader.
+	deviceContext->PSSetSamplers(0, 1, &Sampler);
 }
 
 void MaterialShader::Shutdown()
 {
 	// Release the matrix constant buffer.
-	if (m_matrixBuffer)
+	if (MatrixBuf)
 	{
-		m_matrixBuffer->Release();
-		m_matrixBuffer = 0;
+		MatrixBuf->Release();
+		MatrixBuf = 0;
+	}
+	if (MaterialBuf)
+	{
+		MaterialBuf->Release();
+		MaterialBuf = 0;
 	}
 	// Release the sampler state.
 	if (Sampler)

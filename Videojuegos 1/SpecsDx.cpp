@@ -354,7 +354,7 @@ string SpecsDx::Init(int screenWidth, int screenHeight, HWND hwnd, bool fullscre
 	result = m_device->CreateRasterizerState(&rasterDesc, &m_rasterStateNoCulling);
 	if (FAILED(result))
 	{
-		return "No fue posible crear el estado de rasterizacion del Culling";
+		return "No fue posible crear el culling";
 	}
 
 

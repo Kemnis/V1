@@ -21,16 +21,15 @@ bool GameObject::AssignModel(Model* model)
 	return true;
 }
 
-bool GameObject::AssignShader(BasicShader* shader)
+bool GameObject::AssignBasicShader(BasicShader* basicshader)
 {
-	Shader = shader;
+	BShader = basicshader;
 	return true;
 }
 
-bool GameObject::AssignMaterialShader()
+bool GameObject::AssignMaterialShader(MaterialShader* materialshader)
 {
-	//Temporalmente no se usa la variable de referencia
-	materialShader = ResourceManager::MatShader;
+	MShader = materialshader;
 	return true;
 }
 
@@ -50,7 +49,8 @@ void GameObject::Shutdown()
 {
 	delete Modelo;
 	delete Tex;
-	delete Shader;
+	delete BShader;
+	delete MShader;
 	delete Transform;
 }
 
@@ -64,12 +64,31 @@ Texture* GameObject::GetTexture()
 	return Tex;
 }
 
-BasicShader* GameObject::GetShader()
+bool GameObject::ExistShader()
 {
-	return Shader;
+	if (BShader == nullptr && MShader == nullptr)
+		return false;
+	else
+		return true;
 }
 
 Material* GameObject::GetMaterial()
 {
 	return material;
+}
+
+void GameObject::Draw(XMMATRIX world, XMMATRIX view, XMMATRIX projection)
+{
+	if (BShader != nullptr)
+	{
+		BShader->SetShaderParameters(world, view, projection, material);
+		ResourceManager::bindBasicShader(BShader);
+	}
+	else if (MShader != nullptr)
+	{
+		MShader->SetShaderParameters(world, view, projection, Tex->GetTexture(), material);
+		ResourceManager::bindMaterialShader(MShader);
+	}
+	ResourceManager::bindModel(Modelo);
+	Modelo->Draw();
 }

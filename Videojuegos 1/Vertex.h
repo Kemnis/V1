@@ -21,8 +21,8 @@ public:
 		XMFLOAT3 normal;
 	};
 	vector<VertexType> FinalMesh;
-	vector<VertexType> VertexResult();
-	//vector<unsigned long> IndexResult();
+	void DoFinalMesh();
+	vector<unsigned long> IndexResult();
 	vector<unsigned long> GetIndex();
 
 	vec3 GetVertex(int indexArray);
@@ -84,7 +84,7 @@ public:
 
 	void AddTriangleFaces(vec3 TriangleVertex, vec3 TriangleTexture, vec3 TriangleNormal);
 
-	void ConstructIndexFromTriangles(vec3 Vertex, vec2 Uv, vec3 Normal, int Index);
+	void DoFinalMeshFromTriangles(vec3 Vertex, vec2 Uv, vec3 Normal, int Index);
 
 	int sizeClass();
 

@@ -19,9 +19,9 @@ public:
 	void SetScale(vec3 Scale);
 	void SetRotation(vec3 Rotation);
 	void SetTranslation(vec3 Translation);
-	vec3 GetScale(vec3 Scale);
-	vec3 GetRotation(vec3 Rotation);
-	vec3 GetTranslation(vec3 Translation);
+	vec3 GetScale();
+	vec3 GetRotation();
+	vec3 GetTranslation();
 	void SetTransforms(vec3 Translation, vec3 Rotation, vec3 Scale);
 	void ToMatrix(vec3 Scale, vec3 Rotation, vec3 Translation);
 	XMMATRIX ToMatrix();

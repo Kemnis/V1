@@ -6,11 +6,13 @@
 #include "BasicShader.h"
 #include "MaterialShader.h"
 #include "Material.h"
+#include "KeyHandler.h"
 //Variables de respuesta
 bool ResourceManager::RB = false;
 string ResourceManager::RS = "";
 // Variables de respuesta
-BasicShader* ResourceManager::ShaderActual = nullptr;
+BasicShader* ResourceManager::BShaderActual = nullptr;
+MaterialShader* ResourceManager::MShaderActual = nullptr;
 Model* ResourceManager::ModeloActual = nullptr;
 
 ResourceManager::GameObjectMap ResourceManager::GameObjectIdentifier;
@@ -21,9 +23,19 @@ ResourceManager::MaterialMap ResourceManager::MaterialIdentifier;
 int ResourceManager::GameObjectIndex = 0;
 int ResourceManager::ModelIndex = 0;
 int ResourceManager::TextureIndex = 0;
-int ResourceManager::ShaderIndex = 0;
 int ResourceManager::MaterialIndex = 0;
+BasicShader* ResourceManager::BasShader = 0;
 MaterialShader* ResourceManager::MatShader = 0;
+
+//Informacion de la pantalla
+int ResourceManager::ScreenWidthF = GetSystemMetrics(SM_CXSCREEN);
+int ResourceManager::ScreenHeightF = GetSystemMetrics(SM_CYSCREEN);
+int ResourceManager::ScreenWidth = 800;
+int ResourceManager::ScreenHeight = 600;
+KeyHandler* ResourceManager::Player1 = nullptr;
+
+//Player1
+
 
 ResourceManager::ResourceManager()
 {
@@ -75,16 +87,13 @@ string ResourceManager::BuildGameObject(string nameGameObject, string modelname,
 	}
 	if (shadername != "")
 	{
-		if (shadername == "Material")
-		{
-			nuevo.AssignMaterialShader();
-		}
-		else
-		{
-			nuevo.AssignShader(&ShaderIdentifier.find(shadername)->second);
-			if (nuevo.GetShader() == nullptr)
-				return "E_Fail";
-		}
+		int shadernumber = ShaderIdentifier.find(shadername)->second;
+		if (shadernumber == 0)
+			nuevo.AssignBasicShader(BasShader);
+		else if (shadernumber == 1)
+			nuevo.AssignMaterialShader(MatShader);
+		if (nuevo.ExistShader() == false)
+			return "E_Fail";
 	}
 	if (materialname != "")
 	{
@@ -101,13 +110,16 @@ GameObject* ResourceManager::GetObjectByName(string nameSearch)
 	return &GameObjectIdentifier.find(nameSearch)->second;
 }
 
-bool ResourceManager::AddShader()
+bool ResourceManager::LoadShaders()
 {
-	BasicShader nuevo;
-	nuevo.Name = "Shader";
-	nuevo.Initialize();
-	ShaderIdentifier.insert(std::pair<string, BasicShader>("Shader", nuevo));
-	ShaderIndex++;
+	BasShader = new BasicShader;
+	MatShader = new MaterialShader;
+	BasShader->Name = "Basic";
+	BasShader->Initialize();
+	ShaderIdentifier.insert(std::pair<string, int>("Basic", 0));
+	MatShader->Name = "Material";
+	MatShader->Initialize();
+	ShaderIdentifier.insert(std::pair<string, int>("Material", 1));
 	return true;
 }
 
@@ -125,26 +137,37 @@ bool ResourceManager::InitMaterialshader()
 {
 	MatShader->Name = "MaterialShader";
 	MatShader->Initialize();
-	ShaderIndex++;
 	return true;
 }
 
-bool ResourceManager::bindShader(GameObject * GO)
+bool ResourceManager::bindBasicShader(BasicShader * basicshader)
 {
-	if (ShaderActual != GO->GetShader())
+	if (BShaderActual != basicshader)
 	{
-		GO->GetShader()->BindShader();
-		ShaderActual = GO->GetShader();
+		basicshader->BindShader();
+		BShaderActual = basicshader;
 		return true;
 	}
 	return false;
 }
 
-bool ResourceManager::bindModel(GameObject * GO)
+bool ResourceManager::bindMaterialShader(MaterialShader * materialshader)
 {
-	if (ModeloActual != GO->GetModel())
+	if (MShaderActual != materialshader)
 	{
-		ModeloActual = GO->GetModel();
+		materialshader->BindShader();
+		MShaderActual = materialshader;
+		return true;
+	}
+	return false;
+}
+
+bool ResourceManager::bindModel(Model * model)
+{
+	if (ModeloActual != model)
+	{
+		ModeloActual = model;
+		ModeloActual->BindMesh();
 		return true;
 	}
 	return false;
@@ -156,9 +179,9 @@ void ResourceManager::Shutdown()
 	ModelIdentifier.clear();
 	TextureIdentifier.clear();
 	ShaderIdentifier.clear();
-	ShaderActual = nullptr;
+	BShaderActual = nullptr;
+	MShaderActual = nullptr;
 	GameObjectIndex = 0;
 	ModelIndex = 0;
 	TextureIndex = 0;
-	ShaderIndex = 0;
 }

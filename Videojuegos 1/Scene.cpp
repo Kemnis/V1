@@ -8,23 +8,23 @@ Scene::Scene() {
 Scene::~Scene() {}
 
 string Scene::CreateScene() {
-	SceneCamera->SetPosition(0.0f, 0.0f, -5.0f);
+	ResourceManager::Player1 = new KeyHandler(vec3(0,0,5), vec3(0,180,0));
 	bool res;
 
-	//Load all objects you need First add all the resources
-	//ResourceManager::AddMesh("Triangle", "SphereMesh");
-	ResourceManager::AddModel("Triangle", "SphereMesh");
+	//Load all objects you need First acubedd all the resources
+	ResourceManager::AddModel("Square", "SphereMesh");
 	ResourceManager::AddModel("Sphere.obj", "SphereModel");
-	ResourceManager::AddShader();
+	ResourceManager::LoadShaders();
 	ResourceManager::AddTexture("tex1.jpg", "World");
-	ResourceManager::AddMaterial("ColorBlanco", vec3(1, 1, 1));
+	ResourceManager::AddMaterial("ColorBlanco", vec3(.5, .5, .5));
 
 	//Then Build a GameObject
-	ResourceManager::BuildGameObject("SphereMod", "SphereModel", "", "Shader", "ColorBlanco");
-	ResourceManager::BuildGameObject("SphereMes", "SphereMesh", "", "Shader", "ColorBlanco");
+	ResourceManager::BuildGameObject("SphereMod", "SphereModel", "World", "Material", "ColorBlanco");
+	ResourceManager::BuildGameObject("SphereMes", "SphereMesh", "World", "Material", "ColorBlanco");
 
 				//Descripción:
 	ResourceManager::GetObjectByName("SphereMes")->Transform->SetTranslation(vec3(2, 0, 0));
+	ResourceManager::GetObjectByName("SphereMes")->Transform->SetScale(vec3(.5, .5, .5));
 				//Descripción:
 
 	_RPT0(0, "Scene Created!\n");
@@ -34,10 +34,14 @@ string Scene::CreateScene() {
 string Scene::ProcessScene(double dt)
 {
 	vec3 rot;
-	rot.y = 4 * dt;
+	vec3 trans;
+	trans.z = 0.00;
+	rot.y = 2 * dt;
 	ResourceManager::GetObjectByName("SphereMod")->Transform->Rotate(rot);
+	ResourceManager::GetObjectByName("SphereMod")->Transform->Translate(trans);
 	rot.y = 2 * dt;
 	ResourceManager::GetObjectByName("SphereMes")->Transform->Rotate(rot);
+	ResourceManager::GetObjectByName("SphereMes")->Transform->Translate(trans);
 	return "S_OK";
 }
 
@@ -59,22 +63,22 @@ string Scene::RenderScene()
 	SceneCamera->GetViewMatrix(viewMatrix);
 	projectionMatrix = SceneCamera->GetProjectionMatrix();
 
+	specsDx->TurnOnCulling();
+	specsDx->TurnOnAlphaBlending();
+	specsDx->TurnZBufferOn();
 
 	//Define and create all Objects
 	GameObject* GObjMesh = ResourceManager::GetObjectByName("SphereMes");
 	GameObject* GObjModel = ResourceManager::GetObjectByName("SphereMod");
 
-	GObjMesh->GetShader()->SetShaderParameters(Worldobj2, viewMatrix, *projectionMatrix, GObjMesh->GetMaterial());
-	ResourceManager::bindShader(GObjMesh);
-	ResourceManager::bindModel(GObjModel);
-	GObjMesh->GetModel()->Draw();
+	GObjMesh->Draw(Worldobj2, viewMatrix, *projectionMatrix);
+	//Lo ultimo que movi fue el buffer del initialize de MaterialShader para que existieran 3 posiciones incluyendo el 
+	//apartado del texture... debe estar ahi el problema de rendereo... intentar con solo hacer calculos con texture
+	//sin usar el color del material.
 
-	GObjModel->GetShader()->SetShaderParameters(worldMatrix, viewMatrix, *projectionMatrix, GObjModel->GetMaterial());
-	ResourceManager::bindShader(GObjModel);
-	ResourceManager::bindModel(GObjModel);
-	GObjModel->GetModel()->Draw();
+	GObjModel->Draw(worldMatrix, viewMatrix, *projectionMatrix);
 
-	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
+	
 
 	// Present the rendered scene to the screen.
 	specsDx->EndScene();

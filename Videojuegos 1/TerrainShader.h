@@ -1,5 +1,4 @@
-#ifndef _MaterialShader_H_
-#define _MaterialShader_H_
+#pragma once
 #include <d3d11.h>
 #include <d3dcompiler.h>
 #include <directxmath.h>
@@ -7,7 +6,7 @@
 #include "Texture.h"
 using namespace DirectX;
 using namespace std;
-class MaterialShader : public DxComponent<MaterialShader>
+class TerrainShader : public DxComponent<TerrainShader>
 {
 private:
 	struct MatrixBufferType
@@ -20,8 +19,8 @@ private:
 		float padding;
 	};
 public:
-	MaterialShader();
-	~MaterialShader();
+	TerrainShader();
+	~TerrainShader();
 
 	bool Initialize();
 	void Shutdown();
@@ -41,5 +40,3 @@ private:
 	ID3D11Buffer* MaterialBuf;
 	ID3D11SamplerState* Sampler;
 };
-
-#endif

@@ -6,7 +6,7 @@ Texture::Texture()
 {
 	m_targaData = 0;
 	m_texture = 0;
-	m_textureView = 0;
+	Texture2D = 0;
 }
 
 Texture::~Texture()
@@ -49,7 +49,7 @@ string Texture::LoadTextureWic(string filename)
 	std::wstring widestr = std::wstring(filename.begin(), filename.end());
 	const wchar_t* szName = widestr.c_str();
 	HRESULT TextureWic = CreateWICTextureFromFile(device, deviceContext,
-		szName, res.GetAddressOf(), &m_textureView);
+		szName, res.GetAddressOf(), &Texture2D);
 	//Debugg
 	if (SUCCEEDED(TextureWic))
 	{
@@ -110,14 +110,14 @@ string Texture::LoadTextureTarga(string filename)
 	srvDesc.Texture2D.MipLevels = -1;
 
 	// Create the shader resource view for the texture.
-	hResult = device->CreateShaderResourceView(m_texture, &srvDesc, &m_textureView);
+	hResult = device->CreateShaderResourceView(m_texture, &srvDesc, &Texture2D);
 	if (FAILED(hResult))
 	{
 		return string("No se pudo crear TextureResourceView tga");
 	}
 
 	// Generate mipmaps for this texture.
-	deviceContext->GenerateMips(m_textureView);
+	deviceContext->GenerateMips(Texture2D);
 
 	// Release the targa image data now that the image data has been loaded into the texture.
 	delete[] m_targaData;
@@ -128,7 +128,7 @@ string Texture::LoadTextureTarga(string filename)
 
 ID3D11ShaderResourceView* Texture::GetTexture()
 {
-	return m_textureView;
+	return Texture2D;
 }
 
 
@@ -234,10 +234,10 @@ string Texture::LoadTarga(string filename, int& height, int& width)
 void Texture::Shutdown()
 {
 	// Release the texture view resource.
-	if (m_textureView)
+	if (Texture2D)
 	{
-		m_textureView->Release();
-		m_textureView = 0;
+		Texture2D->Release();
+		Texture2D = 0;
 	}
 
 	// Release the texture.

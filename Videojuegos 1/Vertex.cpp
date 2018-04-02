@@ -19,34 +19,31 @@ Vertex::Vertex()
 }
 
 
-//vector<unsigned long> Vertex::IndexResult() {
-//	vector<unsigned long> resulti;
-//	resulti.reserve(IndexCount);
-//
-//	for (int i = 0; i < (IndexCount); i++) {
-//		resulti.push_back(i);
-//	}
-//	return resulti;
-//}
+vector<unsigned long> Vertex::IndexResult() {
+	vector<unsigned long> resulti;
+	resulti.reserve(IndexCount);
+
+	for (int i = 0; i < (IndexCount); i++) {
+		resulti.push_back(i);
+	}
+	return resulti;
+}
 
 vector<unsigned long> Vertex::GetIndex() {
 	return indices;
 }
 
-vector<Vertex::VertexType> Vertex::VertexResult()
+void Vertex::DoFinalMesh()
 {
-	vector<Vertex::VertexType> result;
-		
-	result.reserve(VertexCount);
+	FinalMesh.reserve(VertexCount);
 	
 	for (int i = 0; i < (VertexCount); i++) {
 		VertexType nuevo;
 		nuevo.position = XMFLOAT3(GetVertex(i).x, GetVertex(i).y, GetVertex(i).z);
 		nuevo.texture = XMFLOAT2(GetTexture(i).x, GetTexture(i).y);
 		nuevo.normal = XMFLOAT3(GetNormal(i).x, GetNormal(i).y, GetNormal(i).z);
-		result.push_back(nuevo);
+		FinalMesh.push_back(nuevo);
 	}
-	return result;
 }
 
 
@@ -289,7 +286,7 @@ void Vertex::AddTriangleFaces(vec3 InfoTriangleFaceVertex, vec3 InfoTriangleFace
 	TriangleFaceNormal.push_back(InfoTriangleFaceNormal);
 }
 
-void Vertex::ConstructIndexFromTriangles(vec3 Vertex, vec2 Uv, vec3 Normal, int Index)
+void Vertex::DoFinalMeshFromTriangles(vec3 Vertex, vec2 Uv, vec3 Normal, int Index)
 {
 	FinalMesh.reserve(indexTriangles);
 	VertexType nuevo;

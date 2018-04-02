@@ -30,25 +30,39 @@ void Model::DefineTriangle()
 	MeshVertex.AddIndex(0); // Bottom left.
 	MeshVertex.AddIndex(1);  // Top middle.
 	MeshVertex.AddIndex(2);  // Bottom right.
+	MeshVertex.AddUV(0.0, 1.0);
+	MeshVertex.AddUV(0.0, 0.0);
+	MeshVertex.AddUV(1.0, 1.0);
+	//All primitives must to generate the Final Mesh
+	MeshVertex.DoFinalMesh();
 }
 
 void Model::DefineSquare()
 {
 	MeshVertex.AddVertex(-1.0f, -1.0f, 0.0f);  // Top left.
+	MeshVertex.AddUV(0.0, 0.0);
+	MeshVertex.AddNormals(0.0, 0.0, -1.0);
 
 	MeshVertex.AddVertex(-1.0f, 1.0f, 0.0f);  // Top right.
+	MeshVertex.AddUV(1.0, 0.0);
+	MeshVertex.AddNormals(0.0, 0.0, -1.0);
 
 	MeshVertex.AddVertex(1.0f, 1.0f, 0.0f);  // Bottom right.
+	MeshVertex.AddUV(1.0, 1.0);
+	MeshVertex.AddNormals(0.0, 0.0, -1.0);
 
 	MeshVertex.AddVertex(1.0f, -1.0f, 0.0f);  // Bottom left.
+	MeshVertex.AddUV(0.0, 1.0);
+	MeshVertex.AddNormals(0.0, 0.0, -1.0);
 
 	MeshVertex.AddIndex(0); // Bottom left.
-	MeshVertex.AddIndex(1);  // Top middle.
+	MeshVertex.AddIndex(1);  // Top left.
 	MeshVertex.AddIndex(2);  // Bottom right.
 
 	MeshVertex.AddIndex(0);  // Bottom left.
 	MeshVertex.AddIndex(2);  // Top right.
 	MeshVertex.AddIndex(3);  // Bottom right.
+	MeshVertex.DoFinalMesh();
 }
 void Model::DefineCube(XMFLOAT3 size)
 {
@@ -526,22 +540,17 @@ bool Model::Initialize(string NameOfFigure)
 
 	//Set up the description of the static vertex buffer
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	vertexBufferDesc.ByteWidth = sizeof(Vertex::VertexType)* MeshVertex.VertexCount;//MeshVertex.IndexCount;
+	if (NameOfFigure != "")
+		vertexBufferDesc.ByteWidth = sizeof(Vertex::VertexType)* MeshVertex.VertexCount;
+	else
+		vertexBufferDesc.ByteWidth = sizeof(Vertex::VertexType)* MeshVertex.IndexCount;
 	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	vertexBufferDesc.CPUAccessFlags = 0;
 	vertexBufferDesc.MiscFlags = 0;
 	vertexBufferDesc.StructureByteStride = 0;
 	
 	// Give the subresource structure a pointer to the vertex data.
-	if (NameOfFigure != "")
-	{
-		vector<Vertex::VertexType> vertices = MeshVertex.VertexResult();
-		vertexData.pSysMem = &vertices[0];
-	}
-	else
-	{
-		vertexData.pSysMem = &MeshVertex.FinalMesh[0];
-	}
+	vertexData.pSysMem = &MeshVertex.FinalMesh[0];
 	vertexData.SysMemPitch = 0;
 	vertexData.SysMemSlicePitch = 0;
 
@@ -558,7 +567,12 @@ bool Model::Initialize(string NameOfFigure)
 	indexBufferDesc.MiscFlags = 0;
 	indexBufferDesc.StructureByteStride = 0;
 
-	vector<unsigned long> indices = MeshVertex.GetIndex();
+	vector<unsigned long> indices;
+	if (NameOfFigure != "")
+		indices = MeshVertex.GetIndex();
+	else
+		indices = MeshVertex.IndexResult();
+
 	//Give the subresource structure a pointer to the index data
 	indexData.pSysMem = &indices[0];
 	indexData.SysMemPitch = 0;
@@ -708,19 +722,19 @@ bool Model::LoadModel(string path)
 			FaceIndex.x = MeshVertex.GetTriangleFV(i).x-1;
 			FaceIndex.y = MeshVertex.GetTriangleFT(i).x-1;
 			FaceIndex.z = MeshVertex.GetTriangleFN(i).x-1;
-			MeshVertex.ConstructIndexFromTriangles(MeshVertex.GetVertex(FaceIndex.x), MeshVertex.GetTexture(FaceIndex.y), MeshVertex.GetNormal(FaceIndex.z),j);
+			MeshVertex.DoFinalMeshFromTriangles(MeshVertex.GetVertex(FaceIndex.x), MeshVertex.GetTexture(FaceIndex.y), MeshVertex.GetNormal(FaceIndex.z),j);
 			j++;
 
 			FaceIndex.x = MeshVertex.GetTriangleFV(i).y-1;
 			FaceIndex.y = MeshVertex.GetTriangleFT(i).y-1;
 			FaceIndex.z = MeshVertex.GetTriangleFN(i).y-1;
-			MeshVertex.ConstructIndexFromTriangles(MeshVertex.GetVertex(FaceIndex.x), MeshVertex.GetTexture(FaceIndex.y), MeshVertex.GetNormal(FaceIndex.z),j);
+			MeshVertex.DoFinalMeshFromTriangles(MeshVertex.GetVertex(FaceIndex.x), MeshVertex.GetTexture(FaceIndex.y), MeshVertex.GetNormal(FaceIndex.z),j);
 			j++;
 
 			FaceIndex.x = MeshVertex.GetTriangleFV(i).z-1;
 			FaceIndex.y = MeshVertex.GetTriangleFT(i).z-1;
 			FaceIndex.z = MeshVertex.GetTriangleFN(i).z-1;
-			MeshVertex.ConstructIndexFromTriangles(MeshVertex.GetVertex(FaceIndex.x), MeshVertex.GetTexture(FaceIndex.y), MeshVertex.GetNormal(FaceIndex.z),j);
+			MeshVertex.DoFinalMeshFromTriangles(MeshVertex.GetVertex(FaceIndex.x), MeshVertex.GetTexture(FaceIndex.y), MeshVertex.GetNormal(FaceIndex.z),j);
 			j++;
 		}
 	}

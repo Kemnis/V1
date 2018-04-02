@@ -12,7 +12,7 @@ private:
 	struct InfoBufferType
 	{
 		XMMATRIX projectionViewWorld;
-		Material* material;
+		vec3 ColorMaterial;
 	};
 
 public:

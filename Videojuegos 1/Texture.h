@@ -1,6 +1,4 @@
 #pragma once
-#ifndef _Texture_H_
-#define _Texture_H_
 #include "WICTextureLoader.h"
 #include <vector>
 using std::vector;
@@ -23,21 +21,19 @@ public:
 	Texture();
 	~Texture();
 
+	string Name;
 	bool Initialize(string);
+	ID3D11ShaderResourceView* GetTexture();
 	void Shutdown();
 
-	string Name;
-	ID3D11ShaderResourceView* GetTexture();
-
-	ID3D11ShaderResourceView* m_textureView;
 private:
 	string LoadTarga(string, int&, int&);
 	string LoadTextureTarga(string);
 	string LoadTextureWic(string);
+
 private:
+	ID3D11ShaderResourceView * Texture2D;
 	unsigned char* m_targaData;
 	ID3D11Texture2D* m_texture;
 
 };
-
-#endif

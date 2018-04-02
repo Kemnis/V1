@@ -7,6 +7,7 @@
 #include "BasicShader.h"
 #include "MaterialShader.h"
 #include "Material.h"
+#include "KeyHandler.h"
 class ResourceManager
 {
 public:
@@ -17,22 +18,33 @@ public:
 	static bool AddTexture(string path, string name);
 	static string BuildGameObject(string nameGameObject, string modelname, string texturename, string shadername, string materialname);
 	static GameObject* GetObjectByName(string);
-	static bool AddShader();
+	static bool LoadShaders();
 	static bool AddMaterial(string Nombre, vec3 Color);
 	static bool InitMaterialshader();
 
-	static bool bindShader(GameObject* GO);
-	static bool bindModel(GameObject * GO);
+	static bool bindBasicShader(BasicShader* basicshader);
+	static bool bindMaterialShader(MaterialShader* materialshader);
+	static bool bindModel(Model * model);
 
 	static void Shutdown();
 
 	using GameObjectMap = std::map<string, GameObject>;
 	using ModelMap = std::map<string, Model>;
 	using TextureMap = std::map<string, Texture>;
-	using ShaderMap = std::map<string, BasicShader>;
+	using ShaderMap = std::map<string, int>;
 	using MaterialMap = std::map<string, Material>;
 
+	static BasicShader* BasShader;
 	static MaterialShader* MatShader;
+
+	//Informacion de pantalla
+	static int ScreenWidthF;
+	static int ScreenHeightF;
+	static int ScreenWidth;
+	static int ScreenHeight;
+
+	//Player 1
+	static KeyHandler* Player1;
 
 
 protected:
@@ -42,7 +54,8 @@ protected:
 	static string RS;
 	// Variables de respuesta
 	//Actuales
-	static BasicShader* ShaderActual;
+	static BasicShader* BShaderActual;
+	static MaterialShader* MShaderActual;
 	static Model* ModeloActual;
 	//Objetos
 	static GameObjectMap GameObjectIdentifier;
@@ -56,7 +69,6 @@ protected:
 	static int TextureIndex;
 	//Shader
 	static ShaderMap ShaderIdentifier;
-	static int ShaderIndex;
 	//Material
 	static MaterialMap MaterialIdentifier;
 	static int MaterialIndex;

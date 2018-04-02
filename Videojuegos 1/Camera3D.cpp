@@ -37,9 +37,9 @@ void Camera3D::Watch()
 	upVector = XMLoadFloat3(&up);
 
 	// Setup the position of the camera in the world.
-	position.x = posX;
-	position.y = posY;
-	position.z = posZ;
+	position.x = ResourceManager::Player1->GetPosition().x;
+	position.y = ResourceManager::Player1->GetPosition().y;
+	position.z = ResourceManager::Player1->GetPosition().z;
 
 	// Load it into a XMVECTOR structure.
 	positionVector = XMLoadFloat3(&position);
@@ -53,9 +53,9 @@ void Camera3D::Watch()
 	lookAtVector = XMLoadFloat3(&lookAt);
 
 	// Set the yaw (Y axis), pitch (X axis), and roll (Z axis) rotations in radians.
-	pitch = rotX * 0.0174532925f;
-	yaw = rotY * 0.0174532925f;
-	roll = rotZ * 0.0174532925f;
+	pitch = ResourceManager::Player1->GetRotation().x * 0.0174532925f;
+	yaw = ResourceManager::Player1->GetRotation().y  * 0.0174532925f;
+	roll = ResourceManager::Player1->GetRotation().z  * 0.0174532925f;
 
 	// Create the rotation matrix from the yaw, pitch, and roll values.
 	rotationMatrix = XMMatrixRotationRollPitchYaw(pitch, yaw, roll);
@@ -73,9 +73,7 @@ void Camera3D::Watch()
 	//No se porque no funciona pero marca error de acceso a memoria... puede ser porque le falte un Transpose
 	//m_projetionViewMatrix = XMMatrixMultiply(m_projectionMatrix, viewMatrix);
 
-	//posicion = XMFLOAT3(posX, posY, posZ);
 	XMStoreFloat4(&view, lookAtVector);
-
 
 	return;
 }
@@ -97,12 +95,10 @@ void Camera3D::SetRotation(float x, float y, float z)
 	return;
 }
 
-
 XMFLOAT3 Camera3D::GetPosition()
 {
 	return XMFLOAT3(posX, posY, posZ);
 }
-
 
 XMFLOAT3 Camera3D::GetRotation()
 {

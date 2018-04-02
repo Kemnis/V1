@@ -215,7 +215,7 @@ bool BasicShader::SetShaderParameters(XMMATRIX worldMatrix, XMMATRIX viewMatrix,
 
 	// Copy the matrices into the constant buffer.
 	dataPtr->projectionViewWorld = projectionViewWorldMatrix;
-	dataPtr->material = material;
+	dataPtr->ColorMaterial = material->color;
 
 
 	// Unlock the constant buffer.

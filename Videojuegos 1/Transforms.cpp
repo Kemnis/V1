@@ -53,17 +53,17 @@ void Transforms::SetTranslation(vec3 Translation)
 	this->tran = Translation;
 }
 
-vec3 Transforms::GetScale(vec3 Scale)
+vec3 Transforms::GetScale()
 {
 	return this->esc;
 }
 
-vec3 Transforms::GetRotation(vec3 Rotation)
+vec3 Transforms::GetRotation()
 {
 	return this->rot;
 }
 
-vec3 Transforms::GetTranslation(vec3 Translation)
+vec3 Transforms::GetTranslation()
 {
 	return this->tran;
 }
