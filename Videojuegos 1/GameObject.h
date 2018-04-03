@@ -3,6 +3,7 @@
 #define _GameObject_H_
 #include "Model.h"
 #include "Texture.h"
+#include "Shader.h"
 #include "BasicShader.h"
 #include "MaterialShader.h"
 #include "Material.h"
@@ -14,8 +15,7 @@ public:
 	
 	string GetName();
 	bool AssignModel(Model* model);
-	bool AssignBasicShader(BasicShader* basicshader);
-	bool AssignMaterialShader(MaterialShader* materialshader);
+	bool AssignShader(Shader* shader);
 	bool AssignMaterial(Material* mat);
 	bool AssignTexture(Texture* texture);
 	Model* GetModel();
@@ -31,8 +31,7 @@ protected:
 	string Name, Status;
 	Model* Modelo;
 	Texture* Tex;
-	BasicShader* BShader;
-	MaterialShader* MShader;
+	Shader* shader;
 	Material* material;
 private:
 };

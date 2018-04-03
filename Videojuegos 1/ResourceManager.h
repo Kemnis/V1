@@ -5,6 +5,7 @@
 #include "Model.h"
 #include "Texture.h"
 #include "Terrain.h"
+#include "Shader.h"
 #include "BasicShader.h"
 #include "MaterialShader.h"
 #include "Material.h"
@@ -18,14 +19,12 @@ public:
 	static bool AddModel(string path, string name);
 	static bool AddTexture(string path, string name);
 	static bool AddStage(string name, int Cells, int CellSize, int Size);
+	static bool AddShader(string name, Shader* shader);
 	static string BuildGameObject(string nameGameObject, string meshname, string texturename, string shadername, string materialname);
 	static GameObject* GetObjectByName(string);
-	static bool LoadShaders();
 	static bool AddMaterial(string Nombre, vec3 Color);
-	static bool InitMaterialshader();
 
-	static bool bindBasicShader(BasicShader* basicshader);
-	static bool bindMaterialShader(MaterialShader* materialshader);
+	static bool bindShader(Shader* basicshader);
 	static bool bindModel(Model * model);
 
 	static void Shutdown();
@@ -33,12 +32,9 @@ public:
 	using GameObjectMap = std::map<string, GameObject>;
 	using ModelMap = std::map<string, Model>;
 	using TextureMap = std::map<string, Texture>;
-	using ShaderMap = std::map<string, int>;
+	using ShaderMap = std::map<string, Shader*>;
 	using MaterialMap = std::map<string, Material>;
 	using TerrainMap = std::map<string, Terrain>;
-
-	static BasicShader* BasShader;
-	static MaterialShader* MatShader;
 
 	//Informacion de pantalla
 	static int ScreenWidthF;
@@ -57,8 +53,7 @@ protected:
 	static string RS;
 	// Variables de respuesta
 	//Actuales
-	static BasicShader* BShaderActual;
-	static MaterialShader* MShaderActual;
+	static Shader* ShaderActual;
 	static Model* ModeloActual;
 	//Objetos
 	static GameObjectMap GameObjectIdentifier;

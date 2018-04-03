@@ -2,20 +2,22 @@
 #include "stdafx.h"
 
 
-Shader::Shader(std::string vsSource, std::string fsSource)
+Shader::Shader(ShaderType type)
 {
 	VertexShader = 0;
 	PixelShader = 0;
 	Layout = 0;
+	ConstantBuffer matrixConstantBuffer(MATRIX_BUFFER_ID, sizeof(MatrixConstantBufferType));
+	this->AddConstantBuffer("MatrixBuffer", matrixConstantBuffer);
+	this->type = type;
 }
 
 Shader::~Shader()
 {
 }
 
-bool Shader::Initialize(std::string vsSource, std::string fsSource)
+bool Shader::Create(D3D11_INPUT_ELEMENT_DESC* inputLayout, unsigned int layoutCount, const std::string& vsSource, const std::string& fsSource)
 {
-
 	std::wstring stemp = s2ws(vsSource);
 	LPCWSTR vsFileName = stemp.c_str();
 
@@ -79,31 +81,10 @@ bool Shader::Initialize(std::string vsSource, std::string fsSource)
 	{
 		return false;
 	}
+	
+	
 
-	// Create the vertex input layout description.
-	// This setup needs to match the VertexType stucture in the ModelClass and in the shader.
-	D3D11_INPUT_ELEMENT_DESC polygonLayout[2];
-	polygonLayout[0].SemanticName = "POSITION";
-	polygonLayout[0].SemanticIndex = 0;
-	polygonLayout[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
-	polygonLayout[0].InputSlot = 0;
-	polygonLayout[0].AlignedByteOffset = 0;
-	polygonLayout[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-	polygonLayout[0].InstanceDataStepRate = 0;
-
-	polygonLayout[1].SemanticName = "COLOR";
-	polygonLayout[1].SemanticIndex = 0;
-	polygonLayout[1].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-	polygonLayout[1].InputSlot = 0;
-	polygonLayout[1].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
-	polygonLayout[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-	polygonLayout[1].InstanceDataStepRate = 0;
-
-	// Get a count of the elements in the layout.
-	unsigned int numElements = sizeof(polygonLayout) / sizeof(polygonLayout[0]);
-
-	// Create the vertex input layout.
-	result = device->CreateInputLayout(polygonLayout, numElements, vertexShaderBuffer->GetBufferPointer(),
+	result = device->CreateInputLayout(inputLayout, layoutCount, vertexShaderBuffer->GetBufferPointer(),
 		vertexShaderBuffer->GetBufferSize(), &Layout);
 	if (FAILED(result))
 	{
@@ -117,10 +98,12 @@ bool Shader::Initialize(std::string vsSource, std::string fsSource)
 	pixelShaderBuffer->Release();
 	pixelShaderBuffer = 0;
 
-	constantBuffers.push_back(new ConstantBuffer<MatrixConstantBuffer>());
-
-
 	return true;
+}
+
+void Shader::AddConstantBuffer(const string& bufferName, const ConstantBuffer& buffer) {
+	constantBufferMap.insert_or_assign(bufferName, buffer);
+	//constantBuffers.push_back(buffer);
 }
 
 std::wstring Shader::s2ws(const std::string& s)
@@ -179,12 +162,22 @@ bool Shader::SetShaderParameters(XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMA
 	projectionViewWorldMatrix = XMMatrixMultiply(worldMatrix, viewMatrix);
 	projectionViewWorldMatrix = XMMatrixMultiplyTranspose(projectionViewWorldMatrix, projectionMatrix);
 
-	MatrixConstantBuffer tempBuffer{};
+	MatrixConstantBufferType tempBuffer{};
 	tempBuffer.projectionViewWorld = projectionViewWorldMatrix;
 
-	constantBuffers[0]->Update(&tempBuffer);
+	this->SetShaderConstantBuffer("MatrixBuffer", &tempBuffer);
 
 	return true;
+}
+
+bool Shader::SetShaderConstantBuffer(const string& bufferName, const void* values) {
+	if (this->constantBufferMap.find(bufferName) != this->constantBufferMap.end()) {
+		constantBufferMap.at(bufferName).Update(values);
+		return true;
+	}
+	else {
+		return false;
+	}
 }
 
 void Shader::BindShader()
@@ -195,9 +188,9 @@ void Shader::BindShader()
 	// Set the vertex and pixel shaders that will be used to render this triangle.
 	deviceContext->VSSetShader(VertexShader, NULL, 0);
 	deviceContext->PSSetShader(PixelShader, NULL, 0);
-
-	for (int i = 0; i < constantBuffers.size(); i++) {
-		deviceContext->VSSetConstantBuffers(i, 1, &constantBuffers[i]->buffer );
+	for (std::map<std::string, ConstantBuffer>::iterator iter = constantBufferMap.begin(); iter != constantBufferMap.end(); ++iter)
+	{
+		deviceContext->VSSetConstantBuffers(iter->second.id, 1, &iter->second.buffer);
 	}
 	
 }

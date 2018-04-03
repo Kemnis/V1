@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -149,6 +149,7 @@
   <ItemGroup>
     <ClInclude Include="Behaviour.h" />
     <ClInclude Include="Camera3D.h" />
+    <ClInclude Include="ConstantBuffer.h" />
     <ClInclude Include="DxComponent.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="GameObject.h" />
@@ -175,6 +176,7 @@
   <ItemGroup>
     <ClCompile Include="Behaviour.cpp" />
     <ClCompile Include="Camera3D.cpp" />
+    <ClCompile Include="ConstantBuffer.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Input.cpp" />
@@ -213,6 +215,16 @@
     <None Include="MaterialShader.vs" />
     <None Include="Model.ps" />
     <None Include="Model.vs" />
+    <None Include="test.ps" />
+    <None Include="test.vs" />
+    <None Include="testMaterial.ps" />
+    <None Include="testMaterial.vs" />
+    <None Include="testTexture.ps">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </None>
+    <None Include="testTexture.vs">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

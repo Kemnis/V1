@@ -105,6 +105,9 @@
     <ClInclude Include="Shader.h">
       <Filter>Archivos de encabezado\Core</Filter>
     </ClInclude>
+    <ClInclude Include="ConstantBuffer.h">
+      <Filter>Archivos de encabezado\Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -167,6 +170,9 @@
     <ClCompile Include="Shader.cpp">
       <Filter>Archivos de origen\Core</Filter>
     </ClCompile>
+    <ClCompile Include="ConstantBuffer.cpp">
+      <Filter>Archivos de origen\Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Videojuegos 1.rc">
@@ -198,6 +204,24 @@
       <Filter>Archivos de recursos</Filter>
     </None>
     <None Include="MaterialShader.vs">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="test.vs">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="test.ps">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="testMaterial.vs">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="testMaterial.ps">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="testTexture.vs">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="testTexture.ps">
       <Filter>Archivos de recursos</Filter>
     </None>
   </ItemGroup>

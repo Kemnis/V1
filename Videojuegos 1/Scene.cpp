@@ -14,16 +14,19 @@ string Scene::CreateScene() {
 	//Load all objects you need First acubedd all the resources
 	ResourceManager::AddModel("Cube", "SphereMesh");
 	ResourceManager::AddModel("Sphere.obj", "SphereModel");
-	ResourceManager::LoadShaders();
+	//ResourceManager::LoadShaders();
 	ResourceManager::AddTexture("tex1.jpg", "World");
 	ResourceManager::AddMaterial("ColorBlanco", vec3(.5, .5, .5));
+	//ResourceManager::AddShader("TestShader", Shader("test.vs", "test.ps"));
+	ResourceManager::AddShader("TestBasicShader", new BasicShader("test.vs", "test.ps"));
+	//ResourceManager::AddShader("TestMaterialShader", new MaterialShader("testTexture.vs", "testTexture.ps"));
+
 	//ResourceManager::AddStage("Stage1",4,3,12);
-	//ResourceManager::AddShader(ShaderType.BasicShader, "BasicShader", "BasicShader.vs", "BasicShader.fs");
 
 
 	//Then Build a GameObject
-	ResourceManager::BuildGameObject("SphereMod", "SphereModel", "World", "Material", "ColorBlanco");
-	ResourceManager::BuildGameObject("SphereMes", "SphereMesh", "World", "Material", "ColorBlanco");
+	ResourceManager::BuildGameObject("SphereMod", "SphereModel", "World", "TestBasicShader", "ColorBlanco");
+	ResourceManager::BuildGameObject("SphereMes", "SphereMesh", "World", "TestBasicShader", "ColorBlanco");
 
 				//Descripción:
 	ResourceManager::GetObjectByName("SphereMes")->Transform->SetTranslation(vec3(2, 0, 0));

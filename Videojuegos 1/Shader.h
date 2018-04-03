@@ -3,86 +3,45 @@
 #include <d3dcompiler.h>
 #include <directxmath.h>
 #include <fstream>
+#include "ConstantBuffer.h"
 #include "Material.h"
+
+#define MATRIX_BUFFER_ID			0
+#define CUSTOM_BUFFER_ID			1
+
 using namespace DirectX;
 using namespace std;
 
-class ConstantBufferBase : public DxComponent<ConstantBufferBase> {
-private:
-
-	
-public:
-	ConstantBufferBase() {
-
-	}
-	~ConstantBufferBase(){
-		buffer->Release();
-	}
 
 
-	HRESULT CreateBuffer(unsigned int bufferSize) {
-		D3D11_BUFFER_DESC matrixBufferDesc = {};
-		matrixBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-		matrixBufferDesc.ByteWidth = bufferSize;
-		matrixBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-		matrixBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-		matrixBufferDesc.MiscFlags = 0;
-		matrixBufferDesc.StructureByteStride = 0;
-		return device->CreateBuffer(&matrixBufferDesc, NULL, &buffer);
-	}
-
-	ID3D11Buffer* buffer;
-
-	virtual void Update(const void *) = 0;
-};
-
-template<typename T>
-class ConstantBuffer : public ConstantBufferBase {
-private:
-	unsigned int structSize;
-
-	bool Initialize() {
-		HRESULT result = this->CreateBuffer(structSize);
-		// Create the constant buffer pointer so we can access the vertex shader constant buffer from within this class.
-		if (FAILED(result))
-		{
-			return false;
-		}
-		return true;
-	}
-public:
-	ConstantBuffer() {
-		this->structSize = sizeof(T);
-		this->Initialize();
-	}
-
-	void Update(const void* source) {
-		D3D11_MAPPED_SUBRESOURCE mappedResource;
-		deviceContext->Map(this->buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
-		T* dataPtr = (T*)mappedResource.pData;
-		memcpy(dataPtr, source, sizeof(T));
-		deviceContext->Unmap(this->buffer, 0);
-	}
+enum class ShaderType {
+	BasicShader = 1,
+	MaterialShader = 2,
 };
 
 class Shader : public DxComponent<Shader>
 {
 private:
-	struct MatrixConstantBuffer
+	struct MatrixConstantBufferType
 	{
 		XMMATRIX projectionViewWorld;
 	};
 
+protected:
+	bool Create(D3D11_INPUT_ELEMENT_DESC* inputLayout, unsigned int layoutCount, const std::string&, const std::string&);
+	void AddConstantBuffer(const string& bufferName, const ConstantBuffer &buffer);
 public:
-	Shader(std::string, std::string);
+	Shader( ShaderType type );
 	~Shader();
 
-	bool Initialize(std::string, std::string);
+	ShaderType type;
+
+	virtual bool Initialize(const std::string&, const std::string& ) = 0;
 	void Shutdown();
 	void BindShader();
 
-
 	bool SetShaderParameters(XMMATRIX, XMMATRIX, XMMATRIX);
+	bool SetShaderConstantBuffer(const std::string& bufferName, const void *values);
 	string Name;
 private:
 	void OutputShaderErrorMessage(ID3D10Blob*, LPCTSTR);
@@ -92,6 +51,6 @@ private:
 	ID3D11VertexShader* VertexShader;
 	ID3D11PixelShader* PixelShader;
 	ID3D11InputLayout* Layout;
-	std::vector<ConstantBufferBase*> constantBuffers;
+	std::map<string, ConstantBuffer> constantBufferMap;
 };
 

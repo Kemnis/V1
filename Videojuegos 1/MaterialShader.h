@@ -5,41 +5,20 @@
 #include <directxmath.h>
 #include <fstream>
 #include "Texture.h"
+#include "Shader.h"
 using namespace DirectX;
 using namespace std;
-class MaterialShader : public DxComponent<MaterialShader>
+class MaterialShader : public Shader
 {
-private:
-	struct MatrixBufferType
-	{
-		XMMATRIX projectionViewWorld;
-	};
-	struct MaterialBuffer
-	{
-		vec3 color;
-		float padding;
-	};
+	
 public:
-	MaterialShader();
-	~MaterialShader();
+	struct MaterialBufferType
+	{
+		vec4 ColorMaterial;
+	};
+	MaterialShader(std::string, std::string);
 
-	bool Initialize();
-	void Shutdown();
-	void BindShader();
-
-	bool SetShaderParameters(XMMATRIX world, XMMATRIX view, XMMATRIX projection, ID3D11ShaderResourceView* texture, Material* material);
-	string Name;
-private:
-	void OutputShaderErrorMessage(ID3D10Blob*, LPCTSTR);
-	std::wstring s2ws(const std::string& s);
-
-private:
-	ID3D11VertexShader * VertexShader;
-	ID3D11PixelShader* PixelShader;
-	ID3D11InputLayout* Layout;
-	ID3D11Buffer* MatrixBuf;
-	ID3D11Buffer* MaterialBuf;
-	ID3D11SamplerState* Sampler;
+	bool Initialize(const std::string& vsSource, const std::string& psSource) override;
 };
 
 #endif

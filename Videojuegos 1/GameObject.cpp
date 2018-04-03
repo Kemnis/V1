@@ -21,15 +21,8 @@ bool GameObject::AssignModel(Model* model)
 	return true;
 }
 
-bool GameObject::AssignBasicShader(BasicShader* basicshader)
-{
-	BShader = basicshader;
-	return true;
-}
-
-bool GameObject::AssignMaterialShader(MaterialShader* materialshader)
-{
-	MShader = materialshader;
+bool GameObject::AssignShader(Shader* shader) {
+	this->shader = shader;
 	return true;
 }
 
@@ -49,8 +42,7 @@ void GameObject::Shutdown()
 {
 	delete Modelo;
 	delete Tex;
-	delete BShader;
-	delete MShader;
+	delete shader;
 	delete Transform;
 }
 
@@ -66,10 +58,7 @@ Texture* GameObject::GetTexture()
 
 bool GameObject::ExistShader()
 {
-	if (BShader == nullptr && MShader == nullptr)
-		return false;
-	else
-		return true;
+	return (shader != nullptr);
 }
 
 Material* GameObject::GetMaterial()
@@ -79,15 +68,20 @@ Material* GameObject::GetMaterial()
 
 void GameObject::Draw(XMMATRIX world, XMMATRIX view, XMMATRIX projection)
 {
-	if (BShader != nullptr)
-	{
-		BShader->SetShaderParameters(world, view, projection, material);
-		ResourceManager::bindBasicShader(BShader);
+	if (shader != nullptr) {
+		shader->SetShaderParameters(world, view, projection);
+		if (shader->type == ShaderType::BasicShader || shader->type == ShaderType::MaterialShader) {
+			if (this->material != nullptr) {
+				BasicShader::MaterialBufferType materialBuffer;
+				materialBuffer.ColorMaterial = vec4(this->material->color, 1.0);
+				shader->SetShaderConstantBuffer("MaterialBuffer", &materialBuffer);
+			}
+		}
+		ResourceManager::bindShader(shader);
 	}
-	else if (MShader != nullptr)
-	{
-		MShader->SetShaderParameters(world, view, projection, Tex->GetTexture(), material);
-		ResourceManager::bindMaterialShader(MShader);
+
+	if (Tex != nullptr) {
+		Tex->BindTexture(0);
 	}
 	ResourceManager::bindModel(Modelo);
 	Modelo->Draw();
