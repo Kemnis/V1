@@ -21,15 +21,8 @@ bool GameObject::AssignModel(Model* model)
 	return true;
 }
 
-bool GameObject::AssignBasicShader(BasicShader* basicshader)
-{
-	BShader = basicshader;
-	return true;
-}
-
-bool GameObject::AssignMaterialShader(MaterialShader* materialshader)
-{
-	MShader = materialshader;
+bool GameObject::AssignShader(Shader* shader) {
+	this->shader = shader;
 	return true;
 }
 
@@ -39,19 +32,20 @@ bool GameObject::AssignMaterial(Material * mat)
 	return true;
 }
 
-bool GameObject::AssignTexture(Texture * texture)
+bool GameObject::AddTexture(Texture * texture)
 {
-	Tex = texture;
+	Tex.push_back(texture);
 	return true;
 }
 
 void GameObject::Shutdown()
 {
+	/*
 	delete Modelo;
-	delete Tex;
-	delete BShader;
-	delete MShader;
+	delete shader;
+	*/
 	delete Transform;
+	
 }
 
 Model* GameObject::GetModel()
@@ -59,17 +53,9 @@ Model* GameObject::GetModel()
 	return Modelo;
 }
 
-Texture* GameObject::GetTexture()
-{
-	return Tex;
-}
-
 bool GameObject::ExistShader()
 {
-	if (BShader == nullptr && MShader == nullptr)
-		return false;
-	else
-		return true;
+	return (shader != nullptr);
 }
 
 Material* GameObject::GetMaterial()
@@ -79,15 +65,23 @@ Material* GameObject::GetMaterial()
 
 void GameObject::Draw(XMMATRIX world, XMMATRIX view, XMMATRIX projection)
 {
-	if (BShader != nullptr)
-	{
-		BShader->SetShaderParameters(world, view, projection, material);
-		ResourceManager::bindBasicShader(BShader);
+	if (shader != nullptr) {
+		ResourceManager::bindShader(shader);
+		shader->SetShaderParameters(world, view, projection);
+		switch (shader->type) {
+			case ShaderType::MaterialShader:
+			case ShaderType::BasicShader: {
+				if (this->material != nullptr) {
+					ConstantBufferTypes::MaterialBuffer materialBuffer;
+					materialBuffer.ColorMaterial = vec4(this->material->color, 1.0);
+					shader->SetShaderConstantBuffer("MaterialBuffer", &materialBuffer);
+				}
+			}break;
+		}; 
 	}
-	else if (MShader != nullptr)
-	{
-		MShader->SetShaderParameters(world, view, projection, Tex->GetTexture(), material);
-		ResourceManager::bindMaterialShader(MShader);
+
+	for (int i = 0; i < Tex.size(); i++) {
+		Tex[i]->BindTexture(i);
 	}
 	ResourceManager::bindModel(Modelo);
 	Modelo->Draw();

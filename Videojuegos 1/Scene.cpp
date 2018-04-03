@@ -14,22 +14,25 @@ string Scene::CreateScene() {
 	//Load all objects you need First acubedd all the resources
 	ResourceManager::AddModel("Cube", "SphereMesh");
 	ResourceManager::AddModel("Sphere.obj", "SphereModel");
-	ResourceManager::LoadShaders();
+	//ResourceManager::LoadShaders();
 	ResourceManager::AddTexture("tex1.jpg", "World");
 	ResourceManager::AddMaterial("ColorBlanco", vec3(.5, .5, .5));
+	ResourceManager::AddShader("TestBasicShader", new BasicShader("testMaterial.vs", "testMaterial.ps"));
+	ResourceManager::AddShader("TestMaterialShader", new MaterialShader("testTexture.vs", "testTexture.ps"));
 	ResourceManager::AddStage("Stage1",10,3);
-	//ResourceManager::AddShader(ShaderType.BasicShader, "BasicShader", "BasicShader.vs", "BasicShader.fs");
+
+	//ResourceManager::AddStage("Stage1",4,3,12);
 
 
 	//Then Build a GameObject
-	ResourceManager::BuildGameObject("SphereMod", "SphereModel", "World", "Material", "ColorBlanco");
-	ResourceManager::BuildGameObject("SphereMes", "SphereMesh", "World", "Material", "ColorBlanco");
-	ResourceManager::BuildGameObject("Stage1", "Stage1", "World", "Material", "ColorBlanco");
+	ResourceManager::BuildGameObject("SphereMod", "SphereModel", "World", "TestBasicShader", "ColorBlanco");
+	ResourceManager::BuildGameObject("SphereMes", "SphereMesh", "World", "TestMaterialShader", "ColorBlanco");
+	ResourceManager::BuildGameObject("Stage1", "Stage1", "World", "TestBasicShader", "ColorBlanco");
 
-				//Descripción:
+				//Descripciï¿½n:
 	ResourceManager::GetObjectByName("SphereMes")->Transform->SetTranslation(vec3(2, 0, 0));
 	ResourceManager::GetObjectByName("SphereMes")->Transform->SetScale(vec3(.5, .5, .5));
-				//Descripción:
+				//Descripciï¿½n:
 
 	_RPT0(0, "Scene Created!\n");
 	return "S_OK";

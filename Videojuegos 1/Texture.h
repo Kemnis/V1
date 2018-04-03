@@ -26,6 +26,8 @@ public:
 	ID3D11ShaderResourceView* GetTexture();
 	void Shutdown();
 
+	void BindTexture(unsigned int slot);
+
 private:
 	string LoadTarga(string, int&, int&);
 	string LoadTextureTarga(string);
@@ -35,5 +37,6 @@ private:
 	ID3D11ShaderResourceView * Texture2D;
 	unsigned char* m_targaData;
 	ID3D11Texture2D* m_texture;
+	ID3D11SamplerState* Sampler;
 
 };
