@@ -27,16 +27,24 @@ private:
 	vec3 MyPos;
 	vec3 MyRot;
 	float forceSide, MaxForceSide, forceFront, MaxForceFront;
+	float LookLR, LookLRMax, LookUD, LookUDMax;
+	float TurnLR, TurnLRMax;
+	double FlyUD, FlyUDMax;
 	Input* Keyboard;
 	KeyCode KeyCodes;
 
-	bool ML, MU, MR, MD, MF, MB;
-	char Sides, Front;
+	char Sides, Front, LSide, LFront, Turn, Fly;
 
 	void MoveForward();
 	void MoveBackward();
 	void MoveLeft();
 	void MoveRight();
-	void MoveUpward();
-	void MoveDownward();
+	void FlyUpward();
+	void FlyDownward();
+	void LookUpward();
+	void LookDownward();
+	void TurnLeft();
+	void TurnRight();
+	void LookLeft();
+	void LookRight();
 };

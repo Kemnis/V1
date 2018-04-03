@@ -10,13 +10,52 @@ Model::Model(string path)
 			ErrorFnc("No se pudo cargar el modelo");
 		else
 			Initialize("");
+		Type = "OBJ";
 	}
 	else
+	{
 		Initialize(path);
+		Type = "PRIMITIVE";
+	}
+}
+
+Model::Model(int Cells, int CellSize)
+{
+	VertexBuffer = 0;
+	IndexBuffer = 0;
+	DefineTerrain(Cells, CellSize);
+	Initialize("Terrain");
+	Type = "Terrain";
 }
 
 Model::~Model()
 {
+}
+
+void Model::DefineTerrain(int Cells, int CellSize) {
+	// Calculate the number of vertices in the terrain.
+	for (int i = 0; i < (Cells + 1); i++)
+	{
+		for (int j = 0; j < (Cells + 1); j++)
+		{
+			Mesh.AddVertex(j*CellSize, 0, i*CellSize);
+			Mesh.AddNormals(0, 1, 0);
+		}
+	}
+
+	// Set the index count to the same as the vertex count.
+	Mesh.IndexCount;
+	int count =0;
+	for (int i = 0; i < (Mesh.VertexCount-1 -Cells); i++)
+	{
+		Mesh.AddIndex(i);
+		Mesh.AddIndex(i + (Cells));
+		Mesh.AddIndex(i + (Cells+1));
+		Mesh.AddIndex(i);
+		Mesh.AddIndex(i + (Cells + 1));
+		Mesh.AddIndex(i+1);
+	}
+	Mesh.DoFinalMesh();
 }
 
 void Model::DefineTriangle()
@@ -64,6 +103,7 @@ void Model::DefineSquare()
 	Mesh.AddIndex(3);  // Bottom right.
 	Mesh.DoFinalMesh();
 }
+
 void Model::DefineCube(XMFLOAT3 size)
 {
 	// A box has six faces, each one pointing in a different direction.
@@ -593,7 +633,7 @@ void Model::Draw()
 	return;
 }
 
-void Model::BindMesh()
+void Model::BindMesh(D3D_PRIMITIVE_TOPOLOGY TOPOLOGY)
 {
 	unsigned int stride;
 	unsigned int offset;
@@ -609,7 +649,7 @@ void Model::BindMesh()
 	deviceContext->IASetIndexBuffer(IndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 
 	// Set the type of primitive that should be rendered from this vertex buffer, in this case triangles.
-	deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	deviceContext->IASetPrimitiveTopology(TOPOLOGY);
 }
 
 Vertex Model::GetMesh()

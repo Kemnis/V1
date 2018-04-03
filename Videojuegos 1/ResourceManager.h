@@ -17,7 +17,7 @@ public:
 
 	static bool AddModel(string path, string name);
 	static bool AddTexture(string path, string name);
-	static bool AddStage(string name, int Cells, int CellSize, int Size);
+	static bool AddStage(string name, int Cells, int CellSize);
 	static string BuildGameObject(string nameGameObject, string meshname, string texturename, string shadername, string materialname);
 	static GameObject* GetObjectByName(string);
 	static bool LoadShaders();
@@ -35,7 +35,6 @@ public:
 	using TextureMap = std::map<string, Texture>;
 	using ShaderMap = std::map<string, int>;
 	using MaterialMap = std::map<string, Material>;
-	using TerrainMap = std::map<string, Terrain>;
 
 	static BasicShader* BasShader;
 	static MaterialShader* MatShader;
@@ -70,9 +69,6 @@ protected:
 	//Texture
 	static TextureMap TextureIdentifier;
 	static int TextureIndex;
-	//Terrain
-	static TerrainMap TerrainIdentifier;
-	static int TerrainIndex;
 	//Shader
 	static ShaderMap ShaderIdentifier;
 	//Material

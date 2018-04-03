@@ -18,13 +18,11 @@ Model* ResourceManager::ModeloActual = nullptr;
 ResourceManager::GameObjectMap ResourceManager::GameObjectIdentifier;
 ResourceManager::ModelMap ResourceManager::ModelIdentifier;
 ResourceManager::TextureMap ResourceManager::TextureIdentifier;
-ResourceManager::TerrainMap ResourceManager::TerrainIdentifier;
 ResourceManager::ShaderMap ResourceManager::ShaderIdentifier;
 ResourceManager::MaterialMap ResourceManager::MaterialIdentifier;
 int ResourceManager::GameObjectIndex = 0;
 int ResourceManager::ModelIndex = 0;
 int ResourceManager::TextureIndex = 0;
-int ResourceManager::TerrainIndex = 0;
 int ResourceManager::MaterialIndex = 0;
 BasicShader* ResourceManager::BasShader = 0;
 MaterialShader* ResourceManager::MatShader = 0;
@@ -72,13 +70,12 @@ bool ResourceManager::AddTexture(string path, string name)
 	return true;
 }
 
-bool ResourceManager::AddStage(string name, int Cells, int CellSize, int Size)
+bool ResourceManager::AddStage(string name, int Cells, int CellSize)
 {
-	Terrain nuevo;
+	Model nuevo(Cells, CellSize);
 	nuevo.Name = name;
-	nuevo.Initialize(Cells,CellSize,Size);
-	TerrainIdentifier.insert(std::pair<string, Terrain>(name, nuevo));
-	TerrainIndex++;
+	ModelIdentifier.insert(std::pair<string, Model>(name, nuevo));
+	ModelIndex++;
 	return true;
 }
 
@@ -179,7 +176,7 @@ bool ResourceManager::bindModel(Model * model)
 	if (ModeloActual != model)
 	{
 		ModeloActual = model;
-		ModeloActual->BindMesh();
+		ModeloActual->BindMesh(/*(ModeloActual->Type =="Terrain") ? D3D10_PRIMITIVE_TOPOLOGY_LINELIST :*/ D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		return true;
 	}
 	return false;

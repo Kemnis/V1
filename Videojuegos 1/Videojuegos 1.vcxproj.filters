@@ -54,9 +54,6 @@
     <ClInclude Include="GameObject.h">
       <Filter>Archivos de encabezado\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Model.h">
-      <Filter>Archivos de encabezado\Core</Filter>
-    </ClInclude>
     <ClInclude Include="ResourceManager.h">
       <Filter>Archivos de encabezado\Core</Filter>
     </ClInclude>
@@ -99,7 +96,7 @@
     <ClInclude Include="Input.h">
       <Filter>Archivos de encabezado\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Terrain.h">
+    <ClInclude Include="Model.h">
       <Filter>Archivos de encabezado\Core</Filter>
     </ClInclude>
   </ItemGroup>
@@ -117,9 +114,6 @@
       <Filter>Archivos de origen\Core</Filter>
     </ClCompile>
     <ClCompile Include="GameObject.cpp">
-      <Filter>Archivos de origen\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Model.cpp">
       <Filter>Archivos de origen\Core</Filter>
     </ClCompile>
     <ClCompile Include="ResourceManager.cpp">
@@ -158,7 +152,7 @@
     <ClCompile Include="Input.cpp">
       <Filter>Archivos de origen\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Terrain.cpp">
+    <ClCompile Include="Model.cpp">
       <Filter>Archivos de origen\Core</Filter>
     </ClCompile>
   </ItemGroup>
