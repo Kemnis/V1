@@ -7,7 +7,7 @@ Shader::Shader(ShaderType type)
 	VertexShader = 0;
 	PixelShader = 0;
 	Layout = 0;
-	ConstantBuffer matrixConstantBuffer(MATRIX_BUFFER_ID, ConstantBufferLocation::VertexShader, sizeof(MatrixConstantBufferType));
+	ConstantBuffer matrixConstantBuffer(MATRIX_BUFFER_ID, ConstantBufferLocation::VertexShader, sizeof(ConstantBufferTypes::MatrixBuffer));
 	this->AddConstantBuffer("MatrixBuffer", matrixConstantBuffer);
 	this->type = type;
 }
@@ -162,7 +162,7 @@ bool Shader::SetShaderParameters(XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMA
 	projectionViewWorldMatrix = XMMatrixMultiply(worldMatrix, viewMatrix);
 	projectionViewWorldMatrix = XMMatrixMultiplyTranspose(projectionViewWorldMatrix, projectionMatrix);
 
-	MatrixConstantBufferType tempBuffer{};
+	ConstantBufferTypes::MatrixBuffer tempBuffer{};
 	tempBuffer.projectionViewWorld = projectionViewWorldMatrix;
 
 	this->SetShaderConstantBuffer("MatrixBuffer", &tempBuffer);

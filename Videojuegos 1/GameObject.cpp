@@ -32,28 +32,25 @@ bool GameObject::AssignMaterial(Material * mat)
 	return true;
 }
 
-bool GameObject::AssignTexture(Texture * texture)
+bool GameObject::AddTexture(Texture * texture)
 {
-	Tex = texture;
+	Tex.push_back(texture);
 	return true;
 }
 
 void GameObject::Shutdown()
 {
+	/*
 	delete Modelo;
-	delete Tex;
 	delete shader;
+	*/
 	delete Transform;
+	
 }
 
 Model* GameObject::GetModel()
 {
 	return Modelo;
-}
-
-Texture* GameObject::GetTexture()
-{
-	return Tex;
 }
 
 bool GameObject::ExistShader()
@@ -72,16 +69,10 @@ void GameObject::Draw(XMMATRIX world, XMMATRIX view, XMMATRIX projection)
 		ResourceManager::bindShader(shader);
 		shader->SetShaderParameters(world, view, projection);
 		switch (shader->type) {
+			case ShaderType::MaterialShader:
 			case ShaderType::BasicShader: {
 				if (this->material != nullptr) {
-					BasicShader::MaterialBufferType materialBuffer;
-					materialBuffer.ColorMaterial = vec4(this->material->color, 1.0);
-					shader->SetShaderConstantBuffer("MaterialBuffer", &materialBuffer);
-				}
-			}break;
-			case ShaderType::MaterialShader: {
-				if (this->material != nullptr) {
-					MaterialShader::MaterialBufferType materialBuffer;
+					ConstantBufferTypes::MaterialBuffer materialBuffer;
 					materialBuffer.ColorMaterial = vec4(this->material->color, 1.0);
 					shader->SetShaderConstantBuffer("MaterialBuffer", &materialBuffer);
 				}
@@ -89,8 +80,8 @@ void GameObject::Draw(XMMATRIX world, XMMATRIX view, XMMATRIX projection)
 		}; 
 	}
 
-	if (Tex != nullptr) {
-		Tex->BindTexture(0);
+	for (int i = 0; i < Tex.size(); i++) {
+		Tex[i]->BindTexture(i);
 	}
 	ResourceManager::bindModel(Modelo);
 	Modelo->Draw();

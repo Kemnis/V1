@@ -148,6 +148,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Behaviour.h" />
+    <ClInclude Include="BufferTypes.h" />
     <ClInclude Include="Camera3D.h" />
     <ClInclude Include="ConstantBuffer.h" />
     <ClInclude Include="DxComponent.h" />

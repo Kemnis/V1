@@ -38,8 +38,8 @@ bool MaterialShader::Initialize(const std::string& vsSource, const std::string& 
 	// Get a count of the elements in the layout.
 	unsigned int numElements = sizeof(polygonLayout) / sizeof(polygonLayout[0]);
 
-	// Setup the description of the dynamic matrix constant buffer that is in the vertex shader.
-	ConstantBuffer materialConstantBuffer(CUSTOM_BUFFER_ID, ConstantBufferLocation::PixelShader, sizeof(MaterialBufferType));
+	
+	ConstantBuffer materialConstantBuffer(CUSTOM_BUFFER_1, ConstantBufferLocation::PixelShader, sizeof(ConstantBufferTypes::MaterialBuffer));
 	this->AddConstantBuffer("MaterialBuffer", materialConstantBuffer);
 
 	this->Create(polygonLayout, numElements, vsSource, psSource);

@@ -6,12 +6,8 @@
 #include "ConstantBuffer.h"
 #include "Material.h"
 
-#define MATRIX_BUFFER_ID			0
-#define CUSTOM_BUFFER_ID			1
-
 using namespace DirectX;
 using namespace std;
-
 
 
 enum class ShaderType {
@@ -21,12 +17,6 @@ enum class ShaderType {
 
 class Shader : public DxComponent<Shader>
 {
-private:
-	struct MatrixConstantBufferType
-	{
-		XMMATRIX projectionViewWorld;
-	};
-
 protected:
 	bool Create(D3D11_INPUT_ELEMENT_DESC* inputLayout, unsigned int layoutCount, const std::string&, const std::string&);
 	void AddConstantBuffer(const string& bufferName, const ConstantBuffer &buffer);

@@ -96,9 +96,10 @@ string ResourceManager::BuildGameObject(string nameGameObject, string meshname, 
 	}
 	if (texturename != "")
 	{
-		nuevo.AssignTexture(&TextureIdentifier.find(texturename)->second);
-		if (nuevo.GetTexture() == nullptr)
-			return "E_Fail";
+		Texture* texture = &TextureIdentifier.find(texturename)->second;
+		if (texture != nullptr) {
+			nuevo.AddTexture(texture);
+		}
 	}
 	if (shadername != "")
 	{

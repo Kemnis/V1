@@ -23,7 +23,7 @@ bool BasicShader::Initialize(const std::string& vsSource, const std::string& psS
 
 	// Setup the description of the dynamic matrix constant buffer that is in the vertex shader.
 	
-	ConstantBuffer materialConstantBuffer(CUSTOM_BUFFER_ID, ConstantBufferLocation::PixelShader, sizeof(MaterialBufferType));
+	ConstantBuffer materialConstantBuffer(CUSTOM_BUFFER_1, ConstantBufferLocation::PixelShader, sizeof(ConstantBufferTypes::MaterialBuffer));
 	this->AddConstantBuffer("MaterialBuffer", materialConstantBuffer);
 	
 

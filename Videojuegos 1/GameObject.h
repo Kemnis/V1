@@ -17,9 +17,9 @@ public:
 	bool AssignModel(Model* model);
 	bool AssignShader(Shader* shader);
 	bool AssignMaterial(Material* mat);
-	bool AssignTexture(Texture* texture);
+	bool AddTexture(Texture* texture);
 	Model* GetModel();
-	Texture* GetTexture();
+	//Texture* GetTexture();
 	bool ExistShader();
 	Material* GetMaterial();
 	void Draw(XMMATRIX world, XMMATRIX view, XMMATRIX projection);
@@ -30,7 +30,7 @@ protected:
 	
 	string Name, Status;
 	Model* Modelo;
-	Texture* Tex;
+	std::vector<Texture*> Tex;
 	Shader* shader;
 	Material* material;
 private:

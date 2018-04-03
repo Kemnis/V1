@@ -25,7 +25,7 @@ string Scene::CreateScene() {
 
 
 	//Then Build a GameObject
-	ResourceManager::BuildGameObject("SphereMod", "SphereModel", "World", "TestMaterialShader", "ColorBlanco");
+	ResourceManager::BuildGameObject("SphereMod", "SphereModel", "World", "TestBasicShader", "ColorBlanco");
 	ResourceManager::BuildGameObject("SphereMes", "SphereMesh", "World", "TestMaterialShader", "ColorBlanco");
 
 				//Descripción:
