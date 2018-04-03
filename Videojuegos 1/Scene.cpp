@@ -17,7 +17,7 @@ string Scene::CreateScene() {
 	ResourceManager::LoadShaders();
 	ResourceManager::AddTexture("tex1.jpg", "World");
 	ResourceManager::AddMaterial("ColorBlanco", vec3(.5, .5, .5));
-	ResourceManager::AddStage("Stage1",4,3,12);
+	//ResourceManager::AddStage("Stage1",4,3,12);
 	//ResourceManager::AddShader(ShaderType.BasicShader, "BasicShader", "BasicShader.vs", "BasicShader.fs");
 
 
