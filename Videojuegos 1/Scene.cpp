@@ -27,7 +27,7 @@ string Scene::CreateScene() {
 	//Then Build a GameObject
 	ResourceManager::BuildGameObject("SphereMod", "SphereModel", "World", "TestBasicShader", "ColorBlanco");
 	ResourceManager::BuildGameObject("SphereMes", "SphereMesh", "World", "TestMaterialShader", "ColorBlanco");
-	ResourceManager::BuildGameObject("Stage1", "Stage1", "World", "Material", "ColorBlanco");
+	ResourceManager::BuildGameObject("Stage1", "Stage1", "World", "TestBasicShader", "ColorBlanco");
 
 				//Descripci�n:
 	ResourceManager::GetObjectByName("SphereMes")->Transform->SetTranslation(vec3(2, 0, 0));
