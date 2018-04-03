@@ -17,9 +17,9 @@ string Scene::CreateScene() {
 	//ResourceManager::LoadShaders();
 	ResourceManager::AddTexture("tex1.jpg", "World");
 	ResourceManager::AddMaterial("ColorBlanco", vec3(.5, .5, .5));
-	//ResourceManager::AddShader("TestShader", Shader("test.vs", "test.ps"));
 	ResourceManager::AddShader("TestBasicShader", new BasicShader("testMaterial.vs", "testMaterial.ps"));
 	ResourceManager::AddShader("TestMaterialShader", new MaterialShader("testTexture.vs", "testTexture.ps"));
+	ResourceManager::AddStage("Stage1",10,3);
 
 	//ResourceManager::AddStage("Stage1",4,3,12);
 
@@ -27,11 +27,12 @@ string Scene::CreateScene() {
 	//Then Build a GameObject
 	ResourceManager::BuildGameObject("SphereMod", "SphereModel", "World", "TestBasicShader", "ColorBlanco");
 	ResourceManager::BuildGameObject("SphereMes", "SphereMesh", "World", "TestMaterialShader", "ColorBlanco");
+	ResourceManager::BuildGameObject("Stage1", "Stage1", "World", "Material", "ColorBlanco");
 
-				//Descripción:
+				//Descripciï¿½n:
 	ResourceManager::GetObjectByName("SphereMes")->Transform->SetTranslation(vec3(2, 0, 0));
 	ResourceManager::GetObjectByName("SphereMes")->Transform->SetScale(vec3(.5, .5, .5));
-				//Descripción:
+				//Descripciï¿½n:
 
 	_RPT0(0, "Scene Created!\n");
 	return "S_OK";
@@ -53,7 +54,7 @@ string Scene::ProcessScene(double dt)
 
 string Scene::RenderScene()
 {
-	XMMATRIX worldMatrix, Worldobj2;//, viewMatrix, projectionMatrix;
+	XMMATRIX worldMatrix, Worldobj2, StageWorld;//, viewMatrix, projectionMatrix;
 	XMMATRIX viewMatrix;
 	XMMATRIX* projectionMatrix;
 
@@ -66,6 +67,7 @@ string Scene::RenderScene()
 	// Get the world, view, and projection matrices from the camera and d3d objects.
 	worldMatrix = ResourceManager::GetObjectByName("SphereMod")->Transform->ToMatrix();
 	Worldobj2 = ResourceManager::GetObjectByName("SphereMes")->Transform->ToMatrix();
+	StageWorld = ResourceManager::GetObjectByName("Stage1")->Transform->ToMatrix();
 	SceneCamera->GetViewMatrix(viewMatrix);
 	projectionMatrix = SceneCamera->GetProjectionMatrix();
 
@@ -76,6 +78,7 @@ string Scene::RenderScene()
 	//Define and create all Objects
 	GameObject* GObjMesh = ResourceManager::GetObjectByName("SphereMes");
 	GameObject* GObjModel = ResourceManager::GetObjectByName("SphereMod");
+	GameObject* GOStage = ResourceManager::GetObjectByName("Stage1");
 
 	GObjMesh->Draw(Worldobj2, viewMatrix, *projectionMatrix);
 	//Lo ultimo que movi fue el buffer del initialize de MaterialShader para que existieran 3 posiciones incluyendo el 
@@ -83,6 +86,7 @@ string Scene::RenderScene()
 	//sin usar el color del material.
 
 	GObjModel->Draw(worldMatrix, viewMatrix, *projectionMatrix);
+	GOStage->Draw(StageWorld, viewMatrix, *projectionMatrix);
 
 	
 	// Present the rendered scene to the screen.

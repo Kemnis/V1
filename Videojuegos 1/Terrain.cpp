@@ -13,30 +13,7 @@ bool Terrain::Initialize(int Cells, int CellSize, int TotalSize)
 	D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
 	D3D11_SUBRESOURCE_DATA vertexData, indexData;
 	HRESULT result;
-	// Calculate the number of vertices in the terrain.
-	Mesh.VertexCount = (Cells + 1);
-
-	for (int i = 0; i < Mesh.VertexCount; i++)
-	{
-		for (int j = 0; j < Mesh.VertexCount; j++)
-		{
-			Mesh.AddVertex(j*CellSize,0,i*CellSize);
-			Mesh.AddNormals(0, 1, 0);
-		}
-	}
-
-	// Set the index count to the same as the vertex count.
-	Mesh.IndexCount = Mesh.VertexCount * Mesh.VertexCount;
-	for (int i = 0; i < ((Mesh.VertexCount-1)*(Mesh.VertexCount-1)); i++)
-	{
-		Mesh.AddIndex(i);
-		Mesh.AddIndex(i * Mesh.VertexCount);
-		Mesh.AddIndex(i + 1);
-		Mesh.AddIndex(i);
-		Mesh.AddIndex(i);
-		Mesh.AddIndex(i);
-	}
-	Mesh.DoFinalMesh();
+	
 
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	vertexBufferDesc.ByteWidth = sizeof(Vertex::VertexType) * Mesh.VertexCount;
