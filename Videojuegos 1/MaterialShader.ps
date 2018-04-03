@@ -1,8 +1,10 @@
 Texture2D shaderTexture;
 SamplerState SampleType;
+
 cbuffer MaterialBuffer{
     float4 MaterialColor;
 }
+
 struct PixelInputType
 {
     float4 position : SV_POSITION;

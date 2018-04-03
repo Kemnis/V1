@@ -1,5 +1,10 @@
 #pragma once
 
+enum class ConstantBufferLocation {
+	VertexShader = 1,
+	PixelShader = 2
+};
+
 class ConstantBuffer : public DxComponent<ConstantBuffer> {
 private:
 	unsigned int structSize;
@@ -9,7 +14,8 @@ private:
 	bool Initialize();
 public:
 	unsigned int id;
-	ConstantBuffer(unsigned int id, unsigned int bufferSize);
+	ConstantBufferLocation location;
+	ConstantBuffer(unsigned int id, ConstantBufferLocation location, unsigned int bufferSize);
 	~ConstantBuffer();
 
 	void Update(const void* source);

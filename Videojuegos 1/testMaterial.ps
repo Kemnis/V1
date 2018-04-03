@@ -1,10 +1,14 @@
+cbuffer MaterialBuffer : register(b1)
+{
+	float4 materialColor;
+};
+
 struct PixelInputType
 {
     float4 position : SV_POSITION;
-	float4 materialColor : COLOR;
 };
 
 float4 BasicPixelShader(PixelInputType input) : SV_TARGET
 {
-    return input.materialColor;
+    return materialColor;
 }

@@ -1,12 +1,7 @@
 
-cbuffer MatrixBuffer
+cbuffer MatrixBuffer : register(b0)
 {
 	matrix projectionViewWorldMatrix;
-};
-
-cbuffer MaterialBuffer
-{
-	float4 materialColor;
 };
 
 struct VertexInputType
@@ -17,7 +12,6 @@ struct VertexInputType
 struct PixelInputType
 {
     float4 position : SV_POSITION;
-	float4 materialColor : COLOR;
 };
 
 PixelInputType BasicVertexShader(VertexInputType input)
@@ -26,7 +20,6 @@ PixelInputType BasicVertexShader(VertexInputType input)
 
     input.position.w = 1.0f;
 	output.position = mul(input.position, projectionViewWorldMatrix);
-    output.materialColor = materialColor;
 
     return output;
 }

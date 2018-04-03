@@ -69,15 +69,24 @@ Material* GameObject::GetMaterial()
 void GameObject::Draw(XMMATRIX world, XMMATRIX view, XMMATRIX projection)
 {
 	if (shader != nullptr) {
-		shader->SetShaderParameters(world, view, projection);
-		if (shader->type == ShaderType::BasicShader || shader->type == ShaderType::MaterialShader) {
-			if (this->material != nullptr) {
-				BasicShader::MaterialBufferType materialBuffer;
-				materialBuffer.ColorMaterial = vec4(this->material->color, 1.0);
-				shader->SetShaderConstantBuffer("MaterialBuffer", &materialBuffer);
-			}
-		}
 		ResourceManager::bindShader(shader);
+		shader->SetShaderParameters(world, view, projection);
+		switch (shader->type) {
+			case ShaderType::BasicShader: {
+				if (this->material != nullptr) {
+					BasicShader::MaterialBufferType materialBuffer;
+					materialBuffer.ColorMaterial = vec4(this->material->color, 1.0);
+					shader->SetShaderConstantBuffer("MaterialBuffer", &materialBuffer);
+				}
+			}break;
+			case ShaderType::MaterialShader: {
+				if (this->material != nullptr) {
+					MaterialShader::MaterialBufferType materialBuffer;
+					materialBuffer.ColorMaterial = vec4(this->material->color, 1.0);
+					shader->SetShaderConstantBuffer("MaterialBuffer", &materialBuffer);
+				}
+			}break;
+		}; 
 	}
 
 	if (Tex != nullptr) {

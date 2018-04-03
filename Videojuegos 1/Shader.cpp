@@ -7,7 +7,7 @@ Shader::Shader(ShaderType type)
 	VertexShader = 0;
 	PixelShader = 0;
 	Layout = 0;
-	ConstantBuffer matrixConstantBuffer(MATRIX_BUFFER_ID, sizeof(MatrixConstantBufferType));
+	ConstantBuffer matrixConstantBuffer(MATRIX_BUFFER_ID, ConstantBufferLocation::VertexShader, sizeof(MatrixConstantBufferType));
 	this->AddConstantBuffer("MatrixBuffer", matrixConstantBuffer);
 	this->type = type;
 }
@@ -190,7 +190,12 @@ void Shader::BindShader()
 	deviceContext->PSSetShader(PixelShader, NULL, 0);
 	for (std::map<std::string, ConstantBuffer>::iterator iter = constantBufferMap.begin(); iter != constantBufferMap.end(); ++iter)
 	{
-		deviceContext->VSSetConstantBuffers(iter->second.id, 1, &iter->second.buffer);
+		if (iter->second.location == ConstantBufferLocation::VertexShader) {
+			deviceContext->VSSetConstantBuffers(iter->second.id, 1, &iter->second.buffer);
+		}
+		else {
+			deviceContext->PSSetConstantBuffers(iter->second.id, 1, &iter->second.buffer);
+		}
 	}
 	
 }

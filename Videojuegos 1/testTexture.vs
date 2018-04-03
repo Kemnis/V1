@@ -1,4 +1,4 @@
-cbuffer MatrixBuffer
+cbuffer MatrixBuffer : register(b0)
 {
 	matrix projectionViewWorldMatrix;
 };
@@ -17,18 +17,14 @@ struct PixelInputType
 	float3 normal : NORMAL;
 };
 
-PixelInputType main(VertexInputType input)
+PixelInputType BasicVertexShader(VertexInputType input)
 {
     PixelInputType output;
-    
+
     input.position.w = 1.0f;
-
 	output.position = mul(input.position, projectionViewWorldMatrix);
-
 	output.tex = input.tex;
-
-	output.normal =  mul(input.normal,(float3x3)projectionViewWorldMatrix);
-
+	output.normal = mul(input.normal,(float3x3)projectionViewWorldMatrix);
 	output.normal = normalize(output.normal);
 
     return output;

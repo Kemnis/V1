@@ -1,15 +1,16 @@
 #include "stdafx.h"
 
-ConstantBuffer::ConstantBuffer(unsigned int id, unsigned int bufferSize) {
+ConstantBuffer::ConstantBuffer(unsigned int id, ConstantBufferLocation location, unsigned int bufferSize){
 	this->id = id;
+	this->location = location;
 	this->structSize = bufferSize;
 	this->Initialize();
 }
 
 ConstantBuffer::~ConstantBuffer() {
-	if (this->buffer) {
+	/*if (this->buffer) {
 		this->buffer->Release();
-	}
+	}*/
 }
 
 bool ConstantBuffer::Initialize() {
