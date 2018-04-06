@@ -32,6 +32,7 @@ private:
 	string LoadTarga(string, int&, int&);
 	string LoadTextureTarga(string);
 	string LoadTextureWic(string);
+	bool LoadBipmap(string);
 
 private:
 	ID3D11ShaderResourceView * Texture2D;

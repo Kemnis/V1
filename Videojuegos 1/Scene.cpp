@@ -15,19 +15,17 @@ string Scene::CreateScene() {
 	ResourceManager::AddModel("Cube", "SphereMesh");
 	ResourceManager::AddModel("Sphere.obj", "SphereModel");
 	//ResourceManager::LoadShaders();
-	ResourceManager::AddTexture("tex1.jpg", "World");
+	ResourceManager::AddTexture("tex1SS.jpg", "World");
 	ResourceManager::AddMaterial("ColorBlanco", vec3(.5, .5, .5));
 	ResourceManager::AddShader("TestBasicShader", new BasicShader("testMaterial.vs", "testMaterial.ps"));
 	ResourceManager::AddShader("TestMaterialShader", new MaterialShader("testTexture.vs", "testTexture.ps"));
 	ResourceManager::AddStage("Stage1",10,3);
 
-	//ResourceManager::AddStage("Stage1",4,3,12);
-
 
 	//Then Build a GameObject
-	ResourceManager::BuildGameObject("SphereMod", "SphereModel", "World", "TestBasicShader", "ColorBlanco");
+	ResourceManager::BuildGameObject("SphereMod", "SphereModel", "", "TestBasicShader", "ColorBlanco");
 	ResourceManager::BuildGameObject("SphereMes", "SphereMesh", "World", "TestMaterialShader", "ColorBlanco");
-	ResourceManager::BuildGameObject("Stage1", "Stage1", "World", "TestBasicShader", "ColorBlanco");
+	ResourceManager::BuildGameObject("Stage1", "Stage1", "", "TestBasicShader", "ColorBlanco");
 
 				//Descripci�n:
 	ResourceManager::GetObjectByName("SphereMes")->Transform->SetTranslation(vec3(2, 0, 0));
