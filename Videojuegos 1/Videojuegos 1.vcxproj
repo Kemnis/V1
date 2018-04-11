@@ -159,6 +159,7 @@
     <ClInclude Include="Material.h" />
     <ClInclude Include="MaterialShader.h" />
     <ClInclude Include="Model.h" />
+    <ClInclude Include="RawImage.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Scene.h" />
@@ -183,6 +184,7 @@
     <ClCompile Include="KeyHandler.cpp" />
     <ClCompile Include="MaterialShader.cpp" />
     <ClCompile Include="Model.cpp" />
+    <ClCompile Include="RawImage.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="BasicShader.cpp" />

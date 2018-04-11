@@ -299,6 +299,9 @@ bool Texture::LoadBipmap(string file)
 	unsigned char height;
 
 
+	
+
+
 	// Start by creating the array structure to hold the height map data.
 	/*m_heightMap = new HeightMapType[m_terrainWidth * m_terrainHeight];
 	if (!m_heightMap)
