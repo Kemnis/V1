@@ -2,7 +2,7 @@
 
 Scene::Scene() {
 	SceneCamera = 0;
-	SceneCamera = new Camera3D(specsDx->GetScreenWidth(), specsDx->GetScreenHeight(), 0.01f, 100.0f);
+	SceneCamera = new Camera3D(specsDx->GetScreenWidth(), specsDx->GetScreenHeight(), 0.01f, 1000.0f);
 }
 
 Scene::~Scene() {}
@@ -17,15 +17,15 @@ string Scene::CreateScene() {
 	//ResourceManager::LoadShaders();
 	ResourceManager::AddTexture("tex1SS.jpg", "World");
 	ResourceManager::AddMaterial("ColorBlanco", vec3(.5, .5, .5));
-	ResourceManager::AddShader("TestBasicShader", new BasicShader("testMaterial.vs", "testMaterial.ps"));
-	ResourceManager::AddShader("TestMaterialShader", new MaterialShader("testTexture.vs", "testTexture.ps"));
-	ResourceManager::AddStage("Stage1",10,3);
+	ResourceManager::AddShader("LambertBasicShader", new BasicShader("LambertMaterial.vs", "LambertMaterial.ps"));
+	ResourceManager::AddShader("LambertMaterialShader", new MaterialShader("LambertTexture.vs", "LambertTexture.ps",1));
+	ResourceManager::AddStage("Stage1",10,1.0f);
 
 
 	//Then Build a GameObject
-	ResourceManager::BuildGameObject("SphereMod", "SphereModel", "", "TestBasicShader", "ColorBlanco");
-	ResourceManager::BuildGameObject("SphereMes", "SphereMesh", "World", "TestMaterialShader", "ColorBlanco");
-	ResourceManager::BuildGameObject("Stage1", "Stage1", "", "TestBasicShader", "ColorBlanco");
+	ResourceManager::BuildGameObject("SphereMod", "SphereModel", "", "LambertBasicShader", "ColorBlanco");
+	ResourceManager::BuildGameObject("SphereMes", "SphereMesh", "World", "LambertMaterialShader", "ColorBlanco");
+	ResourceManager::BuildGameObject("Stage1", "Stage1", "", "LambertBasicShader", "ColorBlanco");
 
 				//Descripci�n:
 	ResourceManager::GetObjectByName("SphereMes")->Transform->SetTranslation(vec3(2, 0, 0));

@@ -18,7 +18,7 @@ public:
 
 	static bool AddModel(string path, string name);
 	static bool AddTexture(string path, string name);
-	static bool AddStage(string name, int Cells, int CellSize);
+	static bool AddStage(string name, float Cells, float CellSize);
 	static bool AddShader(string name, Shader* shader);
 	static string BuildGameObject(string nameGameObject, string meshname, string texturename, string shadername, string materialname);
 	static GameObject* GetObjectByName(string);

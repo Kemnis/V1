@@ -6,9 +6,11 @@ using namespace DirectX;
 using namespace std;
 class MaterialShader : public Shader
 {
+private:
+	int flagLight;
 	
 public:
-	MaterialShader(std::string, std::string);
+	MaterialShader(std::string, std::string, int WithLight);
 
 	bool Initialize(const std::string& vsSource, const std::string& psSource) override;
 };

@@ -153,12 +153,12 @@ void KeyHandler::Update()
 	}
 	else
 	{
-		if (FlyUD > 0.001f)
+		if (FlyUD > 0.01f)
 		{
-			if (FlyUD > 0.002)
-				FlyUD -= 0.002f;
+			if (FlyUD > 0.02)
+				FlyUD -= 0.02f;
 			else
-				FlyUD -= 0.001f;
+				FlyUD -= 0.01f;
 		}
 		else
 		{

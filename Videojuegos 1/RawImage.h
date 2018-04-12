@@ -4,16 +4,34 @@
 #include<string>
 
 typedef unsigned char ubyte;
-typedef char byte;
+
+struct RGB {
+	byte r;
+	byte g;
+	byte b;
+};
+
+struct RGBA {
+	byte r;
+	byte g;
+	byte b;
+	byte a;
+};
 
 class RawImage {
 	typedef unsigned int uint;
-	uint width;
-	uint height;
-	std::vector<byte> pixels;
 
 public:
 	RawImage();
 	RawImage(std::string fileName);
 	bool LoadBitmapFromFile(std::string fileName);
+	uint width;
+	uint height;
+	byte bitsPerPixel;
+	byte bytesPerPixel;
+	std::vector<byte> pixels;
+	byte *pixel;
+	
+	RGB* GetPixelRGB(unsigned int index);
+	RGBA* GetPixelRGBA(unsigned int index);
 };

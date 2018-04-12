@@ -210,20 +210,20 @@
     <Image Include="Videojuegos 1.ico" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="BasicShader.ps" />
-    <None Include="BasicShader.vs" />
-    <None Include="MaterialShader.ps" />
-    <None Include="MaterialShader.vs" />
+    <None Include="LambertLMaterial.vs" />
+    <None Include="LambertLMaterial.ps" />
+    <None Include="LambertLTexture.ps" />
+    <None Include="LambertLTexture.vs" />
     <None Include="Model.ps" />
     <None Include="Model.vs" />
-    <None Include="test.ps" />
-    <None Include="test.vs" />
-    <None Include="testMaterial.ps" />
-    <None Include="testMaterial.vs" />
-    <None Include="testTexture.ps">
+    <None Include="LambertBasic.ps" />
+    <None Include="LambertBasic.vs" />
+    <None Include="LambertMaterial.ps" />
+    <None Include="LambertMaterial.vs" />
+    <None Include="LambertTexture.ps">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </None>
-    <None Include="testTexture.vs">
+    <None Include="LambertTexture.vs">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </None>
   </ItemGroup>

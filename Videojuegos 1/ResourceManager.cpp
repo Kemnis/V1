@@ -73,7 +73,7 @@ bool ResourceManager::AddShader(string name, Shader* shader) {
 	return true;
 }
 
-bool ResourceManager::AddStage(string name, int Cells, int CellSize)
+bool ResourceManager::AddStage(string name, float Cells, float CellSize)
 {
 	Model nuevo(Cells, CellSize);
 	nuevo.Name = name;

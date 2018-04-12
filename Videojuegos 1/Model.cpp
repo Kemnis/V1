@@ -19,7 +19,7 @@ Model::Model(string path)
 	}
 }
 
-Model::Model(int Cells, int CellSize)
+Model::Model(float Cells, float CellSize)
 {
 	VertexBuffer = 0;
 	IndexBuffer = 0;
@@ -32,21 +32,29 @@ Model::~Model()
 {
 }
 
-void Model::DefineTerrain(int Cells, int CellSize) {
+void Model::DefineTerrain(float Cells, float CellSize) {
+	Heightmap.LoadBitmapFromFile("Heightmap2.bmp");
+	Cells = (Heightmap.height-1);
 	// Calculate the number of vertices in the terrain.
-	for (int i = 0; i < (Cells + 1); i++)
+	unsigned int index = 0;
+	for (int i = 0; i < (Heightmap.height); i++)
 	{
-		for (int j = 0; j < (Cells + 1); j++)
+		for (int j = 0; j < (Heightmap.width); j++)
 		{
-			Mesh.AddVertex(j*CellSize, 0, i*CellSize);
+			//unsigned int index = ((i * (Heightmap.width * Heightmap.bytesPerPixel)) + (j * Heightmap.bytesPerPixel));     //(j)+(i* ((int)Heightmap.bitsPerPixel / 8));
+			float height = ((float)Heightmap.GetPixelRGB(index)->r / 255.0f);
+			Mesh.AddVertex(j*CellSize, height*5, i*CellSize);
 			Mesh.AddNormals(0, 1, 0);
+			index++;
 		}
 	}
 
+
+
 	// Set the index count to the same as the vertex count.
-	Mesh.IndexCount;
+	/*Mesh.IndexCount;
 	int count =0;
-	for (int i = 0; i < (Mesh.VertexCount-1 -Cells); i++)
+	for (int i = 0; i < (Mesh.VertexCount - 1 - Cells); i++)
 	{
 		Mesh.AddIndex(i);
 		Mesh.AddIndex(i + (Cells));
@@ -54,6 +62,25 @@ void Model::DefineTerrain(int Cells, int CellSize) {
 		Mesh.AddIndex(i);
 		Mesh.AddIndex(i + (Cells + 1));
 		Mesh.AddIndex(i+1);
+	}*/
+	for (int i = 0; i < Heightmap.height - 1; i++)
+	{
+		for (int j = 0; j < Heightmap.width - 1; j++)
+		{
+			int index1 = (Heightmap.width *   i) + j;    // Bottom left.
+			int index2 = (Heightmap.width *   i) + (j + 1);  // Bottom right.
+			int index3 = (Heightmap.width * (i + 1)) + j;    // Upper left.
+			int index4 = (Heightmap.width * (i + 1)) + (j + 1);  // Upper right.
+
+			
+			Mesh.AddIndex(index1);
+			Mesh.AddIndex(index4);
+			Mesh.AddIndex(index2 );
+
+			Mesh.AddIndex(index1);
+			Mesh.AddIndex(index3);
+			Mesh.AddIndex(index4 );
+		}
 	}
 	Mesh.DoFinalMesh();
 }

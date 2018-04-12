@@ -13,4 +13,11 @@ namespace ConstantBufferTypes {
 		glm::vec4 ColorMaterial;
 	};
 
+	struct LightBuffer
+	{
+		glm::vec4 ambientColor;
+		glm::vec4 diffuseColor;
+		glm::vec3 lightDirection;
+		float padding;
+	};
 }

@@ -1,12 +1,11 @@
 #pragma once
-#ifndef _Model_H_
-#define _Model_H_
 #include "Vertex.h"
 #include "Transforms.h"
+#include "RawImage.h"
 class Model : DxComponent<Model>, Transforms
 {
 public:
-	Model(int Cells, int CellSize);
+	Model(float Cells, float CellSize);
 	Model(string path);
 	~Model();
 	bool Initialize(string primitive);
@@ -16,13 +15,14 @@ public:
 	Vertex GetMesh();
 	string Name;
 	string Type;
+	RawImage Heightmap;
 protected:
 
 	Vertex Mesh;
 	ID3D11Buffer *VertexBuffer, *IndexBuffer;
 private:
 	bool LoadModel(string);
-	void DefineTerrain(int Cells, int CellSize);
+	void DefineTerrain(float Cells, float CellSize);
 	void DefineTriangle();
 	void DefineSquare();
 	void DefineCube(XMFLOAT3 size);
@@ -31,4 +31,3 @@ private:
 };
 
 
-#endif

@@ -26,7 +26,7 @@ bool Shader::Create(D3D11_INPUT_ELEMENT_DESC* inputLayout, unsigned int layoutCo
 	vertexShaderBuffer = 0;
 	errorMessage = 0;
 	// Compile the vertex shader code.
-	HRESULT result = D3DCompileFromFile(vsFileName, NULL, NULL, "BasicVertexShader", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0,
+	HRESULT result = D3DCompileFromFile(vsFileName, NULL, NULL, "VertexProgram", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0,
 		&vertexShaderBuffer, &errorMessage);
 	if (FAILED(result))
 	{
@@ -50,7 +50,7 @@ bool Shader::Create(D3D11_INPUT_ELEMENT_DESC* inputLayout, unsigned int layoutCo
 	ID3D10Blob* pixelShaderBuffer;
 	pixelShaderBuffer = 0;
 	// Compile the pixel shader code.
-	result = D3DCompileFromFile(psFileName, NULL, NULL, "BasicPixelShader", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0,
+	result = D3DCompileFromFile(psFileName, NULL, NULL, "PixelProgram", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0,
 		&pixelShaderBuffer, &errorMessage);
 	if (FAILED(result))
 	{

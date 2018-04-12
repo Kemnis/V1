@@ -2,7 +2,8 @@
 #include "Texture.h"
 #include "stdafx.h"
 
-MaterialShader::MaterialShader(std::string vsSource, std::string psSource) : Shader(ShaderType::MaterialShader) {
+MaterialShader::MaterialShader(std::string vsSource, std::string psSource, int WithLight) : Shader(ShaderType::MaterialShader) {
+	flagLight = WithLight;
 	Initialize(vsSource, psSource);
 }
 
@@ -37,10 +38,14 @@ bool MaterialShader::Initialize(const std::string& vsSource, const std::string& 
 
 	// Get a count of the elements in the layout.
 	unsigned int numElements = sizeof(polygonLayout) / sizeof(polygonLayout[0]);
-
 	
 	ConstantBuffer materialConstantBuffer(CUSTOM_BUFFER_1, ConstantBufferLocation::PixelShader, sizeof(ConstantBufferTypes::MaterialBuffer));
 	this->AddConstantBuffer("MaterialBuffer", materialConstantBuffer);
+	if (flagLight == 1)
+	{
+		ConstantBuffer lightConstantBuffer(CUSTOM_BUFFER_2, ConstantBufferLocation::PixelShader, sizeof(ConstantBufferTypes::LightBuffer));
+		this->AddConstantBuffer("LightBuffer", lightConstantBuffer);
+	}
 
 	this->Create(polygonLayout, numElements, vsSource, psSource);
 
