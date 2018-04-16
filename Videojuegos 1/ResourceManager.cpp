@@ -6,6 +6,7 @@
 #include "BasicShader.h"
 #include "MaterialShader.h"
 #include "Material.h"
+#include "Light.h"
 #include "KeyHandler.h"
 //Variables de respuesta
 bool ResourceManager::RB = false;
@@ -19,10 +20,12 @@ ResourceManager::ModelMap ResourceManager::ModelIdentifier;
 ResourceManager::TextureMap ResourceManager::TextureIdentifier;
 ResourceManager::ShaderMap ResourceManager::ShaderIdentifier;
 ResourceManager::MaterialMap ResourceManager::MaterialIdentifier;
+ResourceManager::LightMap ResourceManager::LightIdentifier;
 int ResourceManager::GameObjectIndex = 0;
 int ResourceManager::ModelIndex = 0;
 int ResourceManager::TextureIndex = 0;
 int ResourceManager::MaterialIndex = 0;
+int ResourceManager::LightIndex = 0;
 
 //Informacion de la pantalla
 int ResourceManager::ScreenWidthF = GetSystemMetrics(SM_CXSCREEN);
@@ -82,7 +85,7 @@ bool ResourceManager::AddStage(string name, float Cells, float CellSize)
 	return true;
 }
 
-string ResourceManager::BuildGameObject(string nameGameObject, string meshname, string texturename , string shadername, string materialname)
+string ResourceManager::BuildGameObject(string nameGameObject, string meshname, string texturename , string shadername, string materialname, string lightname)
 {
 	GameObject nuevo(nameGameObject);
 	if (meshname != "")
@@ -107,15 +110,24 @@ string ResourceManager::BuildGameObject(string nameGameObject, string meshname, 
 				return "E_Fail";
 		}
 	}
+
 	if (materialname != "")
 	{
 		nuevo.AssignMaterial(&MaterialIdentifier.find(materialname)->second);
 		if(nuevo.GetMaterial() == nullptr)
 			return "E_Fail";
 	}
+
+	if (lightname != "" || nuevo.GetShader()->flagLight == 1)
+	{
+		nuevo.AssignLight(&LightIdentifier.find(lightname)->second);
+		if (nuevo.GetLight() == nullptr)
+			return "E_Fail";
+	}
 	AddGameObject(nuevo);
 	return "S_OK";
 }
+
 
 GameObject* ResourceManager::GetObjectByName(string nameSearch)
 {
@@ -129,6 +141,19 @@ bool ResourceManager::AddMaterial(string Nombre, vec3 Color)
 	nuevo.color = Color;
 	MaterialIdentifier.insert(std::pair<string, Material>(Nombre, nuevo));
 	MaterialIndex++;
+	return true;
+}
+
+bool ResourceManager::AddLight(string Nombre, vec4 ambient, vec4 diffuse, vec3 direction)
+{
+	Light nuevo;
+	nuevo.Name = Nombre;
+	nuevo.Ambient = ambient;
+	nuevo.Diffuse = diffuse;
+	//nuevo.Diffuse = diffuse;
+	nuevo.Direction = direction;
+	LightIdentifier.insert(std::pair<string, Light>(Nombre, nuevo));
+	LightIndex++;
 	return true;
 }
 

@@ -12,22 +12,26 @@ string Scene::CreateScene() {
 	bool res;
 
 	//Load all objects you need First acubedd all the resources
-	ResourceManager::AddModel("Cube", "SphereMesh");
+	ResourceManager::AddModel("Sphere", "SphereMesh");
 	ResourceManager::AddModel("Sphere.obj", "SphereModel");
-	//ResourceManager::LoadShaders();
 	ResourceManager::AddTexture("tex1SS.jpg", "World");
-	ResourceManager::AddMaterial("ColorBlanco", vec3(.5, .5, .5));
+	ResourceManager::AddMaterial("ColorBlanco", vec3(1, 1, 1));
+	ResourceManager::AddLight("Primeras", vec4(0.1f, 0.0f, 0.0f, 1.0f), vec4(1.0f, 1.0f, 1.0f, 1.0f), vec3(0.0f, 0.0f, 1.0f));
 	ResourceManager::AddShader("LambertBasicShader", new BasicShader("LambertMaterial.vs", "LambertMaterial.ps"));
-	ResourceManager::AddShader("LambertMaterialShader", new MaterialShader("LambertTexture.vs", "LambertTexture.ps",1));
-	ResourceManager::AddStage("Stage1",10,1.0f);
+	ResourceManager::AddShader("LambertLBasicShader", new BasicShader("LambertLMaterial.vs", "LambertLMaterial.ps",1));
+	ResourceManager::AddShader("LambertMaterialShader", new MaterialShader("LambertTexture.vs", "LambertTexture.ps"));
+	ResourceManager::AddShader("LambertLMaterialShader", new MaterialShader("LambertLTexture.vs", "LambertLTexture.ps", 1));
+	//ResourceManager::AddShader("Terreno", new TerrainShader("Terrain.vs", "Terrain.ps"));
+	ResourceManager::AddStage("Stage1",10,3.0f);
 
 
 	//Then Build a GameObject
-	ResourceManager::BuildGameObject("SphereMod", "SphereModel", "", "LambertBasicShader", "ColorBlanco");
-	ResourceManager::BuildGameObject("SphereMes", "SphereMesh", "World", "LambertMaterialShader", "ColorBlanco");
-	ResourceManager::BuildGameObject("Stage1", "Stage1", "", "LambertBasicShader", "ColorBlanco");
+	ResourceManager::BuildGameObject("SphereMes", "SphereMesh", "World", "LambertLMaterialShader", "ColorBlanco","Primeras");
+	ResourceManager::BuildGameObject("SphereMod", "SphereModel", "World", "LambertMaterialShader", "ColorBlanco", "");
+	ResourceManager::BuildGameObject("Stage1", "Stage1", "", "LambertLBasicShader", "ColorBlanco","Primeras");
 
 				//Descripci�n:
+	ResourceManager::GetObjectByName("SphereMes")->Transform->SetRotation(vec3(180, 0, 0));
 	ResourceManager::GetObjectByName("SphereMes")->Transform->SetTranslation(vec3(2, 0, 0));
 	ResourceManager::GetObjectByName("SphereMes")->Transform->SetScale(vec3(.5, .5, .5));
 				//Descripci�n:
@@ -41,7 +45,7 @@ string Scene::ProcessScene(double dt)
 	vec3 rot;
 	vec3 trans;
 	trans.z = 0.00;
-	rot.y = 2 * dt;
+	rot.y = 90 * dt;
 	ResourceManager::GetObjectByName("SphereMod")->Transform->Rotate(rot);
 	ResourceManager::GetObjectByName("SphereMod")->Transform->Translate(trans);
 	rot.y = 2 * dt;
@@ -63,13 +67,13 @@ string Scene::RenderScene()
 	SceneCamera->Watch();
 
 	// Get the world, view, and projection matrices from the camera and d3d objects.
-	worldMatrix = ResourceManager::GetObjectByName("SphereMod")->Transform->ToMatrix();
 	Worldobj2 = ResourceManager::GetObjectByName("SphereMes")->Transform->ToMatrix();
+	worldMatrix = ResourceManager::GetObjectByName("SphereMod")->Transform->ToMatrix();
 	StageWorld = ResourceManager::GetObjectByName("Stage1")->Transform->ToMatrix();
 	SceneCamera->GetViewMatrix(viewMatrix);
 	projectionMatrix = SceneCamera->GetProjectionMatrix();
 
-	//specsDx->TurnOffCulling();
+	specsDx->TurnOffCulling();
 	specsDx->TurnOnAlphaBlending();
 	specsDx->TurnZBufferOn();
 
@@ -79,10 +83,6 @@ string Scene::RenderScene()
 	GameObject* GOStage = ResourceManager::GetObjectByName("Stage1");
 
 	GObjMesh->Draw(Worldobj2, viewMatrix, *projectionMatrix);
-	//Lo ultimo que movi fue el buffer del initialize de MaterialShader para que existieran 3 posiciones incluyendo el 
-	//apartado del texture... debe estar ahi el problema de rendereo... intentar con solo hacer calculos con texture
-	//sin usar el color del material.
-
 	GObjModel->Draw(worldMatrix, viewMatrix, *projectionMatrix);
 	GOStage->Draw(StageWorld, viewMatrix, *projectionMatrix);
 

@@ -49,20 +49,7 @@ void Model::DefineTerrain(float Cells, float CellSize) {
 		}
 	}
 
-
-
 	// Set the index count to the same as the vertex count.
-	/*Mesh.IndexCount;
-	int count =0;
-	for (int i = 0; i < (Mesh.VertexCount - 1 - Cells); i++)
-	{
-		Mesh.AddIndex(i);
-		Mesh.AddIndex(i + (Cells));
-		Mesh.AddIndex(i + (Cells+1));
-		Mesh.AddIndex(i);
-		Mesh.AddIndex(i + (Cells + 1));
-		Mesh.AddIndex(i+1);
-	}*/
 	for (int i = 0; i < Heightmap.height - 1; i++)
 	{
 		for (int j = 0; j < Heightmap.width - 1; j++)
@@ -71,15 +58,14 @@ void Model::DefineTerrain(float Cells, float CellSize) {
 			int index2 = (Heightmap.width *   i) + (j + 1);  // Bottom right.
 			int index3 = (Heightmap.width * (i + 1)) + j;    // Upper left.
 			int index4 = (Heightmap.width * (i + 1)) + (j + 1);  // Upper right.
-
 			
 			Mesh.AddIndex(index1);
 			Mesh.AddIndex(index4);
-			Mesh.AddIndex(index2 );
+			Mesh.AddIndex(index2);
 
 			Mesh.AddIndex(index1);
 			Mesh.AddIndex(index3);
-			Mesh.AddIndex(index4 );
+			Mesh.AddIndex(index4);
 		}
 	}
 	Mesh.DoFinalMesh();
@@ -241,7 +227,7 @@ void Model::DefineSphere(float diameter, size_t tessellation)
 	// Fill the index buffer with triangles joining each pair of latitude rings.
 	size_t stride = horizontalSegments + 1;
 
-	for (size_t i = 0; i < verticalSegments; i++)
+	for (size_t i = 0; i < (verticalSegments); i++)
 	{
 		for (size_t j = 0; j <= horizontalSegments; j++)
 		{
@@ -257,6 +243,7 @@ void Model::DefineSphere(float diameter, size_t tessellation)
 			Mesh.AddIndex(nextI * stride + nextJ);
 		}
 	}
+	Mesh.DoFinalMesh();
 }
 
 void Model::DefineGeoSphere(float diameter, size_t tessellation)
@@ -599,7 +586,7 @@ bool Model::Initialize(string NameOfFigure)
 	if (NameOfFigure == "Square")
 		DefineSquare();
 	if (NameOfFigure == "Sphere")
-		DefineSphere(2, 5);
+		DefineSphere(3, 8);
 	if (NameOfFigure == "Cube")
 		DefineCube(XMFLOAT3(1, 1, 1));
 	if (NameOfFigure == "Geosphere")

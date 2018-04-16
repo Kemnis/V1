@@ -23,6 +23,9 @@ void Transforms::Scale(vec3 Scale)
 
 void Transforms::Rotate(vec3 Rotation)
 {
+	Rotation.x = Rotation.x*0.0174533f;
+	Rotation.y = Rotation.y*0.0174533f;
+	Rotation.z = Rotation.z*0.0174533f;
 	this->rot = this->rot + Rotation;
 }
 
@@ -45,6 +48,9 @@ void Transforms::SetScale(vec3 Scale)
 
 void Transforms::SetRotation(vec3 Rotation)
 {
+	Rotation.x = Rotation.x*0.0174533f;
+	Rotation.y = Rotation.y*0.0174533f;
+	Rotation.z = Rotation.z*0.0174533f;
 	this->rot = Rotation;
 }
 
@@ -78,12 +84,15 @@ void Transforms::SetTransforms(vec3 Translation, vec3 Rotation, vec3 Scale)
 
 void Transforms::ToMatrix(vec3 Scale, vec3 Rotation, vec3 Translation)
 {
-	TransformMatrix = XMMatrixScaling(Scale.x, Scale.y, Scale.z)* XMMatrixRotationX(Rotation.x) * XMMatrixRotationY(Rotation.y) * XMMatrixRotationX(Rotation.z) * XMMatrixTranslation(Translation.x, Translation.y, Translation.z);
+	/*this->rot.x = this->rot.x*0.0174533f;
+	this->rot.y = this->rot.y*0.0174533f;
+	this->rot.z = this->rot.z*0.0174533f;*/
+	TransformMatrix = XMMatrixScaling(Scale.x, Scale.y, Scale.z)* XMMatrixRotationX(Rotation.x) * XMMatrixRotationY(Rotation.y) * XMMatrixRotationZ(Rotation.z) * XMMatrixTranslation(Translation.x, Translation.y, Translation.z);
 }
 
 XMMATRIX Transforms::ToMatrix()
 {
-	TransformMatrix = XMMatrixScaling(this->esc.x, this->esc.y, this->esc.z)* XMMatrixRotationX(this->rot.x) * XMMatrixRotationY(this->rot.y) * XMMatrixRotationX(this->rot.z) * XMMatrixTranslation(this->tran.x, this->tran.y, this->tran.z);
+	TransformMatrix = XMMatrixScaling(this->esc.x, this->esc.y, this->esc.z)* XMMatrixRotationX(this->rot.x) * XMMatrixRotationY(this->rot.y) * XMMatrixRotationZ(this->rot.z) * XMMatrixTranslation(this->tran.x, this->tran.y, this->tran.z);
 	return TransformMatrix;
 }
 

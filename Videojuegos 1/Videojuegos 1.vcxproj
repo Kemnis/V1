@@ -156,6 +156,7 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="KeyHandler.h" />
+    <ClInclude Include="Light.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="MaterialShader.h" />
     <ClInclude Include="Model.h" />
@@ -220,12 +221,14 @@
     <None Include="LambertBasic.vs" />
     <None Include="LambertMaterial.ps" />
     <None Include="LambertMaterial.vs" />
-    <None Include="LambertTexture.ps">
+    <None Include="Terrain.ps">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </None>
-    <None Include="LambertTexture.vs">
+    <None Include="Terrain.vs">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </None>
+    <None Include="LambertTexture.ps" />
+    <None Include="LambertTexture.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

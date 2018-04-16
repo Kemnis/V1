@@ -21,6 +21,12 @@ bool GameObject::AssignModel(Model* model)
 	return true;
 }
 
+bool GameObject::AssignLight(Light* light)
+{
+	this->light = light;
+	return true;
+}
+
 bool GameObject::AssignShader(Shader* shader) {
 	this->shader = shader;
 	return true;
@@ -53,6 +59,11 @@ Model* GameObject::GetModel()
 	return Modelo;
 }
 
+Shader* GameObject::GetShader()
+{
+	return shader;
+}
+
 bool GameObject::ExistShader()
 {
 	return (shader != nullptr);
@@ -63,12 +74,26 @@ Material* GameObject::GetMaterial()
 	return material;
 }
 
+Light* GameObject::GetLight()
+{
+	return light;
+}
+
 void GameObject::Draw(XMMATRIX world, XMMATRIX view, XMMATRIX projection)
 {
 	if (shader != nullptr) {
 		ResourceManager::bindShader(shader);
 		shader->SetShaderParameters(world, view, projection);
 		switch (shader->type) {
+			case ShaderType::MaterialLShader:
+			case ShaderType::BasicLShader:
+				if (this->light != nullptr) {
+					ConstantBufferTypes::LightBuffer lightBuffer;
+					lightBuffer.ambientColor = vec4(this->light->Ambient);
+					lightBuffer.diffuseColor = vec4(this->light->Diffuse);
+					lightBuffer.lightDirection = vec3(this->light->Direction);
+					shader->SetShaderConstantBuffer("LightBuffer", &lightBuffer);
+				}
 			case ShaderType::MaterialShader:
 			case ShaderType::BasicShader: {
 				if (this->material != nullptr) {

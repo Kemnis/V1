@@ -4,11 +4,11 @@
 #include "GameObject.h"
 #include "Model.h"
 #include "Texture.h"
-#include "Terrain.h"
 #include "Shader.h"
 #include "BasicShader.h"
 #include "MaterialShader.h"
 #include "Material.h"
+#include "Light.h"
 #include "KeyHandler.h"
 class ResourceManager
 {
@@ -20,9 +20,10 @@ public:
 	static bool AddTexture(string path, string name);
 	static bool AddStage(string name, float Cells, float CellSize);
 	static bool AddShader(string name, Shader* shader);
-	static string BuildGameObject(string nameGameObject, string meshname, string texturename, string shadername, string materialname);
+	static string BuildGameObject(string nameGameObject, string meshname, string texturename, string shadername, string materialname, string lightname);
 	static GameObject* GetObjectByName(string);
 	static bool AddMaterial(string Nombre, vec3 Color);
+	static bool AddLight(string Nombre, vec4 ambient, vec4 diffuse, vec3 direction);
 
 	static bool bindShader(Shader* basicshader);
 	static bool bindModel(Model * model);
@@ -34,6 +35,7 @@ public:
 	using TextureMap = std::map<string, Texture>;
 	using ShaderMap = std::map<string, Shader*>;
 	using MaterialMap = std::map<string, Material>;
+	using LightMap = std::map<string, Light>;
 
 	//Informacion de pantalla
 	static int ScreenWidthF;
@@ -69,6 +71,9 @@ protected:
 	//Material
 	static MaterialMap MaterialIdentifier;
 	static int MaterialIndex;
+	//Material
+	static LightMap LightIdentifier;
+	static int LightIndex;
 };
 
 //#endif

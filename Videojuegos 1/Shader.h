@@ -13,6 +13,9 @@ using namespace std;
 enum class ShaderType {
 	BasicShader = 1,
 	MaterialShader = 2,
+	BasicLShader = 3,
+	MaterialLShader = 4,
+	TerrainShader = 5
 };
 
 class Shader : public DxComponent<Shader>
@@ -23,6 +26,7 @@ protected:
 public:
 	Shader( ShaderType type );
 	~Shader();
+	int flagLight;
 
 	ShaderType type;
 

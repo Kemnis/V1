@@ -5,6 +5,12 @@ BasicShader::BasicShader(std::string vsSource, std::string psSource) : Shader(Sh
 	Initialize(vsSource, psSource);
 }
 
+BasicShader::BasicShader(std::string vsSource, std::string psSource, int WithLight) : Shader(ShaderType::BasicLShader) {
+	flagLight = WithLight;
+	Initialize(vsSource, psSource);
+}
+
+
 bool BasicShader::Initialize(const std::string& vsSource, const std::string& psSource)
 {
 	// Create the vertex input layout description.
@@ -25,7 +31,11 @@ bool BasicShader::Initialize(const std::string& vsSource, const std::string& psS
 	
 	ConstantBuffer materialConstantBuffer(CUSTOM_BUFFER_1, ConstantBufferLocation::PixelShader, sizeof(ConstantBufferTypes::MaterialBuffer));
 	this->AddConstantBuffer("MaterialBuffer", materialConstantBuffer);
-	
+	if (flagLight == 1)
+	{
+		ConstantBuffer lightConstantBuffer(CUSTOM_BUFFER_2, ConstantBufferLocation::PixelShader, sizeof(ConstantBufferTypes::LightBuffer));
+		this->AddConstantBuffer("LightBuffer", lightConstantBuffer);
+	}
 
 	this->Create(polygonLayout, numElements, vsSource, psSource);
 

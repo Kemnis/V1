@@ -8,11 +8,13 @@ cbuffer LightBuffer : register(b2)
     float4 ambientColor;
 	float4 diffuseColor;
 	float3 lightDirection;
+	float padding;
 };
 
 struct PixelInputType
 {
     float4 position : SV_POSITION;
+	float4 normal : NORMAL;
 };
 
 float4 PixelProgram(PixelInputType input) : SV_TARGET
@@ -21,20 +23,20 @@ float4 PixelProgram(PixelInputType input) : SV_TARGET
 	float3 lightDir;
 	float lightIntensity;
 
-	finalcolor = ambientColor;
+	finalcolor = input.normal;
 
 	//Invert the light direction for calculations
-	lightDir = -lightDirection;
+	//lightDir = -lightDirection;
 
 	//Calculate the amount of light on this pixel
-	lightIntensity = saturate(dot(input.normal,lightDir));
+	//lightIntensity = saturate(dot(input.normal,lightDir));
 
-	if(lightIntensity > 0.0f)
-	{
+	//if(lightIntensity > 0.0f)
+	//{
 	//Determine the final amount of diffuse color based on the diffuse color combined with the light intensity
 	//Se suma las dos luces
-	finalcolor += saturate(diffuseColor * lightIntensity);
-	}
+	//finalcolor += saturate(diffuseColor * lightIntensity);
+	//}
 
 	return finalcolor;
 
