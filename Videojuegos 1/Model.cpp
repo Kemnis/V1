@@ -33,7 +33,12 @@ Model::~Model()
 }
 
 void Model::DefineTerrain(float Cells, float CellSize) {
-	Heightmap.LoadBitmapFromFile("Heightmap2.bmp");
+	vec4 repeat;
+	repeat.x = (float)(1.0f / 5.0f);
+	repeat.y = (float)(1.0f / 5.0f);
+	repeat.z = (float)0.0f;
+	repeat.w = (float)0.0f;
+	Heightmap.LoadBitmapFromFile("Heightmap.bmp");
 	Cells = (Heightmap.height-1);
 	// Calculate the number of vertices in the terrain.
 	unsigned int index = 0;
@@ -43,31 +48,56 @@ void Model::DefineTerrain(float Cells, float CellSize) {
 		{
 			//unsigned int index = ((i * (Heightmap.width * Heightmap.bytesPerPixel)) + (j * Heightmap.bytesPerPixel));     //(j)+(i* ((int)Heightmap.bitsPerPixel / 8));
 			float height = ((float)Heightmap.GetPixelRGB(index)->r / 255.0f);
-			Mesh.AddVertex(j*CellSize, height*5, i*CellSize);
-			Mesh.AddNormals(0, 1, 0);
+			Mesh.AddVertex(j*CellSize, 0, i*CellSize);
+			Mesh.AddNormals(0, 1, 0);			
+			Mesh.AddUV(repeat.z,repeat.w);
+			if (repeat.z >= 1)
+				repeat.z = 0;
+			else
+				repeat.z += repeat.x;
 			index++;
 		}
+		if (repeat.w >= 1)
+			repeat.w = 0;
+		else
+			repeat.w += repeat.y;
+	}
+
+	// Set the index count to the same as the vertex count. 
+	Mesh.IndexCount;
+	Mesh.IndexCount;
+	int count =0;
+	for (int i = 0; i < (Mesh.VertexCount - 1 - Cells); i++)
+	{
+	Mesh.AddIndex(i);
+	Mesh.AddIndex(i + 1);
+	Mesh.AddIndex(i + (Cells + 1));
+	Mesh.AddIndex(i);
+	Mesh.AddIndex(i + (Cells + 1));
+	Mesh.AddIndex(i + (Cells));
 	}
 
 	// Set the index count to the same as the vertex count.
-	for (int i = 0; i < Heightmap.height - 1; i++)
-	{
-		for (int j = 0; j < Heightmap.width - 1; j++)
-		{
-			int index1 = (Heightmap.width *   i) + j;    // Bottom left.
-			int index2 = (Heightmap.width *   i) + (j + 1);  // Bottom right.
-			int index3 = (Heightmap.width * (i + 1)) + j;    // Upper left.
-			int index4 = (Heightmap.width * (i + 1)) + (j + 1);  // Upper right.
-			
-			Mesh.AddIndex(index1);
-			Mesh.AddIndex(index4);
-			Mesh.AddIndex(index2);
+	//for (int i = 0; i < Heightmap.height - 1; i++)
+	//{
+	//	for (int j = 0; j < Heightmap.width - 1; j++)
+	//	{
+	//		int index1 = (Heightmap.width *   i) + j;    // Bottom left.
+	//		int index2 = (Heightmap.width *   i) + (j + 1);  // Bottom right.
+	//		int index3 = (Heightmap.width * (i + 1)) + j;    // Upper left.
+	//		int index4 = (Heightmap.width * (i + 1)) + (j + 1);  // Upper right.
+	//		
+	//		Mesh.AddIndex(index1);
+	//		Mesh.AddIndex(index4);
+	//		Mesh.AddIndex(index2);
 
-			Mesh.AddIndex(index1);
-			Mesh.AddIndex(index3);
-			Mesh.AddIndex(index4);
-		}
-	}
+	//		Mesh.AddIndex(index1);
+	//		Mesh.AddIndex(index3);
+	//		Mesh.AddIndex(index4);
+	//	}
+	//}
+
+
 	Mesh.DoFinalMesh();
 }
 

@@ -15,20 +15,21 @@ string Scene::CreateScene() {
 	ResourceManager::AddModel("Sphere", "SphereMesh");
 	ResourceManager::AddModel("Sphere.obj", "SphereModel");
 	ResourceManager::AddTexture("tex1SS.jpg", "World");
+	ResourceManager::AddTexture("tex2.jpg", "Pasto");
 	ResourceManager::AddMaterial("ColorBlanco", vec3(1, 1, 1));
-	ResourceManager::AddLight("Primeras", vec4(0.1f, 0.0f, 0.0f, 1.0f), vec4(1.0f, 1.0f, 1.0f, 1.0f), vec3(0.0f, 0.0f, 1.0f));
+	ResourceManager::AddLight("Primeras", vec4(0.1f, 0.8f, 0.8f, 1.0f), vec4(1.0f, 1.0f, 1.0f, 1.0f), vec3(0.0f, 0.0f, 1.0f));
 	ResourceManager::AddShader("LambertBasicShader", new BasicShader("LambertMaterial.vs", "LambertMaterial.ps"));
 	ResourceManager::AddShader("LambertLBasicShader", new BasicShader("LambertLMaterial.vs", "LambertLMaterial.ps",1));
 	ResourceManager::AddShader("LambertMaterialShader", new MaterialShader("LambertTexture.vs", "LambertTexture.ps"));
 	ResourceManager::AddShader("LambertLMaterialShader", new MaterialShader("LambertLTexture.vs", "LambertLTexture.ps", 1));
 	//ResourceManager::AddShader("Terreno", new TerrainShader("Terrain.vs", "Terrain.ps"));
-	ResourceManager::AddStage("Stage1",10,3.0f);
+	ResourceManager::AddStage("Stage1",10,10.0f);
 
 
 	//Then Build a GameObject
 	ResourceManager::BuildGameObject("SphereMes", "SphereMesh", "World", "LambertLMaterialShader", "ColorBlanco","Primeras");
 	ResourceManager::BuildGameObject("SphereMod", "SphereModel", "World", "LambertMaterialShader", "ColorBlanco", "");
-	ResourceManager::BuildGameObject("Stage1", "Stage1", "", "LambertLBasicShader", "ColorBlanco","Primeras");
+	ResourceManager::BuildGameObject("Stage1", "Stage1", "Pasto", "LambertLMaterialShader", "ColorBlanco","Primeras");
 
 				//Descripci�n:
 	ResourceManager::GetObjectByName("SphereMes")->Transform->SetRotation(vec3(180, 0, 0));
