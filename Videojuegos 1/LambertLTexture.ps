@@ -37,14 +37,14 @@ float4 PixelProgram(PixelInputType input) : SV_TARGET
 	//Calculate the amount of light on this pixel
 	lightIntensity = saturate(dot(input.normal,lightDir));
 
-	if(lightIntensity > 0.0f)
-	{
+//	if(lightIntensity > 0.0f)
+//	{
 	//Determine the final amount of diffuse color based on the diffuse color combined with the light intensity
 	//Se suma las dos luces
-	color += saturate(diffuseColor * lightIntensity);
-	}
+	//color += saturate(diffuseColor * lightIntensity);
+//	}
 
-	color = color * textureColor * materialColor;
+	color = textureColor * materialColor;
 
     return color;
 }

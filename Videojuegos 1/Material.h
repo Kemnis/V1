@@ -5,4 +5,5 @@ class Material {
 public:
 	string Name;
 	vec3 color;
+	float escalar;
 };

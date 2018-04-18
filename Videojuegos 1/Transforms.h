@@ -19,6 +19,7 @@ public:
 	void SetScale(vec3 Scale);
 	void SetRotation(vec3 Rotation);
 	void SetTranslation(vec3 Translation);
+	void LookCamera(vec3 position);
 	vec3 GetScale();
 	vec3 GetRotation();
 	vec3 GetTranslation();

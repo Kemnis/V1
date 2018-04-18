@@ -99,6 +99,24 @@ void GameObject::Draw(XMMATRIX world, XMMATRIX view, XMMATRIX projection)
 				if (this->material != nullptr) {
 					ConstantBufferTypes::MaterialBuffer materialBuffer;
 					materialBuffer.ColorMaterial = vec4(this->material->color, 1.0);
+					materialBuffer.escalar = this->material->escalar;
+					shader->SetShaderConstantBuffer("MaterialBuffer", &materialBuffer);
+				}
+			}break;
+			case ShaderType::TerrainShader:
+			{
+				if (this->light != nullptr)
+				{
+					ConstantBufferTypes::LightBuffer lightBuffer;
+					lightBuffer.ambientColor = vec4(this->light->Ambient);
+					lightBuffer.diffuseColor = vec4(this->light->Diffuse);
+					lightBuffer.lightDirection = vec3(this->light->Direction);
+					shader->SetShaderConstantBuffer("LightBuffer", &lightBuffer);
+				}
+				if (this->material != nullptr) {
+					ConstantBufferTypes::MaterialBuffer materialBuffer;
+					materialBuffer.ColorMaterial = vec4(this->material->color, 1.0);
+					materialBuffer.escalar = this->material->escalar;
 					shader->SetShaderConstantBuffer("MaterialBuffer", &materialBuffer);
 				}
 			}break;

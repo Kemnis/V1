@@ -19,84 +19,88 @@ Model::Model(string path)
 	}
 }
 
-Model::Model(float Cells, float CellSize)
+Model::Model(string HeightmapFile, float Cells, float Width, float Height)
 {
 	VertexBuffer = 0;
 	IndexBuffer = 0;
-	DefineTerrain(Cells, CellSize);
+	DefineTerrain(Cells, Width, Height, HeightmapFile);
 	Initialize("Terrain");
 	Type = "Terrain";
+}
+
+Model::Model(vec2 coordPositivo, vec2 coordNegativo)
+{
+	VertexBuffer = 0;
+	IndexBuffer = 0;
+	this->coordPositivo = coordPositivo;
+	this->coordNegativo = coordNegativo;
+	Type = "Billboard";
+	Initialize(Type);
 }
 
 Model::~Model()
 {
 }
 
-void Model::DefineTerrain(float Cells, float CellSize) {
-	vec4 repeat;
-	repeat.x = (float)(1.0f / 5.0f);
-	repeat.y = (float)(1.0f / 5.0f);
-	repeat.z = (float)0.0f;
-	repeat.w = (float)0.0f;
-	Heightmap.LoadBitmapFromFile("Heightmap.bmp");
-	Cells = (Heightmap.height-1);
-	// Calculate the number of vertices in the terrain.
+bool Model::isIntoTerrain(vec3 pos)
+{
+	if ((pos.x>Heightmap.width || pos.z>Heightmap.height) || (pos.x< 0.0f || pos.z < 0.0f))
+	{
+		return false;
+	}
+
+	return true;
+}
+
+float Model::GetPositionHeightMap(vec2 pos)
+{
+	return Mesh.GetVertex((int)pos.x + Heightmap.width*(int)pos.y).y;
+}
+
+void Model::DefineTerrain(float Cells, float Width, float Height, string HeightmapFile) {
+
+	Heightmap.LoadBitmapFromFile(HeightmapFile);
+	Cells = (Heightmap.width);
+	vec2 CellSize = { Width ,Height };
 	unsigned int index = 0;
+	//Cantidad a repetir
+	float countRepet = 8;
 	for (int i = 0; i < (Heightmap.height); i++)
 	{
 		for (int j = 0; j < (Heightmap.width); j++)
 		{
 			//unsigned int index = ((i * (Heightmap.width * Heightmap.bytesPerPixel)) + (j * Heightmap.bytesPerPixel));     //(j)+(i* ((int)Heightmap.bitsPerPixel / 8));
 			float height = ((float)Heightmap.GetPixelRGB(index)->r / 255.0f);
-			Mesh.AddVertex(j*CellSize, 0, i*CellSize);
-			Mesh.AddNormals(0, 1, 0);			
-			Mesh.AddUV(repeat.z,repeat.w);
-			if (repeat.z >= 1)
-				repeat.z = 0;
-			else
-				repeat.z += repeat.x;
+			//Draw in origin
+			//Mesh.AddVertex(CellSize.x*0.5f - CellSize.x * (float)((float)j / (float)Heightmap.width), height*10.0f, CellSize.y*0.5f - CellSize.y * (float)((float)i / (float)Heightmap.height));
+			Mesh.AddVertex(j, height*10.0f,i);
+			Mesh.AddNormals(0.0f, height,0.0f);
+			//Standar
+			Mesh.AddUV((float)j*countRepet / (float)Heightmap.width, (float)i*countRepet / (float)Heightmap.height);
 			index++;
 		}
-		if (repeat.w >= 1)
-			repeat.w = 0;
-		else
-			repeat.w += repeat.y;
+
 	}
 
-	// Set the index count to the same as the vertex count. 
-	Mesh.IndexCount;
-	Mesh.IndexCount;
-	int count =0;
-	for (int i = 0; i < (Mesh.VertexCount - 1 - Cells); i++)
+	 //Set the index count to the same as the vertex count.
+	for (int i = 0; i < Heightmap.height - 1; i++)
 	{
-	Mesh.AddIndex(i);
-	Mesh.AddIndex(i + 1);
-	Mesh.AddIndex(i + (Cells + 1));
-	Mesh.AddIndex(i);
-	Mesh.AddIndex(i + (Cells + 1));
-	Mesh.AddIndex(i + (Cells));
+		for (int j = 0; j < Heightmap.width - 1; j++)
+		{
+			int index1 = (Heightmap.width *   i) + j;    // Bottom left.
+			int index2 = (Heightmap.width *   i) + (j + 1);  // Bottom right.
+			int index3 = (Heightmap.width * (i + 1)) + j;    // Upper left.
+			int index4 = (Heightmap.width * (i + 1)) + (j + 1);  // Upper right.
+			
+			Mesh.AddIndex(index1);
+			Mesh.AddIndex(index3);
+			Mesh.AddIndex(index2);
+
+			Mesh.AddIndex(index2);
+			Mesh.AddIndex(index3);
+			Mesh.AddIndex(index4);
+		}
 	}
-
-	// Set the index count to the same as the vertex count.
-	//for (int i = 0; i < Heightmap.height - 1; i++)
-	//{
-	//	for (int j = 0; j < Heightmap.width - 1; j++)
-	//	{
-	//		int index1 = (Heightmap.width *   i) + j;    // Bottom left.
-	//		int index2 = (Heightmap.width *   i) + (j + 1);  // Bottom right.
-	//		int index3 = (Heightmap.width * (i + 1)) + j;    // Upper left.
-	//		int index4 = (Heightmap.width * (i + 1)) + (j + 1);  // Upper right.
-	//		
-	//		Mesh.AddIndex(index1);
-	//		Mesh.AddIndex(index4);
-	//		Mesh.AddIndex(index2);
-
-	//		Mesh.AddIndex(index1);
-	//		Mesh.AddIndex(index3);
-	//		Mesh.AddIndex(index4);
-	//	}
-	//}
-
 
 	Mesh.DoFinalMesh();
 }
@@ -115,6 +119,7 @@ void Model::DefineTriangle()
 	Mesh.AddUV(0.0, 1.0);
 	Mesh.AddUV(0.0, 0.0);
 	Mesh.AddUV(1.0, 1.0);
+
 	//All primitives must to generate the Final Mesh
 	Mesh.DoFinalMesh();
 }
@@ -604,6 +609,51 @@ void Model::DefineGeoSphere(float diameter, size_t tessellation)
 	fixPole(southPoleIndex);
 }
 
+void Model::DefineBillboard()
+{
+	int indexCount = 0;
+	//Define array vertex
+
+	//First triangle
+	Mesh.AddVertex(-1.0f*coordNegativo.x,1.0f*coordPositivo.y,0.0f);
+	Mesh.AddUV(0.0f,0.0f);
+	Mesh.AddNormals(0.0f,0.0f,-1.0f);
+	Mesh.AddIndex(indexCount);
+	indexCount++;
+
+	Mesh.AddVertex(1.0f*coordPositivo.x, 1.0f*coordPositivo.y, 0.0f);
+	Mesh.AddUV(1.0f, 0.0f);
+	Mesh.AddNormals(0.0f, 0.0f, -1.0f);
+	Mesh.AddIndex(indexCount);
+	indexCount++;
+
+	Mesh.AddVertex(-1.0f*coordNegativo.x, -1.0f*coordNegativo.y, 0.0f);
+	Mesh.AddUV(0.0f, 1.0f);
+	Mesh.AddNormals(0.0f, 0.0f, -1.0f);
+	Mesh.AddIndex(indexCount);
+	indexCount++;
+
+	//Second triangle
+	Mesh.AddVertex(-1.0f*coordNegativo.x, -1.0f*coordNegativo.y, 0.0f);
+	Mesh.AddUV(0.0f, 1.0f);
+	Mesh.AddNormals(0.0f, 0.0f, -1.0f);
+	Mesh.AddIndex(indexCount);
+	indexCount++;
+
+	Mesh.AddVertex(1.0f*coordPositivo.x, 1.0f*coordPositivo.y, 0.0f);
+	Mesh.AddUV(1.0f, 0.0f);
+	Mesh.AddNormals(0.0f, 0.0f, -1.0f);
+	Mesh.AddIndex(indexCount);
+	indexCount++;
+
+	Mesh.AddVertex(1.0f*coordPositivo.x, -1.0f*coordNegativo.y, 0.0f);
+	Mesh.AddUV(1.0f, 1.0f);
+	Mesh.AddNormals(0.0f, 0.0f, -1.0f);
+	Mesh.AddIndex(indexCount);
+
+	Mesh.DoFinalMesh();
+}
+
 
 bool Model::Initialize(string NameOfFigure)
 {
@@ -621,6 +671,8 @@ bool Model::Initialize(string NameOfFigure)
 		DefineCube(XMFLOAT3(1, 1, 1));
 	if (NameOfFigure == "Geosphere")
 		DefineGeoSphere(2, 10);
+	if (NameOfFigure == "Billboard")
+		DefineBillboard();
 
 	//Set up the description of the static vertex buffer
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;

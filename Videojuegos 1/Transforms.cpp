@@ -18,7 +18,7 @@ Transforms::~Transforms() {}
 
 void Transforms::Scale(vec3 Scale)
 {
-	this->esc = this->esc + Scale;
+	this->esc = Scale;
 }
 
 void Transforms::Rotate(vec3 Rotation)
@@ -31,7 +31,7 @@ void Transforms::Rotate(vec3 Rotation)
 
 void Transforms::Translate(vec3 Translation)
 {
-	this->tran = this->tran + Translation;
+	this->tran += Translation;
 }
 
 void Transforms::Identity()
@@ -99,4 +99,9 @@ XMMATRIX Transforms::ToMatrix()
 XMMATRIX Transforms::GetMatrix()
 {
 	return TransformMatrix;
+}
+
+void Transforms::LookCamera(vec3 position)
+{
+	this->rot.y = (float)atan2(this->tran.x - position.x, this->tran.z - position.z) * (180.0 / XM_PI)*0.0174532925f;
 }

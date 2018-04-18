@@ -19,6 +19,7 @@ protected:
 	bool RB;
 	string RS;
 	// Variables de respuesta
+
 	
 private:
 	XMMATRIX CameraMatrix;

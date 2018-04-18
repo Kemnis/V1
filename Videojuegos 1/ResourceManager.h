@@ -18,12 +18,16 @@ public:
 
 	static bool AddModel(string path, string name);
 	static bool AddTexture(string path, string name);
-	static bool AddStage(string name, float Cells, float CellSize);
+	static bool AddStage(string path, string name, float Cells, float Witdth,float Height);
 	static bool AddShader(string name, Shader* shader);
 	static string BuildGameObject(string nameGameObject, string meshname, string texturename, string shadername, string materialname, string lightname);
 	static GameObject* GetObjectByName(string);
 	static bool AddMaterial(string Nombre, vec3 Color);
 	static bool AddLight(string Nombre, vec4 ambient, vec4 diffuse, vec3 direction);
+	static bool AddBillboard(string Nombre, vec2 coordPositivo,vec2 coordNegativo);
+
+	static string AsingTextureToGameObject(string nameGameObject, string nameTexture);
+	static Material*GetMaterial(string nameMaterial);
 
 	static bool bindShader(Shader* basicshader);
 	static bool bindModel(Model * model);

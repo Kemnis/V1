@@ -76,11 +76,20 @@ bool ResourceManager::AddShader(string name, Shader* shader) {
 	return true;
 }
 
-bool ResourceManager::AddStage(string name, float Cells, float CellSize)
+bool ResourceManager::AddStage(string HeightmapFile, string name, float Cells, float Width, float Height)
 {
-	Model nuevo(Cells, CellSize);
+	Model nuevo(HeightmapFile,Cells, Width, Height);
 	nuevo.Name = name;
 	ModelIdentifier.insert(std::pair<string, Model>(name, nuevo));
+	ModelIndex++;
+	return true;
+}
+
+bool ResourceManager::AddBillboard(string Nombre, vec2 coordPositivo, vec2 coordNegativo)
+{
+	Model nuevo(coordPositivo, coordNegativo);
+	nuevo.Name = Nombre;
+	ModelIdentifier.insert(std::pair<string, Model>(Nombre, nuevo));
 	ModelIndex++;
 	return true;
 }
@@ -139,6 +148,7 @@ bool ResourceManager::AddMaterial(string Nombre, vec3 Color)
 	Material nuevo;
 	nuevo.Name = Nombre;
 	nuevo.color = Color;
+	nuevo.escalar = 0.0f;
 	MaterialIdentifier.insert(std::pair<string, Material>(Nombre, nuevo));
 	MaterialIndex++;
 	return true;
@@ -157,6 +167,29 @@ bool ResourceManager::AddLight(string Nombre, vec4 ambient, vec4 diffuse, vec3 d
 	return true;
 }
 
+string ResourceManager::AsingTextureToGameObject(string nameGameObject,string nameTexture)
+{
+	if (nameGameObject!="" && nameTexture!="")
+	{
+		Texture* texture = &TextureIdentifier.find(nameTexture)->second;
+		GameObject* gameObject = ResourceManager::GetObjectByName(nameGameObject);
+		if (texture == nullptr || gameObject ==nullptr)
+		{
+			return "E_Fail";
+		}
+		gameObject->AddTexture(texture);
+	}
+
+	return "S_OK";
+}
+
+Material*ResourceManager::GetMaterial(string nameMaterial)
+{
+	Material * material = &MaterialIdentifier.find(nameMaterial)->second;
+
+	return material;
+}
+
 bool ResourceManager::bindShader(Shader * shader) {
 	if (ShaderActual != shader)
 	{
@@ -172,7 +205,7 @@ bool ResourceManager::bindModel(Model * model)
 	if (ModeloActual != model)
 	{
 		ModeloActual = model;
-		ModeloActual->BindMesh(/*(ModeloActual->Type =="Terrain") ? D3D10_PRIMITIVE_TOPOLOGY_LINELIST :*/ D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		ModeloActual->BindMesh(/*(ModeloActual->Type =="Terrain") ? D3D10_PRIMITIVE_TOPOLOGY_LINELIST : */D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		return true;
 	}
 	return false;

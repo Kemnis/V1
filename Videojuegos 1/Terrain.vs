@@ -8,7 +8,6 @@ struct VertexInputType
     float4 position : POSITION;
 	float2 tex : TEXCOORD0;
 	float3 normal : NORMAL;
-	float2 tex2 : TEXCOORD1;
 };
 
 struct PixelInputType
@@ -25,8 +24,8 @@ PixelInputType VertexProgram(VertexInputType input)
     input.position.w = 1.0f;
 	output.position = mul(input.position, projectionViewWorldMatrix);
 	output.tex = input.tex;
-	output.normal = mul(input.normal,(float3x3)projectionViewWorldMatrix);
-	output.normal = normalize(output.normal);
+	//output.normal = mul(input.normal,(float3x3)projectionViewWorldMatrix);
+	output.normal = input.normal;
 
     return output;
 }

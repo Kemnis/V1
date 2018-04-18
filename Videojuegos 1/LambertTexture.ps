@@ -4,6 +4,10 @@ SamplerState SampleType;
 cbuffer MaterialBuffer : register(b1)
 {
 	float4 materialColor;
+	float escalar;
+	float padding;
+	float padding1;
+	float padding2;
 };
 
 struct PixelInputType
@@ -17,11 +21,12 @@ float4 PixelProgram(PixelInputType input) : SV_TARGET
 {
 	float4 textureColor;
 	float4 color;
-	color = materialColor;
 
 	textureColor = shaderTexture.Sample(SampleType, input.tex);
 
-	color = color * textureColor;
+	clip(textureColor.a - 0.8f);
+
+	color = lerp(textureColor,textureColor*materialColor,escalar);
 
     return color;
 }

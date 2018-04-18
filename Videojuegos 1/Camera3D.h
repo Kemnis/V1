@@ -19,11 +19,11 @@ public:
 	XMFLOAT3 GetRotation();
 
 	void Watch();
-
+	XMFLOAT4 view;
 protected:
 	
 
-	XMFLOAT4 view;
+	
 	float posX, posY, posZ;
 	float rotX, rotY, rotZ;
 	XMMATRIX viewMatrix;
