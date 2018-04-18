@@ -15,6 +15,7 @@ string Scene::CreateScene() {
 	ResourceManager::AddModel("Sphere", "SphereMesh");
 	ResourceManager::AddModel("assets/Sphere.obj", "SphereModel");
 	ResourceManager::AddTexture("assets/skydome day1.png", "World");
+	ResourceManager::AddTexture("assets/skydome night2.jpg", "WorldNight");
 	ResourceManager::AddTexture("assets/terrenopasto.jpg", "Layer1-Bottom");
 	ResourceManager::AddTexture("assets/terrenopiedra.jpg", "Layer2-Mid");
 	ResourceManager::AddTexture("assets/terrenopasto2.png", "Layer3-Top");
@@ -25,6 +26,7 @@ string Scene::CreateScene() {
 	ResourceManager::AddShader("LambertLBasicShader", new BasicShader("LambertLMaterial.vs", "LambertLMaterial.ps",1));
 	ResourceManager::AddShader("LambertMaterialShader", new MaterialShader("LambertTexture.vs", "LambertTexture.ps"));
 	ResourceManager::AddShader("LambertLMaterialShader", new MaterialShader("LambertLTexture.vs", "LambertLTexture.ps", 1));
+	ResourceManager::AddShader("SkydomeShader", new SkydomeShader("Skydome.vs", "Skydome.ps", 1));
 	ResourceManager::AddShader("TerrenoShader", new TerrainShader("Terrain.vs", "Terrain.ps"));
 	ResourceManager::AddStage("assets/Stage2.bmp", "Stage1", 256, 1024, 1024);
 	ResourceManager::AddBillboard("ArbolBill",vec2(1.0f,1.0f),vec2(1.0f,1.0f));
@@ -32,12 +34,14 @@ string Scene::CreateScene() {
 
 	//Then Build a GameObject
 	ResourceManager::BuildGameObject("SphereMes", "SphereMesh", "World", "LambertLMaterialShader", "ColorBlanco","Primeras");
-	ResourceManager::BuildGameObject("SphereMod", "SphereModel", "World", "LambertMaterialShader", "ColorBlanco", "");
+	//ResourceManager::BuildGameObject("SphereMod", "SphereModel", "World", "LambertMaterialShader", "ColorBlanco", "");
+	ResourceManager::BuildGameObject("SphereMod", "SphereModel", "World", "SkydomeShader", "ColorBlanco", "Primeras");
 	ResourceManager::BuildGameObject("Stage1", "Stage1", "", "TerrenoShader", "ColorBlanco","Primeras");
 	ResourceManager::BuildGameObject("Arbol","ArbolBill","ArbolTexture","LambertMaterialShader", "ColorBlanco","");
 
 
 	//Addtexture
+	ResourceManager::AsingTextureToGameObject("SphereMod", "WorldNight");
 	ResourceManager::AsingTextureToGameObject("Stage1", "Layer1-Bottom");
 	ResourceManager::AsingTextureToGameObject("Stage1", "Layer2-Mid");
 	ResourceManager::AsingTextureToGameObject("Stage1", "Layer3-Top");
@@ -67,9 +71,9 @@ string Scene::ProcessScene(double dt)
 
 	ResourceManager::GetMaterial("ColorBlanco")->escalar = sinf(ambiente*0.0174532925f);
 
-	//if (ambiente > 359)
-	//	ambiente -= 359;
-	//ambiente += dt*10.0f;
+	if (ambiente > 359)
+		ambiente -= 359;
+	ambiente += dt*10.0f;
 
 	ResourceManager::GetObjectByName("SphereMod")->Transform->Rotate(rot);
 	//ResourceManager::GetObjectByName("SphereMod")->Transform->SetTranslation(trans);

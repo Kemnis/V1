@@ -95,6 +95,7 @@ void GameObject::Draw(XMMATRIX world, XMMATRIX view, XMMATRIX projection)
 					shader->SetShaderConstantBuffer("LightBuffer", &lightBuffer);
 				}
 			case ShaderType::MaterialShader:
+			case ShaderType::SkydomeShader:
 			case ShaderType::BasicShader: {
 				if (this->material != nullptr) {
 					ConstantBufferTypes::MaterialBuffer materialBuffer;
