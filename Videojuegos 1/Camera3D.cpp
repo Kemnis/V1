@@ -18,9 +18,29 @@ Camera3D::Camera3D(int screenWidth, int screenHeight, float nearPlane, float far
 	float fieldOfView = 3.141592654f / 4.0f;
 	float screenAspect = (float)screenWidth / (float)screenHeight;
 	m_projectionMatrix = XMMatrixPerspectiveFovLH(fieldOfView, screenAspect, nearPlane, farPlane);
+	// Setup the orthographic matrix
+	m_orthoMatrix = XMMatrixOrthographicLH((float)screenWidth, (float)screenHeight, nearPlane, farPlane);
+	//Setup the view2D matrix
+	InitializateViewMatrix2D();
 }
 
 Camera3D::~Camera3D() {}
+
+//Only called once
+void Camera3D::InitializateViewMatrix2D()
+{
+	//Initialize try not Initialize orient camera
+	XMVECTOR position = XMLoadFloat3(&XMFLOAT3(0.0f, 0.0f, -10.0f));
+	XMVECTOR lookAt = XMLoadFloat3(&XMFLOAT3(0.0f, 0.0f, 1.0f));
+	XMVECTOR up = XMLoadFloat3(&XMFLOAT3(0.0f, 1.0f, 0.0f));
+	XMMATRIX angleAxis = XMMatrixRotationRollPitchYaw(0, 0, 0);
+	// Transform the lookAt and up vector by the rotation matrix so the view is correctly rotated at the origin.
+	lookAt = XMVector3TransformCoord(lookAt, angleAxis);
+	up = XMVector3TransformCoord(up, angleAxis);
+	// Translate the rotated camera position to the location of the viewer.
+	lookAt = XMVectorAdd(position, lookAt);
+	m_viewMatrix2D = XMMatrixLookAtLH(position, lookAt, up);
+}
 
 void Camera3D::Watch()
 {
@@ -112,6 +132,12 @@ void Camera3D::GetViewMatrix(XMMATRIX& cameraViewMatrix)
 	return;
 }
 
+void Camera3D::GetViewMatrix2D(XMMATRIX& cameraViewMatrix)
+{
+	cameraViewMatrix = m_viewMatrix2D;
+	return;
+}
+
 XMMATRIX * Camera3D::GetProjectionMatrix()
 {
 
@@ -123,3 +149,7 @@ XMMATRIX * Camera3D::GetProjectionViewMatrix()
 	return &m_projetionViewMatrix;
 }
 
+XMMATRIX * Camera3D::GetOrthoMatrix()
+{
+	return &m_orthoMatrix;
+}

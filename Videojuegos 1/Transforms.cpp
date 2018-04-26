@@ -5,6 +5,8 @@ Transforms::Transforms()
 	this->esc = { 1,1,1 };
 	this->rot = { 0, 0, 0 };
 	this->tran = { 0, 0, 0 };
+	this->gravity = 0.0;
+	this->m_speedDirection = 0.0;
 }
 
 Transforms::Transforms(vec3 esc, vec3 rot, vec3 tran)
@@ -87,12 +89,12 @@ void Transforms::ToMatrix(vec3 Scale, vec3 Rotation, vec3 Translation)
 	/*this->rot.x = this->rot.x*0.0174533f;
 	this->rot.y = this->rot.y*0.0174533f;
 	this->rot.z = this->rot.z*0.0174533f;*/
-	TransformMatrix = XMMatrixScaling(Scale.x, Scale.y, Scale.z)* XMMatrixRotationX(Rotation.x) * XMMatrixRotationY(Rotation.y) * XMMatrixRotationZ(Rotation.z) * XMMatrixTranslation(Translation.x, Translation.y, Translation.z);
+	TransformMatrix = XMMatrixScaling(Scale.x, Scale.y, Scale.z)*XMMatrixRotationRollPitchYaw(Rotation.x, Rotation.y, Rotation.z)* XMMatrixTranslation(Translation.x, Translation.y, Translation.z);
 }
 
 XMMATRIX Transforms::ToMatrix()
 {
-	TransformMatrix = XMMatrixScaling(this->esc.x, this->esc.y, this->esc.z)* XMMatrixRotationX(this->rot.x) * XMMatrixRotationY(this->rot.y) * XMMatrixRotationZ(this->rot.z) * XMMatrixTranslation(this->tran.x, this->tran.y, this->tran.z);
+	TransformMatrix = XMMatrixScaling(this->esc.x, this->esc.y, this->esc.z)* XMMatrixRotationRollPitchYaw(this->rot.x, this->rot.y, this->rot.z) * XMMatrixTranslation(this->tran.x, this->tran.y, this->tran.z);
 	return TransformMatrix;
 }
 
@@ -104,4 +106,23 @@ XMMATRIX Transforms::GetMatrix()
 void Transforms::LookCamera(vec3 position)
 {
 	this->rot.y = (float)atan2(this->tran.x - position.x, this->tran.z - position.z) * (180.0 / XM_PI)*0.0174532925f;
+}
+
+void Transforms::ProccesParabolicShot(double deltaTime)
+{
+	m_speedDirection = deltaTime * 0.03f;
+	gravity += deltaTime * 0.000098f;
+
+	tran = vec3(tran.x + (n.x*m_speedDirection),tran.y + (n.y*m_speedDirection),tran.z + (n.z*m_speedDirection));
+	tran.y -= gravity;
+}
+
+void Transforms::Shot(vec3 LookAt, vec3 LookRotation)
+{
+	m_speedDirection = 0.0;
+	gravity = 0.0;
+
+	rot = LookAt;
+
+	//XMVECTOR direction = XMStoreFloat3();
 }

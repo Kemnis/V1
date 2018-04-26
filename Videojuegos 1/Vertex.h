@@ -22,6 +22,7 @@ public:
 	};
 	vector<VertexType> FinalMesh;
 	void DoFinalMesh();
+	void ClearVertex();
 	vector<unsigned long> IndexResult();
 	vector<unsigned long> GetIndex();
 

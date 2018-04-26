@@ -28,17 +28,41 @@ public:
 	void Draw(XMMATRIX world, XMMATRIX view, XMMATRIX projection);
 	Shader* GetShader();
 	void Shutdown();	
+
+	//Methods bitmaps
+	void SetRect(vec4 rectBitmap);
+	void SetPosition(vec2 position);
+	//void SetPositionCenter(vec2 position);
+	void SetSize(vec2 size);
+	//Methods bitmaps
+	//vec4 getRect();
+	//vec2 getPositon();
+	//vec2 getPisitionCenter();
+	//vec2 getSize();
+	void UpdateBitmap();
 	
 	Transforms* Transform;
+
+
 protected:
 	
 	string Name, Status;
-	Model* Modelo;
+	Model* Modelo;//Mesh
 	std::vector<Texture*> Tex;
 	Shader* shader;
 	Material* material;
 	Light* light;
 private:
+	//Measure
+	int m_screenWidth, m_screenHeight;
+
+	//previous
+	int m_previousWidth, m_previousHeight;
+	int m_previousPosX, m_previousPosY;
+	int PosX, PosY;
+
+	int m_bitmapWidth, m_bitmapHeight;
+	int CenterX, CenterY;
 };
 
 #endif
