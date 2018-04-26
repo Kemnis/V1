@@ -2,20 +2,7 @@
 
 Vertex::Vertex()
 {
-	IndexCount = 0;
-	VertexCount = 0;
-	indexNormals = 0;
-	indexUv = 0;
-	indexTriangles = 0;
-
-	vertices.clear();
-	uv.clear();
-	normal.clear();
-	indices.clear();
-	
-	TriangleFaceVertex.clear();
-	TriangleFaceTexture.clear();
-	TriangleFaceNormal.clear();	
+	ClearVertex();
 }
 
 
@@ -44,6 +31,26 @@ void Vertex::DoFinalMesh()
 		nuevo.normal = XMFLOAT3(GetNormal(i).x, GetNormal(i).y, GetNormal(i).z);
 		FinalMesh.push_back(nuevo);
 	}
+}
+
+void Vertex::ClearVertex()
+{
+	IndexCount = 0;
+	VertexCount = 0;
+	indexNormals = 0;
+	indexUv = 0;
+	indexTriangles = 0;
+
+	vertices.clear();
+	uv.clear();
+	normal.clear();
+	indices.clear();
+
+	TriangleFaceVertex.clear();
+	TriangleFaceTexture.clear();
+	TriangleFaceNormal.clear();
+
+	FinalMesh.clear();
 }
 
 

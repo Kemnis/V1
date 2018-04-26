@@ -2,6 +2,7 @@
 
 Model::Model(string path)
 {
+	dynamicVertexBuffer = false;
 	VertexBuffer = 0;
 	IndexBuffer = 0;
 	if (path.substr(path.find_last_of(".") + 1) == "obj")
@@ -21,6 +22,7 @@ Model::Model(string path)
 
 Model::Model(string HeightmapFile, float Cells, float Width, float Height)
 {
+	dynamicVertexBuffer = false;
 	VertexBuffer = 0;
 	IndexBuffer = 0;
 	DefineTerrain(Cells, Width, Height, HeightmapFile);
@@ -30,12 +32,23 @@ Model::Model(string HeightmapFile, float Cells, float Width, float Height)
 
 Model::Model(vec2 coordPositivo, vec2 coordNegativo)
 {
+	dynamicVertexBuffer = false;
 	VertexBuffer = 0;
 	IndexBuffer = 0;
 	this->coordPositivo = coordPositivo;
 	this->coordNegativo = coordNegativo;
 	Type = "Billboard";
 	Initialize(Type);
+}
+
+Model::Model(vec4 rectBitmap, int widthScreen, int heightScreen)
+{
+	this->rectBitmap = rectBitmap;
+	dynamicVertexBuffer = true;
+	VertexBuffer = 0;
+	IndexBuffer = 0;
+	DefineBitmap(rectBitmap, widthScreen, heightScreen);
+	Initialize("");
 }
 
 Model::~Model()
@@ -52,9 +65,12 @@ bool Model::isIntoTerrain(vec3 pos)
 	return true;
 }
 
-float Model::GetPositionHeightMap(vec2 pos)
+float Model::GetPositionHeightMap(vec3 pos)
 {
-	return Mesh.GetVertex((int)pos.x + Heightmap.width*(int)pos.y).y;
+	if (!isIntoTerrain(pos))
+		return pos.y;
+
+	return Mesh.GetVertex((int)pos.x + Heightmap.width*(int)pos.z).y;
 }
 
 void Model::DefineTerrain(float Cells, float Width, float Height, string HeightmapFile) {
@@ -654,6 +670,145 @@ void Model::DefineBillboard()
 	Mesh.DoFinalMesh();
 }
 
+void Model::DefineBitmap(vec4 rectBitmap, int widthScreen, int heightScreen)
+{
+	float left, right, top, bottom;
+	int countIndex = 0;
+
+	// Calculate the screen coordinates of the left side of the bitmap.
+	left = (float)((widthScreen / 2) * -1) + (float)rectBitmap.x;
+
+	// Calculate the screen coordinates of the right side of the bitmap.
+	right = left + (float)rectBitmap.z;
+
+	// Calculate the screen coordinates of the top of the bitmap.
+	top = (float)(heightScreen / 2) - (float)rectBitmap.y;
+
+	// Calculate the screen coordinates of the bottom of the bitmap.
+	bottom = top - (float)rectBitmap.w;
+
+	// First triangle.
+	Mesh.AddVertex(XMFLOAT3(left, top, 0.0f));
+	Mesh.AddUV(XMFLOAT2(0.0f, 0.0f));
+	Mesh.AddNormals(XMFLOAT3(0.0f, 0.0f, -1.0f));
+	Mesh.AddIndex(countIndex);
+	countIndex++;
+
+	Mesh.AddVertex(XMFLOAT3(right, bottom, 0.0f));
+	Mesh.AddUV(XMFLOAT2(1.0f, 1.0f));
+	Mesh.AddNormals(XMFLOAT3(0.0f, 0.0f, -1.0f));
+	Mesh.AddIndex(countIndex);
+	countIndex++;
+
+	Mesh.AddVertex(XMFLOAT3(left, bottom, 0.0f));
+	Mesh.AddUV(XMFLOAT2(0.0f, 1.0f));
+	Mesh.AddNormals(XMFLOAT3(0.0f, 0.0f, -1.0f));
+	Mesh.AddIndex(countIndex);
+	countIndex++;
+
+	// Second triangle.
+
+	Mesh.AddVertex(XMFLOAT3(left, top, 0.0f));
+	Mesh.AddUV(XMFLOAT2(0.0f, 0.0f));
+	Mesh.AddNormals(XMFLOAT3(0.0f, 0.0f, -1.0f));
+	Mesh.AddIndex(countIndex);
+	countIndex++;
+
+	Mesh.AddVertex(XMFLOAT3(right, top, 0.0f));
+	Mesh.AddUV(XMFLOAT2(1.0f, 0.0f));
+	Mesh.AddNormals(XMFLOAT3(0.0f, 0.0f, -1.0f));
+	Mesh.AddIndex(countIndex);
+	countIndex++;
+
+	Mesh.AddVertex(XMFLOAT3(right, bottom, 0.0f));
+	Mesh.AddUV(XMFLOAT2(1.0f, 1.0f));
+	Mesh.AddNormals(XMFLOAT3(0.0f, 0.0f, -1.0f));
+	Mesh.AddIndex(countIndex);
+
+	Mesh.DoFinalMesh();
+}
+
+bool Model::UpdateBufferBitmap(vec4 rectBitmap, int widthScreen, int heightScreen)
+{
+	D3D11_MAPPED_SUBRESOURCE mappedResource;
+	Vertex::VertexType * verticesPtr;
+	HRESULT result;
+	float left, right, top, bottom;
+	int countIndex = 0;
+
+	//ClearBuffer
+	Mesh.ClearVertex();
+
+	// Calculate the screen coordinates of the left side of the bitmap.
+	left = (float)((widthScreen / 2) * -1) + (float)rectBitmap.x;
+
+	// Calculate the screen coordinates of the right side of the bitmap.
+	right = left + (float)rectBitmap.z;
+
+	// Calculate the screen coordinates of the top of the bitmap.
+	top = (float)(heightScreen / 2) - (float)rectBitmap.y;
+
+	// Calculate the screen coordinates of the bottom of the bitmap.
+	bottom = top - (float)rectBitmap.w;
+
+	// First triangle.
+	Mesh.AddVertex(XMFLOAT3(left, top, 0.0f));
+	Mesh.AddUV(XMFLOAT2(0.0f, 0.0f));
+	Mesh.AddNormals(XMFLOAT3(0.0f,0.0f,-1.0f));
+	Mesh.AddIndex(countIndex);
+	countIndex++;
+
+	Mesh.AddVertex(XMFLOAT3(right, bottom, 0.0f));
+	Mesh.AddUV(XMFLOAT2(1.0f, 1.0f));
+	Mesh.AddNormals(XMFLOAT3(0.0f, 0.0f, -1.0f));
+	Mesh.AddIndex(countIndex);
+	countIndex++;
+
+	Mesh.AddVertex(XMFLOAT3(left, bottom, 0.0f));
+	Mesh.AddUV(XMFLOAT2(0.0f, 1.0f));
+	Mesh.AddNormals(XMFLOAT3(0.0f, 0.0f, -1.0f));
+	Mesh.AddIndex(countIndex);
+	countIndex++;
+
+	// Second triangle.
+
+	Mesh.AddVertex(XMFLOAT3(left, top, 0.0f));
+	Mesh.AddUV(XMFLOAT2(0.0f, 0.0f));
+	Mesh.AddNormals(XMFLOAT3(0.0f, 0.0f, -1.0f));
+	Mesh.AddIndex(countIndex);
+	countIndex++;
+
+	Mesh.AddVertex(XMFLOAT3(right, top, 0.0f));
+	Mesh.AddUV(XMFLOAT2(1.0f, 0.0f));
+	Mesh.AddNormals(XMFLOAT3(0.0f, 0.0f, -1.0f));
+	Mesh.AddIndex(countIndex);
+	countIndex++;
+
+	Mesh.AddVertex(XMFLOAT3(right, bottom, 0.0f));
+	Mesh.AddUV(XMFLOAT2(1.0f, 1.0f));
+	Mesh.AddNormals(XMFLOAT3(0.0f, 0.0f, -1.0f));
+	Mesh.AddIndex(countIndex);
+
+	Mesh.DoFinalMesh();
+	
+	result = deviceContext->Map(VertexBuffer, 0 , D3D11_MAP_WRITE_DISCARD, 0 , &mappedResource);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	// Get a pointer to the data in the vertex buffer.
+	verticesPtr = (Vertex::VertexType*)mappedResource.pData;
+
+	// Copy the data into the vertex buffer.
+	memcpy(verticesPtr, (void*)&Mesh.FinalMesh[0], (sizeof(Vertex::VertexType) * Mesh.VertexCount));
+
+	// Unlock the vertex buffer.
+	deviceContext->Unmap(VertexBuffer, 0);
+
+	return true;
+}
+
 
 bool Model::Initialize(string NameOfFigure)
 {
@@ -675,13 +830,20 @@ bool Model::Initialize(string NameOfFigure)
 		DefineBillboard();
 
 	//Set up the description of the static vertex buffer
-	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	if(!dynamicVertexBuffer)
+		vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;//Defualt buffer usage
+	else
+		vertexBufferDesc.Usage = D3D11_USAGE_DYNAMIC;//Dynamic buffer
+
 	if (NameOfFigure != "")
 		vertexBufferDesc.ByteWidth = sizeof(Vertex::VertexType)* Mesh.VertexCount;
 	else
 		vertexBufferDesc.ByteWidth = sizeof(Vertex::VertexType)* Mesh.IndexCount;
 	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	vertexBufferDesc.CPUAccessFlags = 0;
+	if (!dynamicVertexBuffer)
+		vertexBufferDesc.CPUAccessFlags = 0;
+	else
+		vertexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	vertexBufferDesc.MiscFlags = 0;
 	vertexBufferDesc.StructureByteStride = 0;
 	

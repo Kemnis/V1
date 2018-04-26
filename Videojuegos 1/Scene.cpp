@@ -2,7 +2,7 @@
 
 Scene::Scene() {
 	SceneCamera = 0;
-	SceneCamera = new Camera3D(specsDx->GetScreenWidth(), specsDx->GetScreenHeight(), 0.01f, 1000.0f);
+	SceneCamera = new Camera3D(specsDx->GetScreenWidth(), specsDx->GetScreenHeight(), 0.1f, 1000.0f);
 }
 
 Scene::~Scene() {}
@@ -10,7 +10,6 @@ Scene::~Scene() {}
 string Scene::CreateScene() {
 	ResourceManager::Player1 = new KeyHandler(vec3(0,0,5), vec3(0,180,0));
 	bool res;
-
 	//Load all objects you need First acubedd all the resources
 	ResourceManager::AddModel("Sphere", "SphereMesh");
 	ResourceManager::AddModel("assets/Sphere.obj", "SphereModel");
@@ -28,8 +27,17 @@ string Scene::CreateScene() {
 	ResourceManager::AddShader("LambertLMaterialShader", new MaterialShader("LambertLTexture.vs", "LambertLTexture.ps", 1));
 	ResourceManager::AddShader("SkydomeShader", new SkydomeShader("Skydome.vs", "Skydome.ps", 1));
 	ResourceManager::AddShader("TerrenoShader", new TerrainShader("Terrain.vs", "Terrain.ps"));
+	ResourceManager::AddShader("GUIShader", new GUIShader("GUIShader.vsh","GUIShader.psh"));
 	ResourceManager::AddStage("assets/Stage2.bmp", "Stage1", 256, 1024, 1024);
 	ResourceManager::AddBillboard("ArbolBill",vec2(1.0f,1.0f),vec2(1.0f,1.0f));
+
+	ResourceManager::AddBitmap("Bitmap",vec4(0,0,200,200));
+	ResourceManager::AddBitmap("Bitmap2", vec4(0, 0, 200, 200));
+	ResourceManager::AddBitmap("Bitmap3", vec4(0, 0, 200, 200));
+	ResourceManager::AddBitmap("Bitmap4", vec4(0, 0, 200, 200));
+	ResourceManager::AddBitmap("Bitmap5", vec4(0, 0, 200, 200));
+	ResourceManager::AddBitmap("Bitmap6", vec4(0, 0, 200, 200));
+	ResourceManager::AddBitmap("Bitmap7", vec4(0, 0, 200, 200));
 
 
 	//Then Build a GameObject
@@ -38,7 +46,14 @@ string Scene::CreateScene() {
 	ResourceManager::BuildGameObject("SphereMod", "SphereModel", "World", "SkydomeShader", "ColorBlanco", "Primeras");
 	ResourceManager::BuildGameObject("Stage1", "Stage1", "", "TerrenoShader", "ColorBlanco","Primeras");
 	ResourceManager::BuildGameObject("Arbol","ArbolBill","ArbolTexture","LambertMaterialShader", "ColorBlanco","");
-
+	ResourceManager::BuildGameObject("Arbol2", "ArbolBill", "ArbolTexture", "LambertMaterialShader", "ColorBlanco", "");
+	
+	ResourceManager::BuildGameObject("bitmapPasto","Bitmap","Layer1-Bottom","GUIShader","ColorBlanco","");
+	ResourceManager::BuildGameObject("bitmapArbol", "Bitmap2", "ArbolTexture", "GUIShader", "ColorBlanco", "");
+	ResourceManager::BuildGameObject("bitmapArbol1", "Bitmap3", "ArbolTexture", "GUIShader", "ColorBlanco", "");
+	ResourceManager::BuildGameObject("bitmapArbol2", "Bitmap4", "ArbolTexture", "GUIShader", "ColorBlanco", "");
+	ResourceManager::BuildGameObject("bitmapArbol3", "Bitmap5", "ArbolTexture", "GUIShader", "ColorBlanco", "");
+	ResourceManager::BuildGameObject("bitmapArbol4", "Bitmap6", "ArbolTexture", "GUIShader", "ColorBlanco", "");
 
 	//Addtexture
 	ResourceManager::AsingTextureToGameObject("SphereMod", "WorldNight");
@@ -53,6 +68,10 @@ string Scene::CreateScene() {
 	ResourceManager::GetObjectByName("SphereMod")->Transform->SetScale(vec3(50.0f,50.0f,50.0f));
 				//Descripci�n:
 	ResourceManager::GetObjectByName("Arbol")->Transform->SetTranslation(vec3(15.0f, 0.0f, 15.0f));
+	ResourceManager::GetObjectByName("Arbol2")->Transform->SetTranslation(vec3(30.0f, 0.0f, 30.0f));
+
+	ResourceManager::GetObjectByName("bitmapPasto")->SetRect(vec4(0, 0, 200, 200));
+	ResourceManager::GetObjectByName("bitmapArbol")->SetRect(vec4(200, 0, 200, 200));
 
 	_RPT0(0, "Scene Created!\n");
 	return "S_OK";
@@ -83,36 +102,26 @@ string Scene::ProcessScene(double dt)
 	trans.y = 0;
 	trans.z = move;
 
-	//ResourceManager::GetObjectByName("SphereMes")->Transform->Rotate(rot);
-	//trans = ResourceManager::GetObjectByName("SphereMes")->Transform->GetTranslation();
-	if (ResourceManager::GetObjectByName("Stage1")->GetModel()->isIntoTerrain(trans)&& trans.y<ResourceManager::GetObjectByName("Stage1")->GetModel()->GetPositionHeightMap(vec2(trans.x, trans.z)))
-	{
-		while(trans.y < ResourceManager::GetObjectByName("Stage1")->GetModel()->GetPositionHeightMap(vec2(trans.x, trans.z)))
-			trans.y+=0.1f;
-	}
 
-	ResourceManager::GetObjectByName("Stage1")->GetModel()->GetPositionHeightMap(trans);
-	ResourceManager::GetObjectByName("SphereMes")->Transform->SetTranslation(trans);
+	trans.y = ResourceManager::GetObjectByName("Stage1")->GetModel()->GetPositionHeightMap(trans);
+	ResourceManager::GetObjectByName("SphereMes")->Transform->Translate(trans);
 	
 	trans = ResourceManager::GetObjectByName("Arbol")->Transform->GetTranslation();
-	if(ResourceManager::GetObjectByName("Stage1")->GetModel()->isIntoTerrain(trans) && trans.y<ResourceManager::GetObjectByName("Stage1")->GetModel()->GetPositionHeightMap(vec2(trans.x, trans.z)))
-	{
+	trans.y = ResourceManager::GetObjectByName("Stage1")->GetModel()->GetPositionHeightMap(trans);
+	ResourceManager::GetObjectByName("Arbol")->Transform->Translate(trans);
 
-		while (trans.y < ResourceManager::GetObjectByName("Stage1")->GetModel()->GetPositionHeightMap(vec2(trans.x, trans.z)))
-			trans.y += 0.1f;
-		
-	}
-
-	ResourceManager::GetObjectByName("Arbol")->Transform->SetTranslation(trans);
+	trans = ResourceManager::GetObjectByName("Arbol2")->Transform->GetTranslation();
+	trans.y = ResourceManager::GetObjectByName("Stage1")->GetModel()->GetPositionHeightMap(trans);
+	ResourceManager::GetObjectByName("Arbol2")->Transform->Translate(trans);
 	
 	return "S_OK";
 }
 
 string Scene::RenderScene()
 {
-	XMMATRIX worldMatrix, Worldobj2, StageWorld, BillboardWorld;//, viewMatrix, projectionMatrix;
+	XMMATRIX worldMatrix, Worldobj2, StageWorld, BillboardWorld,viewMatrix2D;//, viewMatrix, projectionMatrix;
 	XMMATRIX viewMatrix;
-	XMMATRIX* projectionMatrix;
+	XMMATRIX* projectionMatrix, *orthoMatrix;
 
 	// Clear the buffers to begin the scene.
 	specsDx->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
@@ -122,6 +131,8 @@ string Scene::RenderScene()
 	// Generate the view matrix based on the camera's position.
 	SceneCamera->Watch();
 	SceneCamera->GetViewMatrix(viewMatrix);
+	SceneCamera->GetViewMatrix2D(viewMatrix2D);
+	orthoMatrix = SceneCamera->GetOrthoMatrix();
 	projectionMatrix = SceneCamera->GetProjectionMatrix();
 
 	ResourceManager::GetObjectByName("SphereMod")->Transform->SetTranslation(vec3(SceneCamera->view.x, SceneCamera->view.y, SceneCamera->view.z));
@@ -132,22 +143,24 @@ string Scene::RenderScene()
 	StageWorld = ResourceManager::GetObjectByName("Stage1")->Transform->ToMatrix();
 
 
-
 	//Define and create all Objects
 	GameObject* GObjMesh = ResourceManager::GetObjectByName("SphereMes");
 	GameObject* GObjModel = ResourceManager::GetObjectByName("SphereMod");
 	GameObject* GOStage = ResourceManager::GetObjectByName("Stage1");
-	
+	GameObject* bitmapGO = ResourceManager::GetObjectByName("bitmapPasto");
+	GameObject* bitmapArbol = ResourceManager::GetObjectByName("bitmapArbol");
 
 	if (GOStage->GetModel()->isIntoTerrain(GObjMesh->Transform->GetTranslation()))
 	{
-		float height = GOStage->GetModel()->GetPositionHeightMap(vec2(GObjMesh->Transform->GetTranslation().x, GObjMesh->Transform->GetTranslation().z));
+		float height = GOStage->GetModel()->GetPositionHeightMap(GObjMesh->Transform->GetTranslation());
 
 		if (GObjMesh->Transform->GetTranslation().y<height)
 		{
 			GObjMesh->Transform->SetTranslation(vec3(GObjMesh->Transform->GetTranslation().x, height, GObjMesh->Transform->GetTranslation().z));
 		}
 	}
+
+
 
 	
 	specsDx->TurnOnAlphaBlending();
@@ -163,16 +176,38 @@ string Scene::RenderScene()
 
 
 	GameObject* GOArbol = ResourceManager::GetObjectByName("Arbol");
+	GameObject* GOArbol2 = ResourceManager::GetObjectByName("Arbol2");
 
 	//Hacer una lista de puros billboards
 	GOArbol->Transform->LookCamera(vec3(SceneCamera->view.x, SceneCamera->view.y, SceneCamera->view.z));
 	BillboardWorld = GOArbol->Transform->ToMatrix();
-	BillboardWorld = BillboardWorld * XMMatrixTranslation(0.0f, GOArbol->GetModel()->coordPositivo.y, 0.0f);
+	BillboardWorld = XMMatrixTranslation(0.0f, GOArbol->GetModel()->coordPositivo.y, 0.0f)*BillboardWorld;
 	GOArbol->Draw(BillboardWorld, viewMatrix, *projectionMatrix);
+
+	GOArbol2->Transform->LookCamera(vec3(SceneCamera->view.x, SceneCamera->view.y, SceneCamera->view.z));
+	BillboardWorld = GOArbol2->Transform->ToMatrix();
+	BillboardWorld = XMMatrixTranslation(0.0f, GOArbol2->GetModel()->coordPositivo.y, 0.0f)*XMMatrixScaling(10.0f,10.0f,10.0f)*BillboardWorld;
+	GOArbol2->Draw(BillboardWorld, viewMatrix, *projectionMatrix);
+
+
 
 	GOStage->Draw(StageWorld, viewMatrix, *projectionMatrix);
 
-	
+
+	specsDx->TurnZBufferOff();
+	bitmapGO->Draw(XMMatrixIdentity(), viewMatrix2D, *orthoMatrix);
+	bitmapArbol->Draw(XMMatrixIdentity(), viewMatrix2D, *orthoMatrix);
+	specsDx->TurnZBufferOn();
+
+
+	//Renderizar Bitmap 2D
+
+	//Para que los Bitmap 2D esten fijos en la pantalla se necesita un nuevo viewMatrix que siempre esten en el origen y una matrix ortografica
+
+	//El vertexbuffer del mesh de la clase model debe de ser dinamico
+
+	//Un shader exclusivo para el GUI
+
 	
 	// Present the rendered scene to the screen.
 	specsDx->EndScene();

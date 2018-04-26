@@ -123,6 +123,9 @@
     <ClInclude Include="SkydomeShader.h">
       <Filter>Archivos de encabezado\Core</Filter>
     </ClInclude>
+    <ClInclude Include="GUIShader.h">
+      <Filter>Archivos de encabezado\Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -197,6 +200,9 @@
     <ClCompile Include="SkydomeShader.cpp">
       <Filter>Archivos de origen\Core</Filter>
     </ClCompile>
+    <ClCompile Include="GUIShader.cpp">
+      <Filter>Archivos de origen\Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Videojuegos 1.rc">
@@ -258,6 +264,12 @@
       <Filter>Archivos de recursos</Filter>
     </None>
     <None Include="Skydome.vs">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="GUIShader.psh">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="GUIShader.vsh">
       <Filter>Archivos de recursos</Filter>
     </None>
   </ItemGroup>
