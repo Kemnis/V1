@@ -25,6 +25,7 @@ public:
 	static bool AddMaterial(string Nombre, vec3 Color);
 	static bool AddLight(string Nombre, vec4 ambient, vec4 diffuse, vec3 direction);
 	static bool AddBillboard(string Nombre, vec2 coordPositivo,vec2 coordNegativo);
+	static bool AddBitmap(string Nombre, vec4 rectBimap);
 
 	static string AsingTextureToGameObject(string nameGameObject, string nameTexture);
 	static Material*GetMaterial(string nameMaterial);

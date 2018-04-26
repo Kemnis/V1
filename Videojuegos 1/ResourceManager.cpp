@@ -94,6 +94,15 @@ bool ResourceManager::AddBillboard(string Nombre, vec2 coordPositivo, vec2 coord
 	return true;
 }
 
+bool ResourceManager::AddBitmap(string Nombre, vec4 rectBimap)
+{
+	Model nuevo(rectBimap,800,600);
+	nuevo.Name = Nombre;
+	ModelIdentifier.insert(std::pair<string, Model>(Nombre, nuevo));
+	ModelIndex++;
+	return true;
+}
+
 string ResourceManager::BuildGameObject(string nameGameObject, string meshname, string texturename , string shadername, string materialname, string lightname)
 {
 	GameObject nuevo(nameGameObject);

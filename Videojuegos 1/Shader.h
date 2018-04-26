@@ -16,7 +16,8 @@ enum class ShaderType {
 	BasicLShader = 3,
 	MaterialLShader = 4,
 	TerrainShader = 5,
-	SkydomeShader = 6
+	SkydomeShader = 6,
+	GUIShader = 7
 };
 
 class Shader : public DxComponent<Shader>

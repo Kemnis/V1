@@ -1,6 +1,8 @@
 #pragma once
 #include "Camera3D.h"
 #include "Mesh3D.h"
+
+
 class Scene : DxComponent<Scene>
 {
 public:

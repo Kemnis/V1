@@ -155,6 +155,7 @@
     <ClInclude Include="DxComponent.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="GUIShader.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="KeyHandler.h" />
     <ClInclude Include="Light.h" />
@@ -185,6 +186,7 @@
     <ClCompile Include="ConstantBuffer.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="GUIShader.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="KeyHandler.cpp" />
     <ClCompile Include="MaterialShader.cpp" />
@@ -237,6 +239,14 @@
     </None>
     <None Include="LambertTexture.ps" />
     <None Include="LambertTexture.vs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="GUIShader.psh">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="GUIShader.vsh">
+      <FileType>Document</FileType>
+    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

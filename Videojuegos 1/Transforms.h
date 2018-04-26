@@ -25,10 +25,14 @@ public:
 	vec3 GetTranslation();
 	void SetTransforms(vec3 Translation, vec3 Rotation, vec3 Scale);
 	void ToMatrix(vec3 Scale, vec3 Rotation, vec3 Translation);
+	void ProccesParabolicShot(double deltaTime);
+	void Shot(vec3 LookAt,vec3 LookRotation);
 	XMMATRIX ToMatrix();
 	XMMATRIX GetMatrix();
 private:
-	vec3 rot, tran, esc;
+	vec3 rot, tran, esc,n;
+	double gravity;
+	double m_speedDirection;
 	XMMATRIX TransformMatrix;
 };
 #endif
