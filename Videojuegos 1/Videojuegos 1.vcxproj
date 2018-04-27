@@ -167,6 +167,8 @@
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="BasicShader.h" />
+    <ClInclude Include="SceneGameLevel1.h" />
+    <ClInclude Include="SceneMenu.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SkydomeShader.h" />
     <ClInclude Include="SpecsDx.h" />
@@ -195,6 +197,8 @@
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="BasicShader.cpp" />
+    <ClCompile Include="SceneGameLevel1.cpp" />
+    <ClCompile Include="SceneMenu.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="SkydomeShader.cpp" />
     <ClCompile Include="SpecsDx.cpp" />

@@ -10,6 +10,7 @@ KeyHandler::KeyHandler(vec3 Pos, vec3 Rot)
 	TurnLR = 0, TurnLRMax = 1.5;
 	FlyUD = 0, FlyUDMax = 1;
 	Keyboard = new Input();
+	Keyboard->Initialize(0,0);
 	Sides = 'N', Front = 'N', LSide = 'N', LFront = 'N';
 }
 KeyHandler::KeyHandler(XMFLOAT3 Pos, XMFLOAT3 Rot)
@@ -23,6 +24,7 @@ KeyHandler::KeyHandler(XMFLOAT3 Pos, XMFLOAT3 Rot)
 	TurnLR = 0, TurnLRMax = 1.5;
 	FlyUD = 0, FlyUDMax = 1;
 	Keyboard = new Input();
+	Keyboard->Initialize(0, 0);
 	Sides = 'N', Front = 'N', LSide = 'N', LFront = 'N';
 }
 KeyHandler::~KeyHandler() {}
@@ -63,9 +65,172 @@ vec3 KeyHandler::GetRotation()
 	return MyRot;
 }
 
-void KeyHandler::Update()
+void KeyHandler::Update(int * scene)
 {
 	Keyboard->Update();
+
+	switch (*scene)
+	{
+	case 0:
+		KeyEventLevel(scene);
+		return;
+	case 1:
+		KeyEventMenu(scene);
+		return;
+	case 2:
+		KeyEventLevel(scene);
+		return;
+	}
+	
+	return;
+}
+
+void KeyHandler::LookUpward()
+{
+	// Update the rotation.
+	MyRot.x -= LookUD;
+	LFront = 'U';
+	// Keep the rotation maximum 90 degrees.
+	if (MyRot.x > 90.0f)
+	{
+		MyRot.x = 90.0f;
+	}
+}
+
+void KeyHandler::LookDownward()
+{
+	// Update the rotation.
+	MyRot.x += LookUD;
+	LFront = 'D';
+	// Keep the rotation maximum 90 degrees.
+	if (MyRot.x < -90.0f)
+	{
+		MyRot.x = -90.0f;
+	}
+}
+
+void KeyHandler::LookLeft()
+{
+	// Update the rotation.
+	MyRot.z += LookLR;
+	LSide = 'L';
+	// Keep the rotation maximum 90 degrees.
+	if (MyRot.z > 90.0f)
+	{
+		MyRot.z = 90.0f;
+	}
+}
+
+void KeyHandler::LookRight()
+{
+	// Update the rotation.
+	MyRot.z -= LookLR;
+	LSide = 'R';
+	// Keep the rotation maximum 90 degrees.
+	if (MyRot.z < -90.0f)
+	{
+		MyRot.z = -90.0f;
+	}
+}
+
+void KeyHandler::FlyUpward()
+{
+	Fly = 'U';
+	// Update the height position.
+	MyPos.y += FlyUD;
+}
+
+void KeyHandler::FlyDownward()
+{
+	Fly = 'D';
+	// Update the height position.
+	MyPos.y -= FlyUD;
+}
+
+void KeyHandler::TurnLeft()
+{
+	Turn = 'L';
+	// Update the rotation.
+	MyRot.y -= TurnLR;
+
+	// Keep the rotation in the 0 to 360 range.
+	if (MyRot.y < 0.0f)
+		MyRot.y += 360.0f;
+}
+
+void KeyHandler::TurnRight()
+{
+	Turn = 'R';
+	// Update the rotation.
+	MyRot.y += TurnLR;
+
+	// Keep the rotation in the 0 to 360 range.
+	if (MyRot.y < 360.0f)
+		MyRot.y -= 360.0f;
+}
+
+void KeyHandler::MoveForward()
+{
+	float radians;
+	Front = 'F';
+	// Convert degrees to radians.
+	radians = MyRot.y * 0.0174532925f;
+
+	// Update the position.
+	MyPos.x += sinf(radians) * forceFront;
+	MyPos.z += cosf(radians) * forceFront;
+}
+
+void KeyHandler::MoveBackward()
+{
+	float radians;
+	Front = 'B';
+	// Convert degrees to radians.
+	radians = MyRot.y * 0.0174532925f;
+
+	// Update the position.
+	MyPos.x -= sinf(radians) * forceFront;
+	MyPos.z -= cosf(radians) * forceFront;
+}
+
+void KeyHandler::MoveLeft()
+{
+	float radians;
+	Sides = 'L';
+	// Convert degrees to radians.
+	radians = MyRot.y * 0.0174532925f;
+
+	// Update the position.
+	MyPos.x -= sinf(radians + (XM_PI*0.5f)) * forceSide;
+	MyPos.z -= cosf(radians + (XM_PI*0.5f)) * forceSide;
+}
+
+void KeyHandler::MoveRight()
+{
+	float radians;
+	Sides = 'R';
+	// Convert degrees to radians.
+	radians = MyRot.y * 0.0174532925f;
+
+	// Update the position.
+	MyPos.x -= sinf(radians - (XM_PI*0.5f)) * forceSide;
+	MyPos.z -= cosf(radians - (XM_PI*0.5f)) * forceSide;
+}
+
+void KeyHandler::KeyEventMenu(int *changeScene)
+{
+	if (Keyboard->KEYSDOWN[KeyCodes.Enter])
+	{
+		*changeScene = 2;
+	}
+}
+
+void KeyHandler::KeyEventLevel(int *changeScene)
+{
+	if (Keyboard->KEYSDOWN[KeyCodes.Enter])
+	{
+		*changeScene = 1;
+	}
 
 	//Smoot Movement X
 	if (Keyboard->KEYS[KeyCodes.Left] || Keyboard->KEYS[KeyCodes.Right])
@@ -77,7 +242,7 @@ void KeyHandler::Update()
 	{
 		if (forceSide > 0.01)
 		{
-			if(forceSide > 0.3)
+			if (forceSide > 0.3)
 				forceSide -= 0.13f;
 			else
 				forceSide -= 0.008f;
@@ -86,7 +251,7 @@ void KeyHandler::Update()
 		{
 			Sides = 'N';
 		}
-		
+
 		if (Sides == 'L')
 			MoveLeft();
 		else if (Sides == 'R')
@@ -246,136 +411,4 @@ void KeyHandler::Update()
 		TurnRight();
 	if (Keyboard->KEYS[KeyCodes.E])
 		LookRight();
-}
-
-void KeyHandler::LookUpward()
-{
-	// Update the rotation.
-	MyRot.x -= LookUD;
-	LFront = 'U';
-	// Keep the rotation maximum 90 degrees.
-	if (MyRot.x > 90.0f)
-	{
-		MyRot.x = 90.0f;
-	}
-}
-
-void KeyHandler::LookDownward()
-{
-	// Update the rotation.
-	MyRot.x += LookUD;
-	LFront = 'D';
-	// Keep the rotation maximum 90 degrees.
-	if (MyRot.x < -90.0f)
-	{
-		MyRot.x = -90.0f;
-	}
-}
-
-void KeyHandler::LookLeft()
-{
-	// Update the rotation.
-	MyRot.z += LookLR;
-	LSide = 'L';
-	// Keep the rotation maximum 90 degrees.
-	if (MyRot.z > 90.0f)
-	{
-		MyRot.z = 90.0f;
-	}
-}
-
-void KeyHandler::LookRight()
-{
-	// Update the rotation.
-	MyRot.z -= LookLR;
-	LSide = 'R';
-	// Keep the rotation maximum 90 degrees.
-	if (MyRot.z < -90.0f)
-	{
-		MyRot.z = -90.0f;
-	}
-}
-
-void KeyHandler::FlyUpward()
-{
-	Fly = 'U';
-	// Update the height position.
-	MyPos.y += FlyUD;
-}
-
-void KeyHandler::FlyDownward()
-{
-	Fly = 'D';
-	// Update the height position.
-	MyPos.y -= FlyUD;
-}
-
-void KeyHandler::TurnLeft()
-{
-	Turn = 'L';
-	// Update the rotation.
-	MyRot.y -= TurnLR;
-
-	// Keep the rotation in the 0 to 360 range.
-	if (MyRot.y < 0.0f)
-		MyRot.y += 360.0f;
-}
-
-void KeyHandler::TurnRight()
-{
-	Turn = 'R';
-	// Update the rotation.
-	MyRot.y += TurnLR;
-
-	// Keep the rotation in the 0 to 360 range.
-	if (MyRot.y < 360.0f)
-		MyRot.y -= 360.0f;
-}
-
-void KeyHandler::MoveForward()
-{
-	float radians;
-	Front = 'F';
-	// Convert degrees to radians.
-	radians = MyRot.y * 0.0174532925f;
-
-	// Update the position.
-	MyPos.x += sinf(radians) * forceFront;
-	MyPos.z += cosf(radians) * forceFront;
-}
-
-void KeyHandler::MoveBackward()
-{
-	float radians;
-	Front = 'B';
-	// Convert degrees to radians.
-	radians = MyRot.y * 0.0174532925f;
-
-	// Update the position.
-	MyPos.x -= sinf(radians) * forceFront;
-	MyPos.z -= cosf(radians) * forceFront;
-}
-
-void KeyHandler::MoveLeft()
-{
-	float radians;
-	Sides = 'L';
-	// Convert degrees to radians.
-	radians = MyRot.y * 0.0174532925f;
-
-	// Update the position.
-	MyPos.x -= sinf(radians + (XM_PI*0.5f)) * forceSide;
-	MyPos.z -= cosf(radians + (XM_PI*0.5f)) * forceSide;
-}
-
-void KeyHandler::MoveRight()
-{
-	float radians;
-	Sides = 'R';
-	// Convert degrees to radians.
-	radians = MyRot.y * 0.0174532925f;
-
-	// Update the position.
-	MyPos.x -= sinf(radians - (XM_PI*0.5f)) * forceSide;
-	MyPos.z -= cosf(radians - (XM_PI*0.5f)) * forceSide;
 }

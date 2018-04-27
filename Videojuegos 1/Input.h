@@ -12,6 +12,7 @@ public:
 	void GetMouseLocation(int&, int&);
 
 	BOOL KEYS[256];
+	BOOL KEYSDOWN[256];
 	unsigned char m_keyboardState[256];
 	void MouseLibreWindow();
 	void MostrarCursor();
@@ -23,6 +24,7 @@ public:
 	//Scroll da > 1 lo mueves hacia adelante, si da < 1 lo mueves hacia atras
 	int scroll;
 private:
+	BOOL KEYSoldDOWN[256];//Guardar la ultima tecla presionada
 	bool ReadKeyboard();
 	bool ReadMouse(MSG);
 	void ProcessInput();

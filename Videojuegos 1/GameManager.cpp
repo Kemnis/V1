@@ -3,8 +3,8 @@
 
 GameManager::GameManager(){
 	hwnd = 0;
-	CurrentScene = new Scene;
-	Niveles.insert(std::pair<int, Scene>(0, *CurrentScene));
+	CurrentScene = new Scene();
+	Niveles.insert(std::pair<int, Scene*>(0, CurrentScene));
 	CurrentSceneIndex = 0;
 	RS = CurrentScene->CreateScene();
 	if (RS != "S_OK")
@@ -36,26 +36,26 @@ string GameManager::FrameRender()
 	return "S_OK";
 }
 
-string GameManager::AddScene(Scene newScene, int indexScene)
+string GameManager::AddScene(Scene*newScene, int indexScene)
 {
 	if (Niveles.size() == 0)
 		CurrentSceneIndex = 0;
-	Niveles.insert(std::pair<int, Scene>(indexScene, newScene));
+	Niveles.insert(std::pair<int, Scene*>(indexScene, newScene));
 	return "S_OK";
 }
 
-Scene GameManager::GetCurrentScene()
+Scene* GameManager::GetCurrentScene()
 {
-	Scene Current = Niveles.find(CurrentSceneIndex)->second;
+	Scene*Current = Niveles.find(CurrentSceneIndex)->second;
 	return Current;
 }
 
 void GameManager::ChangeScene(int index)
 {
 	CurrentSceneIndex = index;
-	Scene newCurrentScene = Niveles.find(index)->second;
+	Scene* newCurrentScene = Niveles.find(index)->second;
 	CurrentScene->DestroyScene();
-	CurrentScene = &newCurrentScene;
+	CurrentScene = newCurrentScene;
 	CurrentScene->CreateScene();
 }
 

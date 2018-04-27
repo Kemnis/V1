@@ -27,20 +27,7 @@ public:
 	Material* GetMaterial();
 	void Draw(XMMATRIX world, XMMATRIX view, XMMATRIX projection);
 	Shader* GetShader();
-	void Shutdown();	
-
-	//Methods bitmaps
-	void SetRect(vec4 rectBitmap);
-	void SetPosition(vec2 position);
-	//void SetPositionCenter(vec2 position);
-	void SetSize(vec2 size);
-	//Methods bitmaps
-	//vec4 getRect();
-	//vec2 getPositon();
-	//vec2 getPisitionCenter();
-	//vec2 getSize();
-	void UpdateBitmap();
-	
+	void Shutdown();
 	Transforms* Transform;
 
 
@@ -53,16 +40,7 @@ protected:
 	Material* material;
 	Light* light;
 private:
-	//Measure
-	int m_screenWidth, m_screenHeight;
-
-	//previous
-	int m_previousWidth, m_previousHeight;
-	int m_previousPosX, m_previousPosY;
-	int PosX, PosY;
-
-	int m_bitmapWidth, m_bitmapHeight;
-	int CenterX, CenterY;
+	
 };
 
 #endif

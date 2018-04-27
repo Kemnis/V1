@@ -19,6 +19,8 @@ public:
 	void SetScale(vec3 Scale);
 	void SetRotation(vec3 Rotation);
 	void SetTranslation(vec3 Translation);
+	void SetRadio(double radio);
+	double GetRadio();
 	void LookCamera(vec3 position);
 	vec3 GetScale();
 	vec3 GetRotation();
@@ -31,6 +33,7 @@ public:
 	XMMATRIX GetMatrix();
 private:
 	vec3 rot, tran, esc,n;
+	double radio;
 	double gravity;
 	double m_speedDirection;
 	XMMATRIX TransformMatrix;

@@ -16,8 +16,8 @@ public:
 	~GameManager();
 	virtual string FrameProcess(double);
 	virtual string FrameRender();
-	string AddScene(Scene, int);
-	Scene GetCurrentScene();
+	string AddScene(Scene*, int);
+	Scene*GetCurrentScene();
 	void ChangeScene(int);
 	virtual void Shutdown();
 	string Name;
@@ -30,7 +30,7 @@ protected:
 	HWND hwnd;
 
 	//Escenas
-	std::map<int, Scene> Niveles;
+	std::map<int, Scene*> Niveles;
 	Scene* CurrentScene;
 	int CurrentSceneIndex;
 	

@@ -18,12 +18,13 @@ public:
 	void UpdateRotation(vec3 XYZ);
 	void UpdateRotation(float X, float Y, float Z);
 
-	void Update();
+	void Update(int *scene);
 
 	vec3 GetPosition();
 	vec3 GetRotation();
 private:
-
+	void KeyEventMenu(int *changeScene);
+	void KeyEventLevel(int *changeScene);
 	vec3 MyPos;
 	vec3 MyRot;
 	float forceSide, MaxForceSide, forceFront, MaxForceFront;
