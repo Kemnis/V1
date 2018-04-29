@@ -25,5 +25,6 @@ protected:
 	//vector<GameObject*> ListGameObjects;
 private:
 	XMMATRIX CameraMatrix;
+
 	
 };

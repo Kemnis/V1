@@ -12,6 +12,9 @@ KeyHandler::KeyHandler(vec3 Pos, vec3 Rot)
 	Keyboard = new Input();
 	Keyboard->Initialize(0,0);
 	Sides = 'N', Front = 'N', LSide = 'N', LFront = 'N';
+	thridPerson = false;
+	focus = NULL;
+	focus = NULL;
 }
 KeyHandler::KeyHandler(XMFLOAT3 Pos, XMFLOAT3 Rot)
 {
@@ -26,6 +29,7 @@ KeyHandler::KeyHandler(XMFLOAT3 Pos, XMFLOAT3 Rot)
 	Keyboard = new Input();
 	Keyboard->Initialize(0, 0);
 	Sides = 'N', Front = 'N', LSide = 'N', LFront = 'N';
+	thridPerson = false;
 }
 KeyHandler::~KeyHandler() {}
 
@@ -411,4 +415,15 @@ void KeyHandler::KeyEventLevel(int *changeScene)
 		TurnRight();
 	if (Keyboard->KEYS[KeyCodes.E])
 		LookRight();
+
+	//Change Model Camera
+	if (Keyboard->KEYSDOWN[KeyCodes.One])
+		thridPerson = false;
+	if (Keyboard->KEYSDOWN[KeyCodes.Three])
+		thridPerson = true;
+	if(Keyboard->KEYSDOWN[KeyCodes.Space])
+	{
+		focus = ResourceManager::GetObjectByName("BotEnemy");
+	}
+		
 }

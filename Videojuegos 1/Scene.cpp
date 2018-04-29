@@ -196,8 +196,8 @@ string Scene::RenderScene()
 
 
 	specsDx->TurnZBufferOff();
-	bitmapGO->Draw(XMMatrixIdentity(), viewMatrix2D, *orthoMatrix);
-	bitmapArbol->Draw(XMMatrixIdentity(), viewMatrix2D, *orthoMatrix);
+		bitmapGO->Draw(XMMatrixIdentity(), viewMatrix2D, *orthoMatrix);
+		bitmapArbol->Draw(XMMatrixIdentity(), viewMatrix2D, *orthoMatrix);
 	specsDx->TurnZBufferOn();
 
 

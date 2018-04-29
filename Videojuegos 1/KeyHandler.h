@@ -22,11 +22,15 @@ public:
 
 	vec3 GetPosition();
 	vec3 GetRotation();
+	vec3 MyRot;
+	bool thridPerson;
+	GameObject*focus;
 private:
 	void KeyEventMenu(int *changeScene);
 	void KeyEventLevel(int *changeScene);
 	vec3 MyPos;
-	vec3 MyRot;
+	
+	vec3 RotLerp;//For focus object
 	float forceSide, MaxForceSide, forceFront, MaxForceFront;
 	float LookLR, LookLRMax, LookUD, LookUDMax;
 	float TurnLR, TurnLRMax;
