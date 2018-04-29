@@ -44,6 +44,8 @@ ResourceManager::ResourceManager()
 ResourceManager::~ResourceManager()
 {
 }
+
+//Add Objects
 bool ResourceManager::AddGameObject(GameObject Gameobject)
 {
 	GameObjectIdentifier.insert(std::pair<string, GameObject>(Gameobject.GetName(), Gameobject));
@@ -146,12 +148,6 @@ string ResourceManager::BuildGameObject(string nameGameObject, string meshname, 
 	return "S_OK";
 }
 
-
-GameObject* ResourceManager::GetObjectByName(string nameSearch)
-{
-	return &GameObjectIdentifier.find(nameSearch)->second;
-}
-
 bool ResourceManager::AddMaterial(string Nombre, vec3 Color)
 {
 	Material nuevo;
@@ -176,13 +172,13 @@ bool ResourceManager::AddLight(string Nombre, vec4 ambient, vec4 diffuse, vec3 d
 	return true;
 }
 
-string ResourceManager::AsingTextureToGameObject(string nameGameObject,string nameTexture)
+string ResourceManager::AsingTextureToGameObject(string nameGameObject, string nameTexture)
 {
-	if (nameGameObject!="" && nameTexture!="")
+	if (nameGameObject != "" && nameTexture != "")
 	{
 		Texture* texture = &TextureIdentifier.find(nameTexture)->second;
 		GameObject* gameObject = ResourceManager::GetObjectByName(nameGameObject);
-		if (texture == nullptr || gameObject ==nullptr)
+		if (texture == nullptr || gameObject == nullptr)
 		{
 			return "E_Fail";
 		}
@@ -191,6 +187,65 @@ string ResourceManager::AsingTextureToGameObject(string nameGameObject,string na
 
 	return "S_OK";
 }
+
+//Destory Objects
+
+bool ResourceManager::DestroyAllModels() 
+{
+	for (ModelMap::iterator it = ModelIdentifier.begin(); it!= ModelIdentifier.end();++it)
+	{
+
+		it->second.ShutdownModel();
+	}
+	ModelIdentifier.clear();
+
+	return true;
+}
+
+bool ResourceManager::DestoryAllMaterial()
+{
+	MaterialIdentifier.clear();
+	return true;
+}
+
+bool ResourceManager::DestroyAllSahders()
+{
+	for (ShaderMap::iterator it = ShaderIdentifier.begin(); it != ShaderIdentifier.end(); ++it)
+	{
+		it->second->Shutdown();
+	}
+	ShaderIdentifier.clear();
+	return true;
+}
+bool ResourceManager::DestroyAllGameObjects()
+{
+	GameObjectIdentifier.clear();
+	return true;
+}
+
+bool ResourceManager::DestroyAllLight()
+{
+	LightIdentifier.clear();
+	return true;
+}
+
+bool ResourceManager::DestroyAllTexture()
+{
+	for (TextureMap::iterator it = TextureIdentifier.begin(); it!=TextureIdentifier.end();++it)
+	{
+		it->second.Shutdown();
+	}
+	TextureIdentifier.clear();
+	return true;
+}
+
+// Get Objects
+
+GameObject* ResourceManager::GetObjectByName(string nameSearch)
+{
+	return &GameObjectIdentifier.find(nameSearch)->second;
+}
+
 
 Material*ResourceManager::GetMaterial(string nameMaterial)
 {

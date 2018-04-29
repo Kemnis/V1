@@ -61,6 +61,15 @@ void Transforms::SetTranslation(vec3 Translation)
 	this->tran = Translation;
 }
 
+void Transforms::SetRadio(double radio)
+{
+	this->radio = radio;
+}
+double Transforms::GetRadio()
+{
+	return radio;
+}
+
 vec3 Transforms::GetScale()
 {
 	return this->esc;

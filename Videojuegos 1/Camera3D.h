@@ -16,13 +16,15 @@ public:
 	XMMATRIX* GetProjectionMatrix();
 	XMMATRIX* GetProjectionViewMatrix();
 	XMMATRIX*GetOrthoMatrix();
-	
+
 
 	XMFLOAT3 GetPosition();
 	XMFLOAT3 GetRotation();
+	XMFLOAT3 LerpAngle(XMFLOAT3 a, XMFLOAT3 b, float f);
 
 	void Watch();
 	XMFLOAT4 view;
+	XMFLOAT4 pos;
 
 private:
 	void InitializateViewMatrix2D();
@@ -38,7 +40,8 @@ protected:
 	//For Render 2D
 	XMMATRIX m_orthoMatrix;
 	XMMATRIX m_viewMatrix2D;
-
+	
+	double radio;
 };
 
 #endif

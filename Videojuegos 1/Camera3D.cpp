@@ -14,6 +14,8 @@ Camera3D::Camera3D(int screenWidth, int screenHeight, float nearPlane, float far
 	view.z = 0.0f;
 	view.w = 0.0f;
 
+	radio = -3.0;
+
 	// Setup the projection matrix.
 	float fieldOfView = 3.141592654f / 4.0f;
 	float screenAspect = (float)screenWidth / (float)screenHeight;
@@ -84,8 +86,19 @@ void Camera3D::Watch()
 	lookAtVector = XMVector3TransformCoord(lookAtVector, rotationMatrix);
 	upVector = XMVector3TransformCoord(upVector, rotationMatrix);
 
-	// Translate the rotated camera position to the location of the viewer.
-	lookAtVector = XMVectorAdd(positionVector, lookAtVector);
+	if (ResourceManager::Player1->thridPerson) {
+		XMVECTOR temp = XMVectorScale(lookAtVector, radio);
+		temp = XMVectorAdd(positionVector, temp);
+
+		lookAtVector = positionVector;
+		positionVector = temp;
+	}
+	else
+	{
+		// Translate the rotated camera position to the location of the viewer.
+		lookAtVector = XMVectorAdd(positionVector, lookAtVector);
+	}
+	
 
 	// Finally create the view matrix from the three updated vectors.
 	viewMatrix = XMMatrixLookAtLH(positionVector, lookAtVector, upVector);
@@ -93,7 +106,9 @@ void Camera3D::Watch()
 	//No se porque no funciona pero marca error de acceso a memoria... puede ser porque le falte un Transpose
 	//m_projetionViewMatrix = XMMatrixMultiply(m_projectionMatrix, viewMatrix);
 
+	XMStoreFloat4(&pos, positionVector);
 	XMStoreFloat4(&view, lookAtVector);
+
 
 	return;
 }
@@ -152,4 +167,19 @@ XMMATRIX * Camera3D::GetProjectionViewMatrix()
 XMMATRIX * Camera3D::GetOrthoMatrix()
 {
 	return &m_orthoMatrix;
+}
+XMFLOAT3 LerpAngle(XMFLOAT3 a, XMFLOAT3 b, float f)
+{
+	XMFLOAT3 result;
+	XMVECTOR av, bv, resultV;
+
+
+	av = XMLoadFloat3(&a);
+	bv = XMLoadFloat3(&b);
+
+	resultV = XMVectorLerp(av, bv, f);
+
+	XMStoreFloat3(&result,resultV);
+
+	return result;
 }

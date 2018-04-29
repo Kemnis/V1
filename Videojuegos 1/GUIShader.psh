@@ -40,7 +40,7 @@ float4 textureColor;
 textureColor = shaderTexture.Sample(SampleType, input.tex);
 
 // Remove bacground
-//clip(textureColor.a - 0.7f);
+clip(textureColor.a - 0.7f);
 
 
 

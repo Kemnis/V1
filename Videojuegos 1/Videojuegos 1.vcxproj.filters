@@ -126,6 +126,12 @@
     <ClInclude Include="GUIShader.h">
       <Filter>Archivos de encabezado\Core</Filter>
     </ClInclude>
+    <ClInclude Include="SceneMenu.h">
+      <Filter>Archivos de encabezado\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneGameLevel1.h">
+      <Filter>Archivos de encabezado\Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -201,6 +207,12 @@
       <Filter>Archivos de origen\Core</Filter>
     </ClCompile>
     <ClCompile Include="GUIShader.cpp">
+      <Filter>Archivos de origen\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneMenu.cpp">
+      <Filter>Archivos de origen\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneGameLevel1.cpp">
       <Filter>Archivos de origen\Core</Filter>
     </ClCompile>
   </ItemGroup>

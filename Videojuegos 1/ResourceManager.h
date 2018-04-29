@@ -24,8 +24,18 @@ public:
 	static GameObject* GetObjectByName(string);
 	static bool AddMaterial(string Nombre, vec3 Color);
 	static bool AddLight(string Nombre, vec4 ambient, vec4 diffuse, vec3 direction);
-	static bool AddBillboard(string Nombre, vec2 coordPositivo,vec2 coordNegativo);
-	static bool AddBitmap(string Nombre, vec4 rectBimap);
+	//Not delete change Scene
+	//Define defualt system
+	static bool AddBillboard(string Nombre, vec2 coordPositivo,vec2 coordNegativo);//1 Billboard Default
+	static bool AddBitmap(string Nombre, vec4 rectBimap);//Count n  Bitmaps Default System
+
+
+	static bool DestroyAllGameObjects();
+	static bool DestroyAllSahders();
+	static bool DestroyAllModels();//Not Delete Mesh Billbaord and Bitmaps
+	static bool DestoryAllMaterial();
+	static bool DestroyAllTexture();
+	static bool DestroyAllLight();
 
 	static string AsingTextureToGameObject(string nameGameObject, string nameTexture);
 	static Material*GetMaterial(string nameMaterial);

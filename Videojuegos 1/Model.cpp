@@ -48,6 +48,7 @@ Model::Model(vec4 rectBitmap, int widthScreen, int heightScreen)
 	VertexBuffer = 0;
 	IndexBuffer = 0;
 	DefineBitmap(rectBitmap, widthScreen, heightScreen);
+	Type = "Bitmap";
 	Initialize("");
 }
 
@@ -668,6 +669,7 @@ void Model::DefineBillboard()
 	Mesh.AddIndex(indexCount);
 
 	Mesh.DoFinalMesh();
+	radio = 1;
 }
 
 void Model::DefineBitmap(vec4 rectBitmap, int widthScreen, int heightScreen)
@@ -816,12 +818,19 @@ bool Model::Initialize(string NameOfFigure)
 	D3D11_SUBRESOURCE_DATA vertexData, indexData;
 	HRESULT result;
 
+	m_previousWidth = -1;
+	m_previousHeight = -1;
+	m_previousPosX = -1;
+	m_previousPosY = -1;
+	m_screenWidth = 800;
+	m_screenHeight = 600;
+
 	if (NameOfFigure == "Triangle")
 		DefineTriangle();
 	if (NameOfFigure == "Square")
 		DefineSquare();
 	if (NameOfFigure == "Sphere")
-		DefineSphere(3, 8);
+		DefineSphere(2, 8);
 	if (NameOfFigure == "Cube")
 		DefineCube(XMFLOAT3(1, 1, 1));
 	if (NameOfFigure == "Geosphere")
@@ -1034,7 +1043,38 @@ bool Model::LoadModel(string path)
 			FaceIndex.z = Mesh.GetTriangleFN(i).z-1;
 			Mesh.DoFinalMeshFromTriangles(Mesh.GetVertex(FaceIndex.x), Mesh.GetTexture(FaceIndex.y), Mesh.GetNormal(FaceIndex.z),j);
 			j++;
+
+			//Buscar X maxima y minima - Y maxima y minima - Z maxima y minima
+			if (Max.x <= Mesh.GetVertex(i).x)
+				Max.x = Mesh.GetVertex(i).x;
+			else if (Min.x >= Mesh.GetVertex(i).x)
+				Min.x = Mesh.GetVertex(i).x;
+			if (Max.y <= Mesh.GetVertex(i).y)
+				Max.y = Mesh.GetVertex(i).y;
+			else if (Min.y >= Mesh.GetVertex(i).y)
+				Min.y = Mesh.GetVertex(i).y;
+			if (Max.z <= Mesh.GetVertex(i).z)
+				Max.z = Mesh.GetVertex(i).z;
+			else if (Min.z >= Mesh.GetVertex(i).z)
+				Min.z = Mesh.GetVertex(i).z;
 		}
+
+		//Definir el radio del modelo
+		double radioMax = Max.x;
+		if (radioMax < Max.y)
+			radioMax = Max.y;
+		if (radioMax < Max.z)
+			radioMax = Max.z;
+		double radioMin = Min.x;
+		if (radioMin > Max.y)
+			radioMin = Max.y;
+		if (radioMin > Max.z)
+			radioMin = Max.z;
+		if (radioMax > (-1)*radioMin)
+			radio = radioMax;
+		else
+			radio = radioMin;
+
 	}
 	catch (std::exception& e)
 	{
@@ -1066,5 +1106,63 @@ void Model::ShutdownModel()
 		VertexBuffer = 0;
 	}
 
+	Mesh.ClearVertex();
+
 	return;
+}
+
+//Method Bitmap
+void Model::SetRect(vec4 rectBitmap)
+{
+	CenterX = rectBitmap.x;
+	CenterY = rectBitmap.y;
+	m_bitmapWidth = rectBitmap.z;
+	m_bitmapHeight = rectBitmap.w;
+
+	PosX = rectBitmap.x + m_screenWidth * 0.5f - m_bitmapWidth * 0.5f;
+	PosY = m_screenHeight * 0.5f - m_bitmapHeight * 0.5f - rectBitmap.y;
+	return;
+}
+//Method Bitmap
+void Model::SetPosition(vec2 position)
+{
+	CenterX = position.x;
+	CenterY = position.y;
+	PosX = position.x + m_screenWidth * 0.5f - m_bitmapWidth * 0.5f;
+	PosY = m_screenHeight * 0.5f - m_bitmapHeight * 0.5f - position.y;
+	return;
+}
+
+//Method Bitmap
+void Model::SetSize(vec2 size)
+{
+	m_bitmapWidth = size.x;
+	m_bitmapHeight = size.y;
+
+	PosX = PosX + m_screenWidth * 0.5f - m_bitmapWidth * 0.5f;
+	PosY = m_screenHeight * 0.5f - m_bitmapHeight * 0.5f - PosY;
+}
+
+//Update Bitmap
+void Model::UpdateBitmap()
+{
+	// If the position we are rendering this bitmap to has not changed then don't update the vertex buffer since it
+	// currently has the correct parameters.
+	if ((PosX == m_previousPosX) && (PosY == m_previousPosY) && (m_bitmapWidth == m_previousWidth) && (m_bitmapHeight == m_previousHeight))
+	{
+		return;
+	}
+
+	// If it has changed then update the position it is being rendered to.
+	m_previousPosX = PosX;
+	m_previousPosY = PosY;
+	m_previousWidth = m_bitmapWidth;
+	m_previousHeight = m_bitmapHeight;
+
+	UpdateBufferBitmap(vec4(PosX, PosY, m_bitmapWidth, m_bitmapHeight), m_screenWidth, m_screenHeight);
+}
+
+double Model::GetRadio()
+{
+	return radio;
 }

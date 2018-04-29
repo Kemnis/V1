@@ -3,15 +3,15 @@
 #include "Mesh3D.h"
 
 
-class Scene : DxComponent<Scene>
+class Scene :public DxComponent<Scene>
 {
 public:
 	Scene();
 	~Scene();
 	virtual string CreateScene();
-	virtual string ProcessScene(double);
+	virtual string ProcessScene(double dt);
 	virtual string RenderScene();
-	
+	virtual string Start();
 	virtual void DestroyScene();
 
 public:				//Descripción: Variables Globales
@@ -21,9 +21,10 @@ protected:
 	bool RB;
 	string RS;
 	// Variables de respuesta
-
-	
+	bool created;
+	//vector<GameObject*> ListGameObjects;
 private:
 	XMMATRIX CameraMatrix;
+
 	
 };
