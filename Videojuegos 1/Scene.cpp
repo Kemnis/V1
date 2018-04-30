@@ -1,77 +1,106 @@
 #include "stdafx.h"
 //Escena defualt para hacer desmadre en el examen
-Scene::Scene() {
+Scene::Scene(string id) {
 	SceneCamera = 0;
 	SceneCamera = new Camera3D(specsDx->GetScreenWidth(), specsDx->GetScreenHeight(), 0.1f, 1000.0f);
-	created = false;
+	this->id = id;
 }
 
 Scene::~Scene() {}
 
+//Main instruction to Initialize a Scene
 string Scene::CreateScene() {
-	
-	if (!created)
-	{
-		//Load all objects you need First acubedd all the resources
-		ResourceManager::AddModel("Sphere", "SphereMesh");
-		ResourceManager::AddModel("assets/Sphere.obj", "SphereModel");
-		ResourceManager::AddStage("assets/Stage2.bmp", "Stage1", 256, 1024, 1024);
-
-		ResourceManager::AddTexture("assets/skydome day1.png", "World");
-		ResourceManager::AddTexture("assets/skydome night2.jpg", "WorldNight");
-		ResourceManager::AddTexture("assets/terrenopasto.jpg", "Layer1-Bottom");
-		ResourceManager::AddTexture("assets/terrenopiedra.jpg", "Layer2-Mid");
-		ResourceManager::AddTexture("assets/terrenopasto2.png", "Layer3-Top");
-		ResourceManager::AddTexture("assets/arbol.png", "ArbolTexture");
-		ResourceManager::AddMaterial("ColorBlanco", vec3(0.2, 0.2, 0.4));
-
-		ResourceManager::AddLight("Primeras", vec4(0.1f, 0.8f, 0.8f, 1.0f), vec4(1.0f, 1.0f, 1.0f, 1.0f), vec3(0.0f, 0.0f, 1.0f));
-		ResourceManager::AddShader("LambertBasicShader", new BasicShader("LambertMaterial.vs", "LambertMaterial.ps"));
-		ResourceManager::AddShader("LambertLBasicShader", new BasicShader("LambertLMaterial.vs", "LambertLMaterial.ps", 1));
-		ResourceManager::AddShader("LambertMaterialShader", new MaterialShader("LambertTexture.vs", "LambertTexture.ps"));
-		ResourceManager::AddShader("LambertLMaterialShader", new MaterialShader("LambertLTexture.vs", "LambertLTexture.ps", 1));
-		ResourceManager::AddShader("SkydomeShader", new SkydomeShader("Skydome.vs", "Skydome.ps", 1));
-		ResourceManager::AddShader("TerrenoShader", new TerrainShader("Terrain.vs", "Terrain.ps"));
-		ResourceManager::AddShader("GUIShader", new GUIShader("GUIShader.vsh", "GUIShader.psh"));
-
-		//Then Build a GameObject
-		ResourceManager::BuildGameObject("SphereMes", "SphereMesh", "World", "LambertLMaterialShader", "ColorBlanco", "Primeras");
-		//ResourceManager::BuildGameObject("SphereMod", "SphereModel", "World", "LambertMaterialShader", "ColorBlanco", "");
-		ResourceManager::BuildGameObject("SphereMod", "SphereModel", "World", "SkydomeShader", "ColorBlanco", "Primeras");
-		ResourceManager::BuildGameObject("Stage1", "Stage1", "", "TerrenoShader", "ColorBlanco", "Primeras");
-		ResourceManager::BuildGameObject("Arbol", "Billboard", "ArbolTexture", "LambertMaterialShader", "ColorBlanco", "");
-		ResourceManager::BuildGameObject("Arbol2", "Billboard", "ArbolTexture", "LambertMaterialShader", "ColorBlanco", "");
-
-		ResourceManager::BuildGameObject("bitmapPasto", "Bitmap00", "Layer1-Bottom", "GUIShader", "ColorBlanco", "");
-		ResourceManager::BuildGameObject("bitmapArbol", "Bitmap01", "ArbolTexture", "GUIShader", "ColorBlanco", "");
-
-		//Addtexture
-		ResourceManager::AsingTextureToGameObject("SphereMod", "WorldNight");
-		ResourceManager::AsingTextureToGameObject("Stage1", "Layer1-Bottom");
-		ResourceManager::AsingTextureToGameObject("Stage1", "Layer2-Mid");
-		ResourceManager::AsingTextureToGameObject("Stage1", "Layer3-Top");
-
-
-	}
-	
-	Start();
-
-	_RPT0(0, "Scene Created!\n");
+	//Load Resources of Scene
+	RS = LoadResources();
+	//Build GameObjects and define Multitexture or Behaviours to objects
+	RS = BuildScene();
+	//Define the start points of every object if it needs
+	RS = Start();
+	if (RS == "S_OK")
+		_RPT0(0, "Scene Created!\n");
+	else
+		_RPT0(0, "Scene cannot be created!\n");
 	return "S_OK";
 }
 
-string Scene::Start() {
+//Load all objects you need 
+string Scene::LoadResources()
+{
+	RB = ResourceManager::AddModel(id, "Sphere", "SphereMesh");
+	RB = ResourceManager::AddModel(id, "assets/Sphere.obj", "SphereModel");
+	RB = ResourceManager::AddStage(id, "assets/Stage2.bmp", "Stage1", 256, 1024, 1024);
 
-	//Descripci�n:
+	RB = ResourceManager::AddTexture(id, "assets/skydome day1.png", "World");
+	RB = ResourceManager::AddTexture(id, "assets/skydome night2.jpg", "WorldNight");
+	RB = ResourceManager::AddTexture(id, "assets/terrenopasto.jpg", "Layer1-Bottom");
+	RB = ResourceManager::AddTexture(id, "assets/terrenopiedra.jpg", "Layer2-Mid");
+	RB = ResourceManager::AddTexture(id, "assets/terrenopasto2.png", "Layer3-Top");
+	RB = ResourceManager::AddTexture(id, "assets/arbol.png", "ArbolTexture");
+	RB = ResourceManager::AddMaterial(id, "ColorBlanco", vec3(0.2, 0.2, 0.4));
+
+	RB = ResourceManager::AddLight(id, "Primeras", vec4(0.1f, 0.8f, 0.8f, 1.0f), vec4(1.0f, 1.0f, 1.0f, 1.0f), vec3(0.0f, 0.0f, 1.0f));
+	RB = ResourceManager::AddShader(id, "LambertBasicShader", new BasicShader("LambertMaterial.vs", "LambertMaterial.ps"));
+	RB = ResourceManager::AddShader(id, "LambertLBasicShader", new BasicShader("LambertLMaterial.vs", "LambertLMaterial.ps", 1));
+	RB = ResourceManager::AddShader(id, "LambertMaterialShader", new MaterialShader("LambertTexture.vs", "LambertTexture.ps"));
+	RB = ResourceManager::AddShader(id, "LambertLMaterialShader", new MaterialShader("LambertLTexture.vs", "LambertLTexture.ps", 1));
+	RB = ResourceManager::AddShader(id, "SkydomeShader", new SkydomeShader("Skydome.vs", "Skydome.ps", 1));
+	RB = ResourceManager::AddShader(id, "TerrenoShader", new TerrainShader("Terrain.vs", "Terrain.ps"));
+	RB = ResourceManager::AddShader(id, "GUIShader", new GUIShader("GUIShader.vsh", "GUIShader.psh"));
+	if (RB != true)
+	{
+		_RPT0(0, "Something went wrong!\n");
+		return "E_Fail";
+	}
+	else
+	{
+		_RPT0(0, "Objects Loaded from Scene 0!\n");
+		return "S_OK";
+	}
+}
+
+//Then Build a GameObject or Define a Behaviour of its (Also Multitextures goes here)
+string Scene::BuildScene()
+{
+	RS = ResourceManager::BuildGameObject(id, "SphereMes", "SphereMesh", "World", "LambertLMaterialShader", "ColorBlanco", "Primeras");
+	RS = ResourceManager::BuildGameObject(id, "SphereMod", "SphereModel", "World", "SkydomeShader", "ColorBlanco", "Primeras");
+	RS = ResourceManager::BuildGameObject(id, "Stage1", "Stage1", "", "TerrenoShader", "ColorBlanco", "Primeras");
+	RS = ResourceManager::BuildGameObject(id, "Arbol", "Billboard", "ArbolTexture", "LambertMaterialShader", "ColorBlanco", "");
+	RS = ResourceManager::BuildGameObject(id, "Arbol2", "Billboard", "ArbolTexture", "LambertMaterialShader", "ColorBlanco", "");
+	RS = ResourceManager::BuildGameObject(id, "bitmapPasto", "Bitmap00", "Layer1-Bottom", "GUIShader", "ColorBlanco", "");
+	RS = ResourceManager::BuildGameObject(id, "bitmapArbol", "Bitmap01", "ArbolTexture", "GUIShader", "ColorBlanco", "");
+
+	//Addtexture
+	RS = ResourceManager::AsingTextureToGameObject("SphereMod", "WorldNight");
+	RS = ResourceManager::AsingTextureToGameObject("Stage1", "Layer1-Bottom");
+	RS = ResourceManager::AsingTextureToGameObject("Stage1", "Layer2-Mid");
+	RS = ResourceManager::AsingTextureToGameObject("Stage1", "Layer3-Top");
+
+	if (RS != "S_OK")
+	{
+		_RPT0(0, "Something went wrong!\n");
+		return "S_OK";
+	}
+	else
+	{
+		_RPT0(0, "Objects Builded and correctly defined behaviour from Scene 0!\n");
+		return "E_Fail";
+	}
+}
+
+//Define the first location of EVERY Object
+string Scene::Start() {
 	ResourceManager::GetObjectByName("SphereMes")->Transform->SetRotation(vec3(180, 0, 0));
 	ResourceManager::GetObjectByName("SphereMes")->Transform->SetTranslation(vec3(2, 0, 0));
 	ResourceManager::GetObjectByName("SphereMes")->Transform->SetScale(vec3(.5, .5, .5));
+
 	ResourceManager::GetObjectByName("SphereMod")->Transform->SetScale(vec3(50.0f, 50.0f, 50.0f));
-	//Descripci�n:
+
 	ResourceManager::GetObjectByName("Arbol")->Transform->SetTranslation(vec3(15.0f, 0.0f, 15.0f));
+
 	ResourceManager::GetObjectByName("Arbol2")->Transform->SetTranslation(vec3(30.0f, 0.0f, 30.0f));
 
 	ResourceManager::GetObjectByName("bitmapPasto")->GetModel()->SetRect(vec4(0, 0, 200, 200));
+
 	ResourceManager::GetObjectByName("bitmapArbol")->GetModel()->SetRect(vec4(200, 0, 200, 200));
 
 	vec3 trans;
@@ -86,6 +115,7 @@ string Scene::Start() {
 	return "S_OK";
 }
 
+//Then Process all the changes of everything and every object
 string Scene::ProcessScene(double dt)
 {
 	vec3 rot;
@@ -120,6 +150,7 @@ string Scene::ProcessScene(double dt)
 	return "S_OK";
 }
 
+//Finally Render it
 string Scene::RenderScene()
 {
 	// Clear the buffers to begin the scene.
@@ -215,7 +246,21 @@ string Scene::RenderScene()
 	return "S_OK";
 }
 
+//Destroys all the objects that were created
 void Scene::DestroyScene()
 {
+	RB = DownloadResources();
+	if (RB == true)
+		_RPT0(0, "Scene Test Destroyed!\n");
+	else
+		_RPT0(0, "Error when try destroy Scene Test!\n");
+}
 
+bool Scene::DownloadResources()
+{
+	bool Sucess = ResourceManager::DestroyItemsFromScene(id);
+	if (Sucess == true)
+		return true;
+	else
+		return false;
 }

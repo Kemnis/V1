@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-SceneGameLevel1::SceneGameLevel1():Scene()
+SceneGameLevel1::SceneGameLevel1(string id):Scene(id)
 {
 
 }
@@ -9,41 +9,95 @@ SceneGameLevel1::~SceneGameLevel1()
 
 }
 
+//Main instruction to Initialize a Scene
 string SceneGameLevel1::CreateScene()
 {
-	if (!created)
-	{
-		created = true;
-		//Objects define here
-		
-		ResourceManager::AddModel("assets/LowPolyPlayer.obj","nave");
-		ResourceManager::AddTexture("assets/player.jpg","TextureNave");
-
-		ResourceManager::AddModel("assets/LowPolyEnemy.obj", "meshEnemy");
-		ResourceManager::AddTexture("assets/enemy.jpg", "TextureEnemy");
-
-		ResourceManager::BuildGameObject("NaveJugador","nave","TextureNave","LambertMaterialShader", "ColorBlanco", "Primeras");
-
-		ResourceManager::BuildGameObject("BotEnemy", "meshEnemy", "TextureEnemy", "LambertMaterialShader", "ColorBlanco", "Primeras");
-		
-	}
-
-	Start();
-
-	_RPT0(0, "SceneMenu Created!\n");
+	//Load Resources of Scene
+	RS = LoadResources();
+	//Build GameObjects and define Multitexture or Behaviours to objects
+	RS = BuildScene();
+	//Define the start points of every object if it needs
+	RS = Start();
+	if (RS == "S_OK")
+		_RPT0(0, "Scene Created!\n");
+	else
+		_RPT0(0, "Scene cannot be created!\n");
 	return "S_OK";
 }
 
+//Load all objects you need 
+string SceneGameLevel1::LoadResources()
+{
+	RB = ResourceManager::AddModel(id, "assets/LowPolyPlayer.obj", "nave");
+	RB = ResourceManager::AddTexture(id, "assets/player.jpg", "TextureNave");
+
+	RB = ResourceManager::AddModel(id, "assets/LowPolyEnemy.obj", "meshEnemy");
+	RB = ResourceManager::AddTexture(id, "assets/enemy.jpg", "TextureEnemy");
+
+	RB = ResourceManager::AddModel(id, "Sphere", "SphereMesh");
+	RB = ResourceManager::AddModel(id, "assets/Sphere.obj", "SphereModel");
+	RB = ResourceManager::AddTexture(id, "assets/skydome day1.png", "World");
+	RB = ResourceManager::AddTexture(id, "assets/skydome night2.jpg", "WorldNight");
+	RB = ResourceManager::AddTexture(id, "assets/terrenopasto.jpg", "Layer1-Bottom");
+	RB = ResourceManager::AddTexture(id, "assets/terrenopiedra.jpg", "Layer2-Mid");
+	RB = ResourceManager::AddTexture(id, "assets/terrenopasto2.png", "Layer3-Top");
+	RB = ResourceManager::AddLight(id, "Primeras", vec4(0.1f, 0.8f, 0.8f, 1.0f), vec4(1.0f, 1.0f, 1.0f, 1.0f), vec3(0.0f, 0.0f, 1.0f));
+	RB = ResourceManager::AddShader(id, "LambertMaterialShader", new MaterialShader("LambertTexture.vs", "LambertTexture.ps"));
+	RB = ResourceManager::AddShader(id, "LambertLMaterialShader", new MaterialShader("LambertLTexture.vs", "LambertLTexture.ps", 1));
+	RB = ResourceManager::AddShader(id, "SkydomeShader", new SkydomeShader("Skydome.vs", "Skydome.ps", 1));
+	RB = ResourceManager::AddShader(id, "TerrenoShader", new TerrainShader("Terrain.vs", "Terrain.ps"));
+	RB = ResourceManager::AddMaterial(id, "ColorBlanco", vec3(0.2, 0.2, 0.4));
+	RB = ResourceManager::AddStage(id, "assets/Stage2.bmp", "Stage1", 256, 1024, 1024);
+
+	if (RB != true)
+	{
+		_RPT0(0, "Something went wrong!\n");
+		return "E_Fail";
+	}
+	else
+	{
+		_RPT0(0, "Objects Loaded from Scene 0!\n");
+		return "S_OK";
+	}
+}
+
+//Then Build a GameObject or Define a Behaviour of its (Also Multitextures goes here)
+string SceneGameLevel1::BuildScene()
+{
+	RS = ResourceManager::BuildGameObject(id, "NaveJugador", "nave", "TextureNave", "LambertMaterialShader", "ColorBlanco", "Primeras");
+	RS = ResourceManager::BuildGameObject(id, "BotEnemy", "meshEnemy", "TextureEnemy", "LambertMaterialShader", "ColorBlanco", "Primeras");
+	RS = ResourceManager::BuildGameObject(id, "SphereMes", "SphereMesh", "World", "LambertLMaterialShader", "ColorBlanco", "Primeras");
+	RS = ResourceManager::BuildGameObject(id, "SphereMod", "SphereModel", "World", "SkydomeShader", "ColorBlanco", "Primeras");
+	RS = ResourceManager::BuildGameObject(id, "Stage1", "Stage1", "", "TerrenoShader", "ColorBlanco", "Primeras");
+
+	//Addtexture
+	RS = ResourceManager::AsingTextureToGameObject("SphereMod", "WorldNight");
+	RS = ResourceManager::AsingTextureToGameObject("Stage1", "Layer1-Bottom");
+	RS = ResourceManager::AsingTextureToGameObject("Stage1", "Layer2-Mid");
+	RS = ResourceManager::AsingTextureToGameObject("Stage1", "Layer3-Top");
+	if (RS != "S_OK")
+	{
+		_RPT0(0, "Something went wrong!\n");
+		return "S_OK";
+	}
+	else
+	{
+		_RPT0(0, "Objects Builded and correctly defined behaviour from Scene 0!\n");
+		return "E_Fail";
+	}
+}
+
+//Define the first location of EVERY Object
 string SceneGameLevel1::Start()
 {
-
 	float height = ResourceManager::GetObjectByName("Stage1")->GetModel()->GetPositionHeightMap(vec3(35.0f, 0.0f, 35.0f));
 	ResourceManager::GetObjectByName("NaveJugador")->Transform->SetScale(vec3(0.1f, 0.1f, 0.1f));
 	ResourceManager::GetObjectByName("BotEnemy")->Transform->SetTranslation(vec3(50.0f, height + 4.0f, 50.0f));
 	ResourceManager::GetObjectByName("BotEnemy")->Transform->SetScale(vec3(0.1f, 0.1f, 0.1f));
 	return "S_OK";
 }
-//Frames Scene
+
+//Then Process all the changes of everything and every object
 string SceneGameLevel1::ProcessScene(double dt)
 {
 	vec3 rot;
@@ -75,7 +129,7 @@ string SceneGameLevel1::ProcessScene(double dt)
 	return "S_OK";
 }
 
-//Update Scene
+//Finally Render it
 string SceneGameLevel1::RenderScene()
 {
 	XMMATRIX viewMatrix, viewMatrix2D, *orthoMatrix,*projectionMatrix;
@@ -125,7 +179,21 @@ string SceneGameLevel1::RenderScene()
 	return "S_OK";
 }
 
+//Destroys all the objects that were created
 void SceneGameLevel1::DestroyScene()
 {
+	RB = DownloadResources();
+	if (RB == true)
+		_RPT0(0, "Game Level 1 Destroyed!\n");
+	else
+		_RPT0(0, "Error when try destroy Game Level 1!\n");
+}
 
+bool SceneGameLevel1::DownloadResources()
+{
+	bool Sucess = ResourceManager::DestroyItemsFromScene(id);
+	if (Sucess == true)
+		return true;
+	else
+		return false;
 }

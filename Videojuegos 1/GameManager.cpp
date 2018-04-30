@@ -3,17 +3,29 @@
 
 GameManager::GameManager(){
 	hwnd = 0;
-	CurrentScene = new Scene();
+	CurrentScene = new Scene("Escena #0: Prueba");
 	Niveles.insert(std::pair<int, Scene*>(0, CurrentScene));
 	CurrentSceneIndex = 0;
 	RS = CurrentScene->CreateScene();
+	RS = DefineNumberOfLevels();
 	if (RS != "S_OK")
 		_RPT0(0,"No fue posible crear la escena");
 	else
-		_RPT0(0, "Scene Created!\n");
+		_RPT0(0, "Scene Template Created!\n");
 }
 
 GameManager::~GameManager(){
+}
+
+string GameManager::DefineNumberOfLevels()
+{
+	RS = AddScene(new SceneMenu("Escena #1: Menu"), 1);
+	RS = AddScene(new SceneGameLevel1("Escena #2: Nivel 1"), 2);
+	if (RS != "S_OK")
+		_RPT0(0, "No fue posible crear los niveles");
+	else
+		_RPT0(0, "Game Levels Created!\n");
+	return RS;
 }
 
 string GameManager::FrameProcess(double dt)
@@ -50,6 +62,11 @@ Scene* GameManager::GetCurrentScene()
 	return Current;
 }
 
+int GameManager::GetCurrentIdScene()
+{
+	return CurrentSceneIndex;
+}
+
 void GameManager::ChangeScene(int index)
 {
 	CurrentSceneIndex = index;
@@ -57,6 +74,12 @@ void GameManager::ChangeScene(int index)
 	CurrentScene->DestroyScene();
 	CurrentScene = newCurrentScene;
 	CurrentScene->CreateScene();
+}
+
+bool GameManager::OnChangeScene(int oldScene, int newScene)
+{
+
+	return true;
 }
 
 void GameManager::Shutdown()

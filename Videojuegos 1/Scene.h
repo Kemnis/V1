@@ -6,25 +6,21 @@
 class Scene :public DxComponent<Scene>
 {
 public:
-	Scene();
+	Scene(string id);
 	~Scene();
+	virtual string LoadResources();
 	virtual string CreateScene();
+	virtual string BuildScene();
+	virtual string Start();
 	virtual string ProcessScene(double dt);
 	virtual string RenderScene();
-	virtual string Start();
 	virtual void DestroyScene();
-
-public:				//Descripción: Variables Globales
+	virtual bool DownloadResources();
+public:
 	Camera3D * SceneCamera;
 protected:
-	//Variables de respuesta
+	string RS,id;
 	bool RB;
-	string RS;
-	// Variables de respuesta
-	bool created;
-	//vector<GameObject*> ListGameObjects;
 private:
 	XMMATRIX CameraMatrix;
-
-	
 };

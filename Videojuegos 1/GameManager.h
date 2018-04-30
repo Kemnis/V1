@@ -14,12 +14,18 @@ public:
 	
 	GameManager();
 	~GameManager();
-	virtual string FrameProcess(double);
+	string DefineNumberOfLevels();
+	virtual string FrameProcess(double DeltaTime);
 	virtual string FrameRender();
-	string AddScene(Scene*, int);
-	Scene*GetCurrentScene();
-	void ChangeScene(int);
+	string AddScene(Scene* pScene, int indexScene);
+
+	Scene * GetCurrentScene();
+	int GetCurrentIdScene();
+
+	void ChangeScene(int newScene);
+	bool OnChangeScene(int oldScene, int newScene);
 	virtual void Shutdown();
+
 	string Name;
 protected:
 	//Variables de respuesta
