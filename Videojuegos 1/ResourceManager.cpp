@@ -310,8 +310,11 @@ bool ResourceManager::DestroyItemsFromScene(string idFrom)
 		else
 			PosAnt = "";
 	}
-	if (GlobalObjectsIdentifier.find(PosAnt)->second.CreatedBy == idFrom)
-		GlobalObjectsIdentifier.erase(PosAnt);
+	if (PosAnt != "")
+	{
+		if (GlobalObjectsIdentifier.find(PosAnt)->second.CreatedBy == idFrom)
+			GlobalObjectsIdentifier.erase(PosAnt);
+	}
 	return true;
 }
 
@@ -406,7 +409,13 @@ void ResourceManager::Shutdown()
 	ModelIdentifier.clear();
 	TextureIdentifier.clear();
 	ShaderIdentifier.clear();
+	MaterialIdentifier.clear();
+	LightIdentifier.clear();
+	GlobalObjectsIdentifier.clear();
 	GameObjectIndex = 0;
 	ModelIndex = 0;
 	TextureIndex = 0;
+	MaterialIndex = 0;
+	LightIndex = 0;
+	GlobalObjectsCounter = 0;
 }

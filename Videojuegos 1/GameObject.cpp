@@ -51,12 +51,8 @@ bool GameObject::AddTexture(Texture * texture)
 
 void GameObject::Shutdown()
 {
-	/*
-	delete Modelo;
-	delete shader;
-	*/
 	delete Transform;
-	
+	Transform = 0;
 }
 
 Model* GameObject::GetModel()

@@ -36,18 +36,18 @@ string SceneGameLevel1::LoadResources()
 
 	RB = ResourceManager::AddModel(id, "Sphere", "SphereMesh");
 	RB = ResourceManager::AddModel(id, "assets/Sphere.obj", "SphereModel");
-	RB = ResourceManager::AddTexture(id, "assets/skydome day1.png", "World");
-	RB = ResourceManager::AddTexture(id, "assets/skydome night2.jpg", "WorldNight");
-	RB = ResourceManager::AddTexture(id, "assets/terrenopasto.jpg", "Layer1-Bottom");
-	RB = ResourceManager::AddTexture(id, "assets/terrenopiedra.jpg", "Layer2-Mid");
-	RB = ResourceManager::AddTexture(id, "assets/terrenopasto2.png", "Layer3-Top");
+	RB = ResourceManager::AddStage(id, "assets/Stage1.bmp", "Stage1", 256, 1024, 1024);
+	RB = ResourceManager::AddTexture(id, "assets/SkyStage1Day.jpg", "World");
+	RB = ResourceManager::AddTexture(id, "assets/SkyStage1Night.jpg", "WorldNight");
+	RB = ResourceManager::AddTexture(id, "assets/mt1Stage1.jpg", "Layer1-Bottom");
+	RB = ResourceManager::AddTexture(id, "assets/mt2Stage1.jpg", "Layer2-Mid");
+	RB = ResourceManager::AddTexture(id, "assets/mt3Stage1.jpg", "Layer3-Top");
+	RB = ResourceManager::AddMaterial(id, "ColorBlanco", vec3(0.2, 0.2, 0.4));
 	RB = ResourceManager::AddLight(id, "Primeras", vec4(0.1f, 0.8f, 0.8f, 1.0f), vec4(1.0f, 1.0f, 1.0f, 1.0f), vec3(0.0f, 0.0f, 1.0f));
 	RB = ResourceManager::AddShader(id, "LambertMaterialShader", new MaterialShader("LambertTexture.vs", "LambertTexture.ps"));
 	RB = ResourceManager::AddShader(id, "LambertLMaterialShader", new MaterialShader("LambertLTexture.vs", "LambertLTexture.ps", 1));
 	RB = ResourceManager::AddShader(id, "SkydomeShader", new SkydomeShader("Skydome.vs", "Skydome.ps", 1));
 	RB = ResourceManager::AddShader(id, "TerrenoShader", new TerrainShader("Terrain.vs", "Terrain.ps"));
-	RB = ResourceManager::AddMaterial(id, "ColorBlanco", vec3(0.2, 0.2, 0.4));
-	RB = ResourceManager::AddStage(id, "assets/Stage2.bmp", "Stage1", 256, 1024, 1024);
 
 	if (RB != true)
 	{
@@ -92,6 +92,7 @@ string SceneGameLevel1::Start()
 {
 	float height = ResourceManager::GetObjectByName("Stage1")->GetModel()->GetPositionHeightMap(vec3(35.0f, 0.0f, 35.0f));
 	ResourceManager::GetObjectByName("NaveJugador")->Transform->SetScale(vec3(0.1f, 0.1f, 0.1f));
+	ResourceManager::GetObjectByName("SphereMod")->Transform->SetRotation(vec3(180,0,0));
 	ResourceManager::GetObjectByName("BotEnemy")->Transform->SetTranslation(vec3(50.0f, height + 4.0f, 50.0f));
 	ResourceManager::GetObjectByName("BotEnemy")->Transform->SetScale(vec3(0.1f, 0.1f, 0.1f));
 	return "S_OK";
@@ -144,7 +145,7 @@ string SceneGameLevel1::RenderScene()
 	projectionMatrix = SceneCamera->GetProjectionMatrix();
 
 	//Fijar el Skydome a la camrara
-	ResourceManager::GetObjectByName("SphereMod")->Transform->SetTranslation(vec3(SceneCamera->view.x, SceneCamera->view.y, SceneCamera->view.z));
+	ResourceManager::GetObjectByName("SphereMod")->Transform->SetTranslation(vec3(SceneCamera->pos.x, SceneCamera->pos.y, SceneCamera->pos.z));
 
 	GameObject*GoStage = ResourceManager::GetObjectByName("Stage1");
 	GameObject* GObjModel = ResourceManager::GetObjectByName("SphereMod");

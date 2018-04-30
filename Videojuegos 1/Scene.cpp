@@ -28,14 +28,14 @@ string Scene::LoadResources()
 {
 	RB = ResourceManager::AddModel(id, "Sphere", "SphereMesh");
 	RB = ResourceManager::AddModel(id, "assets/Sphere.obj", "SphereModel");
-	RB = ResourceManager::AddStage(id, "assets/Stage2.bmp", "Stage1", 256, 1024, 1024);
+	RB = ResourceManager::AddStage(id, "assets/Stage1.bmp", "Stage1", 256, 1024, 1024);
 
-	RB = ResourceManager::AddTexture(id, "assets/skydome day1.png", "World");
-	RB = ResourceManager::AddTexture(id, "assets/skydome night2.jpg", "WorldNight");
-	RB = ResourceManager::AddTexture(id, "assets/terrenopasto.jpg", "Layer1-Bottom");
-	RB = ResourceManager::AddTexture(id, "assets/terrenopiedra.jpg", "Layer2-Mid");
-	RB = ResourceManager::AddTexture(id, "assets/terrenopasto2.png", "Layer3-Top");
-	RB = ResourceManager::AddTexture(id, "assets/arbol.png", "ArbolTexture");
+	RB = ResourceManager::AddTexture(id, "assets/SkyStage1Day.jpg", "World");
+	RB = ResourceManager::AddTexture(id, "assets/SkyStage1Night.jpg", "WorldNight");
+	RB = ResourceManager::AddTexture(id, "assets/mt1Stage1.jpg", "Layer1-Bottom");
+	RB = ResourceManager::AddTexture(id, "assets/mt2Stage1.jpg", "Layer2-Mid");
+	RB = ResourceManager::AddTexture(id, "assets/mt3Stage1.jpg", "Layer3-Top");
+	RB = ResourceManager::AddTexture(id, "assets/TreeTex.png", "ArbolTexture");
 	RB = ResourceManager::AddMaterial(id, "ColorBlanco", vec3(0.2, 0.2, 0.4));
 
 	RB = ResourceManager::AddLight(id, "Primeras", vec4(0.1f, 0.8f, 0.8f, 1.0f), vec4(1.0f, 1.0f, 1.0f, 1.0f), vec3(0.0f, 0.0f, 1.0f));
