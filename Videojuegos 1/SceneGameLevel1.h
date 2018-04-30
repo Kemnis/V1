@@ -4,13 +4,16 @@
 class SceneGameLevel1:public Scene
 {
 public:
-	SceneGameLevel1();
+	SceneGameLevel1(string id);
 	~SceneGameLevel1();
 	string CreateScene();
-	string ProcessScene(double dt);
-	string RenderScene();
+	string LoadResources();
+	string BuildScene();
 	string Start();
+	string ProcessScene(double dt);
+	string RenderScene(); 
 	void DestroyScene();
+	bool DownloadResources();
 private:
 protected:
 };

@@ -6,10 +6,11 @@
 class Model : DxComponent<Model>
 {
 public:
-	Model(string HeightmapFile,float Cells, float Width,float Height);
-	Model(string path);
+	Model();
+	Model(string HeightmapFile,float Cells, float Width,float Height);//Mesh for Terrain
+	Model(string path);//Mesh of Objects
 	Model(vec2 coordPositivo, vec2 coordNegativo);//<-Width and Height my Billboard
-	Model(vec4 rectBitmap, int widthScreen, int heightScreen);
+	Model(vec4 rectBitmap, int widthScreen, int heightScreen);//Mesh for Bitmap images in 2D screens
 	~Model();
 	bool Initialize(string primitive);
 	void Draw();

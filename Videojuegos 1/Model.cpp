@@ -1,5 +1,10 @@
 #include "stdafx.h"
 
+Model::Model()
+{
+
+}
+
 Model::Model(string path)
 {
 	dynamicVertexBuffer = false;
@@ -49,7 +54,7 @@ Model::Model(vec4 rectBitmap, int widthScreen, int heightScreen)
 	IndexBuffer = 0;
 	DefineBitmap(rectBitmap, widthScreen, heightScreen);
 	Type = "Bitmap";
-	Initialize("");
+	Initialize(Type);
 }
 
 Model::~Model()
