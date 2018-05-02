@@ -4,8 +4,6 @@ GameObject::GameObject(string name)
 {
 	Transform = new Transforms();
 	Name = name;
-
-
 }
 
 GameObject::~GameObject()
@@ -53,6 +51,26 @@ void GameObject::Shutdown()
 {
 	delete Transform;
 	Transform = 0;
+}
+
+void GameObject::SetPosBitmap(vec2 Position)
+{
+	Modelo->SetPosition(Position);
+}
+
+void GameObject::SetEscBitmap(vec2 Escale)
+{
+	Modelo->SetSize(Escale);
+}
+
+void GameObject::SetPosBitmap(float PosX,float PosY)
+{
+	Modelo->SetPosition(vec2(PosX,PosY));
+}
+
+void GameObject::SetEscBitmap(float EscX,float EscY)
+{
+	Modelo->SetSize(vec2(EscX,EscY));
 }
 
 Model* GameObject::GetModel()
@@ -134,9 +152,6 @@ void GameObject::Draw(XMMATRIX world, XMMATRIX view, XMMATRIX projection)
 					materialBuffer.escalar = this->material->escalar;
 					shader->SetShaderConstantBuffer("MaterialBuffer", &materialBuffer);
 				}
-
-				
-
 			}break;
 		}; 
 	}

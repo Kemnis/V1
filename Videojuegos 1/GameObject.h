@@ -11,7 +11,7 @@
 class GameObject
 {
 public:
-	GameObject(string);
+	GameObject(string Name);
 	~GameObject();
 	
 	string GetName();
@@ -20,6 +20,10 @@ public:
 	bool AssignMaterial(Material* mat);
 	bool AssignLight(Light* light);
 	bool AddTexture(Texture* texture);
+	void SetPosBitmap(vec2 Position);
+	void SetEscBitmap(vec2 Escale);
+	void SetPosBitmap(float PosX, float PosY);
+	void SetEscBitmap(float EscX, float EscY);
 	Model* GetModel();
 	Light* GetLight();
 	//Texture* GetTexture();

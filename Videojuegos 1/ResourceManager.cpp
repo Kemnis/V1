@@ -13,6 +13,7 @@ Model* ResourceManager::ModeloActual = nullptr;
 
 ResourceManager::GameObjectMap ResourceManager::GameObjectIdentifier;
 ResourceManager::ModelMap ResourceManager::ModelIdentifier;
+ResourceManager::WordMap ResourceManager::WordIdentifier;
 ResourceManager::TextureMap ResourceManager::TextureIdentifier;
 ResourceManager::ShaderMap ResourceManager::ShaderIdentifier;
 ResourceManager::MaterialMap ResourceManager::MaterialIdentifier;
@@ -20,6 +21,7 @@ ResourceManager::LightMap ResourceManager::LightIdentifier;
 ResourceManager::GlobalResourcesMap ResourceManager::GlobalObjectsIdentifier;
 int ResourceManager::GameObjectIndex = 0;
 int ResourceManager::ModelIndex = 0;
+int ResourceManager::WordIndex = 0;
 int ResourceManager::TextureIndex = 0;
 int ResourceManager::MaterialIndex = 0;
 int ResourceManager::LightIndex = 0;
@@ -141,7 +143,7 @@ bool ResourceManager::AddBillboard(string idFrom, string Nombre, vec2 coordPosit
 bool ResourceManager::AddBitmap(string idFrom, string Nombre, vec4 rectBimap)
 {
 	Model* nuevo;
-	if (ResourceManager::GraphicMode == 'W')
+	if (GraphicMode == 'W')
 		nuevo = new Model(rectBimap, ResourceManager::ScreenWidth, ResourceManager::ScreenHeight);
 	else
 		nuevo = new Model(rectBimap, ResourceManager::ScreenWidthF, ResourceManager::ScreenHeightF);
@@ -196,7 +198,7 @@ bool ResourceManager::AddLight(string idFrom, string Nombre, vec4 ambient, vec4 
 	return true;
 }
 
-string ResourceManager::BuildGameObject(string idFrom,string nameGameObject, string meshname, string texturename, string shadername, string materialname, string lightname)
+string ResourceManager::BuildGameObject(string idFrom, string nameGameObject, string meshname, string texturename, string shadername, string materialname, string lightname)
 {
 	GameObject nuevo(nameGameObject);
 	if (meshname != "")
@@ -236,6 +238,92 @@ string ResourceManager::BuildGameObject(string idFrom,string nameGameObject, str
 			return "E_Fail";
 	}
 	AddGameObject(nuevo,idFrom);
+	return "S_OK";
+}
+
+string ResourceManager::BuildGameObject(string idFrom, string nameGameObject, Model* Modelo, string texturename, string shadername, string materialname, string lightname)
+{
+	GameObject nuevo(nameGameObject);
+	nuevo.AssignModel(Modelo);
+	if (nuevo.GetModel() == nullptr)
+		return "E_Fail";
+	if (texturename != "")
+	{
+		Texture* texture = &TextureIdentifier.find(texturename)->second;
+		if (texture != nullptr) {
+			nuevo.AddTexture(texture);
+		}
+	}
+	if (shadername != "")
+	{
+		Shader* shader = ShaderIdentifier.find(shadername)->second;
+		if (shader != nullptr) {
+			nuevo.AssignShader(shader);
+			if (nuevo.ExistShader() == false)
+				return "E_Fail";
+		}
+	}
+
+	if (materialname != "")
+	{
+		nuevo.AssignMaterial(&MaterialIdentifier.find(materialname)->second);
+		if (nuevo.GetMaterial() == nullptr)
+			return "E_Fail";
+	}
+
+	if (lightname != "" || nuevo.GetShader()->flagLight == 1)
+	{
+		nuevo.AssignLight(&LightIdentifier.find(lightname)->second);
+		if (nuevo.GetLight() == nullptr)
+			return "E_Fail";
+	}
+	AddGameObject(nuevo, idFrom);
+	return "S_OK";
+}
+
+string ResourceManager::LoadLetters(string idFrom, string path, string Abecedario)
+{
+	std::string str = Abecedario;
+	string constante = "Letter:";
+	for (char& c : str) {
+		Texture nuevo();
+		AddTexture(idFrom,path + c + ".png", constante + c);
+	}
+	return "S_OK";
+}
+
+string ResourceManager::BuildWord(string idFrom, string idWord, string PalabraMax10, vec2 pos)
+{
+	PalabrasYOraciones Palabra;
+	Palabra.PalabraCompleta = PalabraMax10;
+	string constante = "Letter:";
+	std::string str = PalabraMax10;
+	for (char& c : str) {
+		if (Palabra.count < 10)
+		{
+			if (GraphicMode == 'W')
+				Palabra.Letras[Palabra.count] = new Model(vec4((pos.x*(Palabra.count + 1)), (pos.y*(Palabra.count + 1)), 20, 20), ScreenWidth, ScreenHeight);
+			else
+				Palabra.Letras[Palabra.count] = new Model(vec4((pos.x*(Palabra.count + 1)), (pos.y*(Palabra.count + 1)), 20, 20), ScreenWidthF, ScreenHeightF);
+			Palabra.Contenido[Palabra.count] = &TextureIdentifier.find(constante + c)->second;
+			Palabra.Letras[Palabra.count]->Name = idWord + c;
+			Palabra.Letras[Palabra.count]->Type = "Letter";
+			//Construir GameObject para ser dibujado
+			string res = ResourceManager::BuildGameObject(idFrom, idWord + c, Palabra.Letras[Palabra.count],
+				constante + c, "GUIShader", "ColorBlanco", "");
+			Palabra.count++;
+		}
+	}
+	WordIdentifier.insert(std::pair<string, PalabrasYOraciones>(idWord, Palabra));
+	WordIndex++;
+	
+	//Identify if the resource is from Scene
+	ObjectInformation Info;
+	Info.CreatedBy = idFrom;
+	Info.Name = idWord;
+	Info.Type = "Letter";
+	GlobalObjectsIdentifier.insert(std::pair<string, ObjectInformation>(to_string(GlobalObjectsCounter), Info));
+	GlobalObjectsCounter++;
 	return "S_OK";
 }
 

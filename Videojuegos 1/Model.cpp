@@ -55,6 +55,12 @@ Model::Model(vec4 rectBitmap, int widthScreen, int heightScreen)
 	DefineBitmap(rectBitmap, widthScreen, heightScreen);
 	Type = "Bitmap";
 	Initialize(Type);
+	SetRect(rectBitmap);
+}
+
+Model::Model(string Palabra, int widthScreen, int heightScreen) {
+	Type = "Letter";
+	Initialize(Type);
 }
 
 Model::~Model()
@@ -1128,6 +1134,7 @@ void Model::SetRect(vec4 rectBitmap)
 	PosY = m_screenHeight * 0.5f - m_bitmapHeight * 0.5f - rectBitmap.y;
 	return;
 }
+
 //Method Bitmap
 void Model::SetPosition(vec2 position)
 {

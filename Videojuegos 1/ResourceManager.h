@@ -13,6 +13,28 @@
 struct ObjectInformation {
 	string Name, Type, CreatedBy;
 };
+class PalabrasYOraciones
+{
+public:
+	Model* Letras[10];
+	Texture* Contenido[10];
+	string PalabraCompleta;
+	int count;
+	PalabrasYOraciones()
+	{
+		count = 0;
+		/*Letras[0] = nullptr;
+		Letras[1] = nullptr;
+		Letras[2] = nullptr;
+		Letras[3] = nullptr;
+		Letras[4] = nullptr;
+		Letras[5] = nullptr;
+		Letras[6] = nullptr;
+		Letras[7] = nullptr;
+		Letras[8] = nullptr;
+		Letras[9] = nullptr;*/
+	}
+};
 class ResourceManager
 {
 public:
@@ -25,12 +47,18 @@ public:
 	static bool AddShader(string idFrom,string name, Shader* shader);
 	static bool AddMaterial(string idFrom,string Nombre, vec3 Color);
 	static bool AddLight(string idFrom,string Nombre, vec4 ambient, vec4 diffuse, vec3 direction);
+
 	//Not delete change Scene
 	//Define defualt system
+
 	static bool AddBillboard(string idFrom, string Nombre, vec2 coordPositivo, vec2 coordNegativo);//1 Billboard Default
 	static bool AddBitmap(string idFrom, string Nombre, vec4 rectBimap);//Count n  Bitmaps Default System
 
 	static string BuildGameObject(string idFrom, string nameGameObject, string meshname, string texturename, string shadername, string materialname, string lightname);
+	static string BuildGameObject(string idFrom, string nameGameObject, Model* Modelo, string texturename, string shadername, string materialname, string lightname);
+	static string LoadLetters(string idFrom, string path, string Abecedario);
+	static string BuildWord(string idFrom, string idWord, string Palabra, vec2 Pos);
+	static string DrawWord(string idFrom, string idWord);
 	static GameObject* GetObjectByName(string Name);
 	
 
@@ -53,6 +81,7 @@ public:
 
 	using GameObjectMap = std::map<string, GameObject>;
 	using ModelMap = std::map<string, Model>;
+	using WordMap = std::map<string, PalabrasYOraciones>;
 	using TextureMap = std::map<string, Texture>;
 	using ShaderMap = std::map<string, Shader*>;
 	using MaterialMap = std::map<string, Material>;
@@ -81,6 +110,9 @@ protected:
 	//Modelos
 	static ModelMap ModelIdentifier;
 	static int ModelIndex;
+	//Palabras
+	static WordMap WordIdentifier;
+	static int WordIndex;
 	//Texture
 	static TextureMap TextureIdentifier;
 	static int TextureIndex;

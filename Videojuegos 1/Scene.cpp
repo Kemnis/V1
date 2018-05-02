@@ -75,6 +75,9 @@ string Scene::BuildScene()
 	RS = ResourceManager::AsingTextureToGameObject("Stage1", "Layer2-Mid");
 	RS = ResourceManager::AsingTextureToGameObject("Stage1", "Layer3-Top");
 
+	RS = ResourceManager::LoadLetters(id, "assets/Abecedario10x10/", "AHLO");
+	RS = ResourceManager::BuildWord(id, "Palabra1", "HOLA", vec2(20, 0));
+
 	if (RS != "S_OK")
 	{
 		_RPT0(0, "Something went wrong!\n");
@@ -111,6 +114,7 @@ string Scene::Start() {
 	trans = ResourceManager::GetObjectByName("Arbol2")->Transform->GetTranslation();
 	trans.y = ResourceManager::GetObjectByName("Stage1")->GetModel()->GetPositionHeightMap(trans);
 	ResourceManager::GetObjectByName("Arbol2")->Transform->SetTranslation(trans);
+
 
 	return "S_OK";
 }
@@ -227,8 +231,8 @@ string Scene::RenderScene()
 
 
 	specsDx->TurnZBufferOff();
-		bitmapGO->Draw(XMMatrixIdentity(), viewMatrix2D, *orthoMatrix);
-		bitmapArbol->Draw(XMMatrixIdentity(), viewMatrix2D, *orthoMatrix);
+		//bitmapGO->Draw(XMMatrixIdentity(), viewMatrix2D, *orthoMatrix);
+		//bitmapArbol->Draw(XMMatrixIdentity(), viewMatrix2D, *orthoMatrix);
 	specsDx->TurnZBufferOn();
 
 
@@ -242,6 +246,20 @@ string Scene::RenderScene()
 
 	
 	// Present the rendered scene to the screen.
+	specsDx->TurnZBufferOff();
+	GameObject* words[10];
+	int Letras = 0;
+	string identifier = "Palabra1";
+	while (Letras != 4)
+	{
+		string str = "HOLA";
+		for (char& c : str) {
+			words[Letras] = ResourceManager::GetObjectByName(identifier + c);
+			words[Letras]->Draw(XMMatrixIdentity(), viewMatrix2D, *orthoMatrix);
+			Letras++;
+		}
+	}
+	specsDx->TurnZBufferOn();
 	specsDx->EndScene();
 	return "S_OK";
 }
