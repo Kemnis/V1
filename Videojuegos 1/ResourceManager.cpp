@@ -480,12 +480,18 @@ bool ResourceManager::bindShader(Shader * shader) {
 	return false;
 }
 
-bool ResourceManager::bindModel(Model * model)
+bool ResourceManager::bindNdDrawModel(Model * model)
 {
 	if (ModeloActual != model)
 	{
 		ModeloActual = model;
 		ModeloActual->BindMesh(/*(ModeloActual->Type =="Terrain") ? D3D10_PRIMITIVE_TOPOLOGY_LINELIST : */D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		ModeloActual->Draw();
+		if (ModeloActual->HaveMeshColition())
+		{
+			ModeloActual->BindMeshCol(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+			ModeloActual->DrawCol();
+		}
 		return true;
 	}
 	return false;

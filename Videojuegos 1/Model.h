@@ -15,11 +15,15 @@ public:
 	~Model();
 	bool Initialize(string primitive);
 	void Draw();
+	void DrawCol();
 	void BindMesh(D3D_PRIMITIVE_TOPOLOGY TOPOLOGY);
+	void BindMeshCol(D3D_PRIMITIVE_TOPOLOGY TOPOLOGY);
 	void ShutdownModel();
 	float GetPositionHeightMap(vec3 pos);
 	bool isIntoTerrain(vec3 pos);
 	bool UpdateBufferBitmap(vec4 rectBitmap, int widthScreen, int heightScreen);
+	void HaveColition(bool tieneColision);
+	bool HaveMeshColition();
 
 	//Methods bitmaps
 	void SetRect(vec4 rectBitmap);
@@ -37,11 +41,13 @@ public:
 	vec2 SizeXZ;
 	vec2 coordPositivo, coordNegativo;
 	vec4 rectBitmap;
+
 	
 protected:
+	bool colisiona = false;
 	bool dynamicVertexBuffer;//<- For re-position bitmap2D
-	Vertex Mesh;
-	ID3D11Buffer *VertexBuffer, *IndexBuffer;
+	Vertex Mesh, colition;
+	ID3D11Buffer *VertexBuffer, *IndexBuffer,*VertexColBuffer,*IndexColBuffer;
 	
 private:
 	bool LoadModel(string);
@@ -52,6 +58,7 @@ private:
 	void DefineSphere(float diameter, size_t tessellation);
 	void DefineGeoSphere(float diameter, size_t tessellation);
 	void DefineBillboard();
+	void InitCol(string MeshCol);
 	void ConstructAWord(string Oracion, int widthScreen, int heightScreen);
 	void DefineBitmap(vec4 rectBitmap, int widthScreen, int heightScreen);
 

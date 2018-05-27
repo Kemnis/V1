@@ -159,6 +159,5 @@ void GameObject::Draw(XMMATRIX world, XMMATRIX view, XMMATRIX projection)
 	for (int i = 0; i < Tex.size(); i++) {
 		Tex[i]->BindTexture(i);
 	}
-	ResourceManager::bindModel(Modelo);
-	Modelo->Draw();
+	ResourceManager::bindNdDrawModel(Modelo);
 }

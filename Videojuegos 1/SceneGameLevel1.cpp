@@ -150,7 +150,7 @@ string SceneGameLevel1::RenderScene()
 	GameObject*GoStage = ResourceManager::GetObjectByName("Stage1");
 	GameObject* GObjModel = ResourceManager::GetObjectByName("SphereMod");
 	GameObject*GOjugador = ResourceManager::GetObjectByName("NaveJugador");
-	GameObject*sphereColi = ResourceManager::GetObjectByName("SphereMes");
+	//GameObject*sphereColi = ResourceManager::GetObjectByName("SphereMes");
 	GameObject*GOEnemy = ResourceManager::GetObjectByName("BotEnemy");
 
 	specsDx->TurnOnAlphaBlending();
@@ -164,11 +164,11 @@ string SceneGameLevel1::RenderScene()
 	GoStage->Draw(GoStage->Transform->ToMatrix(),viewMatrix,*projectionMatrix);
 	vec3 trans = GOjugador->Transform->GetTranslation();
 	GOjugador->Draw(GOjugador->Transform->ToMatrix(), viewMatrix, *projectionMatrix);
-	sphereColi->Draw(XMMatrixScaling(GOjugador->Transform->GetRadio(), GOjugador->Transform->GetRadio(), GOjugador->Transform->GetRadio())*XMMatrixScaling(GOjugador->Transform->GetScale().x, GOjugador->Transform->GetScale().y, GOjugador->Transform->GetScale().z)*XMMatrixTranslation(trans.x, trans.y, trans.z),viewMatrix,*projectionMatrix);
+	//sphereColi->Draw(XMMatrixScaling(GOjugador->Transform->GetRadio(), GOjugador->Transform->GetRadio(), GOjugador->Transform->GetRadio())*XMMatrixScaling(GOjugador->Transform->GetScale().x, GOjugador->Transform->GetScale().y, GOjugador->Transform->GetScale().z)*XMMatrixTranslation(trans.x, trans.y, trans.z),viewMatrix,*projectionMatrix);
 	
 	trans = GOEnemy->Transform->GetTranslation();
 	GOEnemy->Draw(GOEnemy->Transform->ToMatrix(), viewMatrix, *projectionMatrix);
-	sphereColi->Draw(XMMatrixScaling(GOEnemy->Transform->GetRadio(), GOEnemy->Transform->GetRadio(), GOEnemy->Transform->GetRadio())*XMMatrixScaling(GOEnemy->Transform->GetScale().x, GOEnemy->Transform->GetScale().y, GOEnemy->Transform->GetScale().z)*XMMatrixTranslation(trans.x, trans.y, trans.z), viewMatrix, *projectionMatrix);
+	//sphereColi->Draw(XMMatrixScaling(GOEnemy->Transform->GetRadio(), GOEnemy->Transform->GetRadio(), GOEnemy->Transform->GetRadio())*XMMatrixScaling(GOEnemy->Transform->GetScale().x, GOEnemy->Transform->GetScale().y, GOEnemy->Transform->GetScale().z)*XMMatrixTranslation(trans.x, trans.y, trans.z), viewMatrix, *projectionMatrix);
 	//Draw 2D
 
 	//specsDx->TurnZBufferOff();

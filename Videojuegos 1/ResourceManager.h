@@ -75,7 +75,7 @@ public:
 	static Material*GetMaterial(string nameMaterial);
 
 	static bool bindShader(Shader* basicshader);
-	static bool bindModel(Model * model);
+	static bool bindNdDrawModel(Model * model);
 
 	static void Shutdown();
 
