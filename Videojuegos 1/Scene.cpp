@@ -38,7 +38,7 @@ string Scene::LoadResources()
 	RB = ResourceManager::AddTexture(id, "assets/TreeTex.png", "ArbolTexture");
 	RB = ResourceManager::AddMaterial(id, "ColorBlanco", vec3(0.2, 0.2, 0.4));
 
-	RB = ResourceManager::AddLight(id, "Primeras", vec4(0.1f, 0.8f, 0.8f, 1.0f), vec4(1.0f, 1.0f, 1.0f, 1.0f), vec3(0.0f, 0.0f, 1.0f));
+	RB = ResourceManager::AddLight(id, "Luz", vec4(0.1f, 0.8f, 0.8f, 1.0f), vec4(1.0f, 1.0f, 1.0f, 1.0f), vec3(0.0f, 0.0f, 1.0f));
 	RB = ResourceManager::AddShader(id, "LambertBasicShader", new BasicShader("LambertMaterial.vs", "LambertMaterial.ps"));
 	RB = ResourceManager::AddShader(id, "LambertLBasicShader", new BasicShader("LambertLMaterial.vs", "LambertLMaterial.ps", 1));
 	RB = ResourceManager::AddShader(id, "LambertMaterialShader", new MaterialShader("LambertTexture.vs", "LambertTexture.ps"));
@@ -61,9 +61,9 @@ string Scene::LoadResources()
 //Then Build a GameObject or Define a Behaviour of its (Also Multitextures goes here)
 string Scene::BuildScene()
 {
-	RS = ResourceManager::BuildGameObject(id, "SphereMes", "SphereMesh", "World", "LambertLMaterialShader", "ColorBlanco", "Primeras");
-	RS = ResourceManager::BuildGameObject(id, "SphereMod", "SphereModel", "World", "SkydomeShader", "ColorBlanco", "Primeras");
-	RS = ResourceManager::BuildGameObject(id, "Stage1", "Stage1", "", "TerrenoShader", "ColorBlanco", "Primeras");
+	RS = ResourceManager::BuildGameObject(id, "SphereMes", "SphereMesh", "World", "LambertLMaterialShader", "ColorBlanco", "Luz");
+	RS = ResourceManager::BuildGameObject(id, "SphereMod", "SphereModel", "World", "SkydomeShader", "ColorBlanco", "Luz");
+	RS = ResourceManager::BuildGameObject(id, "Stage1", "Stage1", "", "TerrenoShader", "ColorBlanco", "Luz");
 	RS = ResourceManager::BuildGameObject(id, "Arbol", "Billboard", "ArbolTexture", "LambertMaterialShader", "ColorBlanco", "");
 	RS = ResourceManager::BuildGameObject(id, "Arbol2", "Billboard", "ArbolTexture", "LambertMaterialShader", "ColorBlanco", "");
 	RS = ResourceManager::BuildGameObject(id, "bitmapPasto", "Bitmap00", "Layer1-Bottom", "GUIShader", "ColorBlanco", "");

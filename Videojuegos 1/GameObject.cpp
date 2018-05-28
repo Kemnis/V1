@@ -98,6 +98,37 @@ Light* GameObject::GetLight()
 	return light;
 }
 
+void GameObject::IsPatrol(vector<vec3> PosicionesPosibles)
+{
+	PosPos = PosicionesPosibles;
+	ispatrol = true;
+	PrecalculatePositions();
+}
+
+void GameObject::PrecalculatePositions()
+{
+	if (ispatrol == true)
+	{
+		for (auto it = PosPos.begin(); it != PosPos.end(); it++)
+		{
+			multipleworlds.push_back(Transform->DoMatrix(vec3(it->x, it->y, it->z),vec3(0,0,0),vec3(1,1,1)));
+		}
+	}
+}
+
+void GameObject::DrawPatrol(XMMATRIX viewMatrix, XMMATRIX projectionMatrix)
+{
+	if (ispatrol == true)
+	{
+		for (int i=0; i < multipleworlds.size(); i++)
+		{
+			XMMATRIX temp = multipleworlds.at(i);
+			Draw(temp, viewMatrix, projectionMatrix);
+		}
+	}
+}
+
+
 void GameObject::Draw(XMMATRIX world, XMMATRIX view, XMMATRIX projection)
 {
 	if (shader != nullptr) {
@@ -159,5 +190,18 @@ void GameObject::Draw(XMMATRIX world, XMMATRIX view, XMMATRIX projection)
 	for (int i = 0; i < Tex.size(); i++) {
 		Tex[i]->BindTexture(i);
 	}
-	ResourceManager::bindNdDrawModel(Modelo);
+	ResourceManager::bindModel(Modelo);
+	Modelo->Draw();
 }
+
+
+
+
+
+
+
+
+
+
+
+

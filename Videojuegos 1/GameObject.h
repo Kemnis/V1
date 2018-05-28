@@ -8,6 +8,7 @@
 #include "MaterialShader.h"
 #include "Material.h"
 #include "Light.h"
+
 class GameObject
 {
 public:
@@ -30,19 +31,29 @@ public:
 	bool ExistShader();
 	Material* GetMaterial();
 	void Draw(XMMATRIX world, XMMATRIX view, XMMATRIX projection);
+	void DrawPatrol(XMMATRIX viewMatrix, XMMATRIX projectionMatrix);
+	void PrecalculatePositions();
+	void IsPatrol(vector<vec3> PosicionesPosibles);
 	Shader* GetShader();
 	void Shutdown();
 	Transforms* Transform;
 
 
+
+
+
 protected:
-	
+
 	string Name, Status;
 	Model* Modelo;//Mesh
 	std::vector<Texture*> Tex;
 	Shader* shader;
 	Material* material;
 	Light* light;
+	vector<vec3> PosPos;
+	vector<XMMATRIX> multipleworlds;
+	bool ispatrol = false;
+	//EnemyBehaviour MyBehaviour();
 private:
 	
 };

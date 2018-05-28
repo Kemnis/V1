@@ -31,6 +31,7 @@ public:
 	void Shot(vec3 LookAt,vec3 LookRotation);
 	XMMATRIX ToMatrix();
 	XMMATRIX GetMatrix();
+	XMMATRIX DoMatrix(vec3 pos, vec3 rot, vec3 esc);
 private:
 	vec3 rot, tran, esc,n;
 	double radio;

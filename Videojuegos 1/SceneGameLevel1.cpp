@@ -36,6 +36,9 @@ string SceneGameLevel1::LoadResources()
 
 	RB = ResourceManager::AddModel(id, "Sphere", "SphereMesh");
 	RB = ResourceManager::AddModel(id, "assets/Sphere.obj", "SphereModel");
+
+	RB = ResourceManager::AddModel(id, "Sphere", "Patrol");
+
 	RB = ResourceManager::AddStage(id, "assets/Stage1.bmp", "Stage1", 256, 1024, 1024);
 	RB = ResourceManager::AddTexture(id, "assets/SkyStage1Day.jpg", "World");
 	RB = ResourceManager::AddTexture(id, "assets/SkyStage1Night.jpg", "WorldNight");
@@ -43,10 +46,13 @@ string SceneGameLevel1::LoadResources()
 	RB = ResourceManager::AddTexture(id, "assets/mt2Stage1.jpg", "Layer2-Mid");
 	RB = ResourceManager::AddTexture(id, "assets/mt3Stage1.jpg", "Layer3-Top");
 	RB = ResourceManager::AddMaterial(id, "ColorBlanco", vec3(0.2, 0.2, 0.4));
-	RB = ResourceManager::AddLight(id, "Primeras", vec4(0.1f, 0.8f, 0.8f, 1.0f), vec4(1.0f, 1.0f, 1.0f, 1.0f), vec3(0.0f, 0.0f, 1.0f));
+	RB = ResourceManager::AddLight(id, "Luz", vec4(0.1f, 0.8f, 0.8f, 1.0f), vec4(1.0f, 1.0f, 1.0f, 1.0f), vec3(0.0f, 0.0f, 1.0f));
 	RB = ResourceManager::AddShader(id, "LambertMaterialShader", new MaterialShader("LambertTexture.vs", "LambertTexture.ps"));
 	RB = ResourceManager::AddShader(id, "LambertLMaterialShader", new MaterialShader("LambertLTexture.vs", "LambertLTexture.ps", 1));
-	RB = ResourceManager::AddShader(id, "SkydomeShader", new SkydomeShader("Skydome.vs", "Skydome.ps", 1));
+
+	RB = ResourceManager::AddShader(id, "MaterialPatrol", new MaterialShader("LambertMaterial.vs", "LambertMaterial.ps"));
+
+ 	RB = ResourceManager::AddShader(id, "SkydomeShader", new SkydomeShader("Skydome.vs", "Skydome.ps", 1));
 	RB = ResourceManager::AddShader(id, "TerrenoShader", new TerrainShader("Terrain.vs", "Terrain.ps"));
 
 	if (RB != true)
@@ -64,11 +70,13 @@ string SceneGameLevel1::LoadResources()
 //Then Build a GameObject or Define a Behaviour of its (Also Multitextures goes here)
 string SceneGameLevel1::BuildScene()
 {
-	RS = ResourceManager::BuildGameObject(id, "NaveJugador", "nave", "TextureNave", "LambertMaterialShader", "ColorBlanco", "Primeras");
-	RS = ResourceManager::BuildGameObject(id, "BotEnemy", "meshEnemy", "TextureEnemy", "LambertMaterialShader", "ColorBlanco", "Primeras");
-	RS = ResourceManager::BuildGameObject(id, "SphereMes", "SphereMesh", "World", "LambertLMaterialShader", "ColorBlanco", "Primeras");
-	RS = ResourceManager::BuildGameObject(id, "SphereMod", "SphereModel", "World", "SkydomeShader", "ColorBlanco", "Primeras");
-	RS = ResourceManager::BuildGameObject(id, "Stage1", "Stage1", "", "TerrenoShader", "ColorBlanco", "Primeras");
+	RS = ResourceManager::BuildGameObject(id, "NaveJugador", "nave", "TextureNave", "LambertMaterialShader", "ColorBlanco", "Luz");
+	RS = ResourceManager::BuildGameObject(id, "BotEnemy", "meshEnemy", "TextureEnemy", "LambertMaterialShader", "ColorBlanco", "Luz");
+	RS = ResourceManager::BuildGameObject(id, "SphereMes", "SphereMesh", "World", "LambertLMaterialShader", "ColorBlanco", "Luz");
+	RS = ResourceManager::BuildGameObject(id, "SphereMod", "SphereModel", "World", "SkydomeShader", "ColorBlanco", "Luz");
+	RS = ResourceManager::BuildGameObject(id, "Stage1", "Stage1", "", "TerrenoShader", "ColorBlanco", "Luz");
+
+	RS = ResourceManager::BuildGameObject(id, "Patrols", "Patrol", "", "MaterialPatrol", "ColorBlanco", "Luz");
 
 	//Addtexture
 	RS = ResourceManager::AsingTextureToGameObject("SphereMod", "WorldNight");
@@ -91,10 +99,22 @@ string SceneGameLevel1::BuildScene()
 string SceneGameLevel1::Start()
 {
 	float height = ResourceManager::GetObjectByName("Stage1")->GetModel()->GetPositionHeightMap(vec3(35.0f, 0.0f, 35.0f));
+	vector<vec3> Posiciones;
+	Posiciones.push_back(vec3(20.0f, height + 4.0f, 20.0f));
+	Posiciones.push_back(vec3(40.0f, height + 4.0f, 45.0f));
+	Posiciones.push_back(vec3(60.0f, height + 4.0f, 40.0f));
+	Posiciones.push_back(vec3(80.0f, height + 4.0f, 75.0f));
 	ResourceManager::GetObjectByName("NaveJugador")->Transform->SetScale(vec3(0.1f, 0.1f, 0.1f));
 	ResourceManager::GetObjectByName("SphereMod")->Transform->SetRotation(vec3(180,0,0));
 	ResourceManager::GetObjectByName("BotEnemy")->Transform->SetTranslation(vec3(50.0f, height + 4.0f, 50.0f));
+	ResourceManager::DefinePositionPatrol(Posiciones);
 	ResourceManager::GetObjectByName("BotEnemy")->Transform->SetScale(vec3(0.1f, 0.1f, 0.1f));
+	ResourceManager::StartEnemy(1, 1, "Patrol", 1);
+	ResourceManager::DefineTargetToFight("NaveJugador");
+	ResourceManager::GetMyBody("BotEnemy");
+	ResourceManager::GetObjectByName("Patrols")->Transform->SetTranslation(vec3(20.0f, height + 4.0f, 20.0f));
+	ResourceManager::GetObjectByName("Patrols")->IsPatrol(Posiciones);
+
 	return "S_OK";
 }
 
@@ -127,13 +147,15 @@ string SceneGameLevel1::ProcessScene(double dt)
 		//SceneCamera->LerpAngle(XMFLOAT3(),XMFLOAT3(),);
 	}
 
+	ResourceManager::UpdateEnemy();
 	return "S_OK";
 }
 
 //Finally Render it
 string SceneGameLevel1::RenderScene()
 {
-	XMMATRIX viewMatrix, viewMatrix2D, *orthoMatrix,*projectionMatrix;
+	vec3 posiciones[5];
+	XMMATRIX viewMatrix, viewMatrix2D, *orthoMatrix,*projectionMatrix, Patrolmatrix;
 	// Clear the buffers to begin the scene
 	specsDx->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
 
@@ -147,18 +169,21 @@ string SceneGameLevel1::RenderScene()
 	//Fijar el Skydome a la camrara
 	ResourceManager::GetObjectByName("SphereMod")->Transform->SetTranslation(vec3(SceneCamera->pos.x, SceneCamera->pos.y, SceneCamera->pos.z));
 
-	GameObject*GoStage = ResourceManager::GetObjectByName("Stage1");
+	GameObject* GoStage = ResourceManager::GetObjectByName("Stage1");
 	GameObject* GObjModel = ResourceManager::GetObjectByName("SphereMod");
-	GameObject*GOjugador = ResourceManager::GetObjectByName("NaveJugador");
+	GameObject* GOjugador = ResourceManager::GetObjectByName("NaveJugador");
+	GameObject* GOPatrol = ResourceManager::GetObjectByName("Patrols");
 	//GameObject*sphereColi = ResourceManager::GetObjectByName("SphereMes");
 	GameObject*GOEnemy = ResourceManager::GetObjectByName("BotEnemy");
 
 	specsDx->TurnOnAlphaBlending();
-		specsDx->TurnOffCulling();
-			specsDx->TurnZBufferOff();
-				GObjModel->Draw(GObjModel->Transform->ToMatrix(), viewMatrix, *projectionMatrix);
-			specsDx->TurnZBufferOn();
-		specsDx->TurnOnCulling();
+	specsDx->TurnOffCulling();
+		specsDx->TurnZBufferOff();
+			GObjModel->Draw(GObjModel->Transform->ToMatrix(), viewMatrix, *projectionMatrix);
+		specsDx->TurnZBufferOn();
+	specsDx->TurnOnCulling();
+
+	GOPatrol->DrawPatrol(viewMatrix,*projectionMatrix);
 
 
 	GoStage->Draw(GoStage->Transform->ToMatrix(),viewMatrix,*projectionMatrix);

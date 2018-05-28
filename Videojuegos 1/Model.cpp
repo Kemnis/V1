@@ -818,70 +818,74 @@ bool Model::UpdateBufferBitmap(vec4 rectBitmap, int widthScreen, int heightScree
 	return true;
 }
 
-void Model::HaveColition(bool tieneColision)
-{
-	colisiona = tieneColision;
-}
+//void Model::HaveColition(bool tieneColision)
+//{
+//	colisiona = tieneColision;
+//}
+//
+//bool Model::HaveMeshColition()
+//{
+//	return colisiona;
+//}
 
-bool Model::HaveMeshColition()
-{
-	return colisiona;
-}
+//void Model::InitCol(string MeshCol)
+//{
+//	D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
+//	D3D11_SUBRESOURCE_DATA vertexData, indexData;
+//	HRESULT result;
+//
+//	if (MeshCol == "Sphere")
+//		DefineSphere(2, 8);
+//	if (MeshCol == "Cube")
+//		DefineCube(XMFLOAT3(1, 1, 1));
+//
+//	//Set up the description of the static vertex buffer
+//	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;//Defualt buffer usage
+//
+//
+//	vertexBufferDesc.ByteWidth = sizeof(Vertex::VertexType)* colition.VertexCount;
+//	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+//	vertexBufferDesc.CPUAccessFlags = 0;
+//	vertexBufferDesc.MiscFlags = 0;
+//	vertexBufferDesc.StructureByteStride = 0;
+//
+//	// Give the subresource structure a pointer to the vertex data.
+//	vertexData.pSysMem = &colition.FinalMesh[0];
+//	vertexData.SysMemPitch = 0;
+//	vertexData.SysMemSlicePitch = 0;
+//
+//	//Now create the vertex buffer
+//	result = device->CreateBuffer(&vertexBufferDesc, &vertexData, &VertexColBuffer);
+//	if (FAILED(result))
+//		ErrorFnc("No se pudo crear el buffer de vertices");
+//
+//	//Set up the description of the static index buffer
+//	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+//	indexBufferDesc.ByteWidth = sizeof(unsigned long)* colition.IndexCount;
+//	indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+//	indexBufferDesc.CPUAccessFlags = 0;
+//	indexBufferDesc.MiscFlags = 0;
+//	indexBufferDesc.StructureByteStride = 0;
+//
+//	vector<unsigned long> indices;
+//	indices = colition.GetIndex();
+//
+//
+//	//Give the subresource structure a pointer to the index data
+//	indexData.pSysMem = &indices[0];
+//	indexData.SysMemPitch = 0;
+//	indexData.SysMemSlicePitch = 0;
+//
+//	//Create the index buffer
+//	result = device->CreateBuffer(&indexBufferDesc, &indexData, &IndexColBuffer);
+//	if (FAILED(result))
+//		ErrorFnc("No se pudo crear el buffer de indices");
+//	
+//}
 
-void Model::InitCol(string MeshCol)
-{
-	D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
-	D3D11_SUBRESOURCE_DATA vertexData, indexData;
-	HRESULT result;
-
-	if (MeshCol == "Sphere")
-		DefineSphere(2, 8);
-	if (MeshCol == "Cube")
-		DefineCube(XMFLOAT3(1, 1, 1));
-
-	//Set up the description of the static vertex buffer
-	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;//Defualt buffer usage
-
-
-	vertexBufferDesc.ByteWidth = sizeof(Vertex::VertexType)* colition.VertexCount;
-	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	vertexBufferDesc.CPUAccessFlags = 0;
-	vertexBufferDesc.MiscFlags = 0;
-	vertexBufferDesc.StructureByteStride = 0;
-
-	// Give the subresource structure a pointer to the vertex data.
-	vertexData.pSysMem = &colition.FinalMesh[0];
-	vertexData.SysMemPitch = 0;
-	vertexData.SysMemSlicePitch = 0;
-
-	//Now create the vertex buffer
-	result = device->CreateBuffer(&vertexBufferDesc, &vertexData, &VertexColBuffer);
-	if (FAILED(result))
-		ErrorFnc("No se pudo crear el buffer de vertices");
-
-	//Set up the description of the static index buffer
-	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	indexBufferDesc.ByteWidth = sizeof(unsigned long)* colition.IndexCount;
-	indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-	indexBufferDesc.CPUAccessFlags = 0;
-	indexBufferDesc.MiscFlags = 0;
-	indexBufferDesc.StructureByteStride = 0;
-
-	vector<unsigned long> indices;
-	indices = colition.GetIndex();
-
-
-	//Give the subresource structure a pointer to the index data
-	indexData.pSysMem = &indices[0];
-	indexData.SysMemPitch = 0;
-	indexData.SysMemSlicePitch = 0;
-
-	//Create the index buffer
-	result = device->CreateBuffer(&indexBufferDesc, &indexData, &IndexColBuffer);
-	if (FAILED(result))
-		ErrorFnc("No se pudo crear el buffer de indices");
-	
-}
+//bool Model::ConstructBehaviour() {
+//
+//}
 
 bool Model::Initialize(string NameOfFigure)
 {
@@ -971,11 +975,11 @@ void Model::Draw()
 	return;
 }
 
-void Model::DrawCol()
-{
-	deviceContext->DrawIndexed(colition.IndexCount, 0, 0);
-	return;
-}
+//void Model::DrawCol()
+//{
+//	deviceContext->DrawIndexed(colition.IndexCount, 0, 0);
+//	return;
+//}
 
 void Model::BindMesh(D3D_PRIMITIVE_TOPOLOGY TOPOLOGY)
 {
@@ -996,24 +1000,24 @@ void Model::BindMesh(D3D_PRIMITIVE_TOPOLOGY TOPOLOGY)
 	deviceContext->IASetPrimitiveTopology(TOPOLOGY);
 }
 
-void Model::BindMeshCol(D3D_PRIMITIVE_TOPOLOGY TOPOLOGY)
-{
-	unsigned int stride;
-	unsigned int offset;
-
-	// Set vertex buffer stride and offset.
-	stride = sizeof(Vertex::VertexType);
-	offset = 0;
-
-	// Set the vertex buffer to active in the input assembler so it can be rendered.
-	deviceContext->IASetVertexBuffers(0, 1, &VertexColBuffer, &stride, &offset);
-
-	// Set the index buffer to active in the input assembler so it can be rendered.
-	deviceContext->IASetIndexBuffer(IndexColBuffer, DXGI_FORMAT_R32_UINT, 0);
-
-	// Set the type of primitive that should be rendered from this vertex buffer, in this case triangles.
-	deviceContext->IASetPrimitiveTopology(TOPOLOGY);
-}
+//void Model::BindMeshCol(D3D_PRIMITIVE_TOPOLOGY TOPOLOGY)
+//{
+//	unsigned int stride;
+//	unsigned int offset;
+//
+//	// Set vertex buffer stride and offset.
+//	stride = sizeof(Vertex::VertexType);
+//	offset = 0;
+//
+//	// Set the vertex buffer to active in the input assembler so it can be rendered.
+//	deviceContext->IASetVertexBuffers(0, 1, &VertexColBuffer, &stride, &offset);
+//
+//	// Set the index buffer to active in the input assembler so it can be rendered.
+//	deviceContext->IASetIndexBuffer(IndexColBuffer, DXGI_FORMAT_R32_UINT, 0);
+//
+//	// Set the type of primitive that should be rendered from this vertex buffer, in this case triangles.
+//	deviceContext->IASetPrimitiveTopology(TOPOLOGY);
+//}
 
 Vertex Model::GetMesh()
 {
@@ -1112,7 +1116,7 @@ bool Model::LoadModel(string path)
 		_RPT3(0, "Last Vertex: %f,%f,%f\n", Mesh.GetLastVertex().x, Mesh.GetLastVertex().y, Mesh.GetLastVertex().z);
 		_RPT2(0, "Last UVs: %f, %f\n", Mesh.GetFirstTexture().x, Mesh.GetFirstTexture().y);
 		_RPT3(0, "Last Normals: %f,%f,%f\n", Mesh.GetLastNormal().x, Mesh.GetLastNormal().y, Mesh.GetLastNormal().z);
-
+		
 		//_RPT4(0, "#V: %f   #T: %f   #N: %f   #F: %f\n", Mesh.GetVertex(), Mesh.GetTexture(), Mesh.GetNormal(), Mesh.GetTriangleFN());
 		//------------------------------------------------------------------------------------------
 

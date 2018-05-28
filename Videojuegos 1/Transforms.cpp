@@ -107,6 +107,11 @@ XMMATRIX Transforms::ToMatrix()
 	return TransformMatrix;
 }
 
+XMMATRIX Transforms::DoMatrix(vec3 pos, vec3 rot, vec3 esc)
+{
+	return XMMatrixScaling(esc.x, esc.y, esc.z)* XMMatrixRotationRollPitchYaw(rot.x, rot.y, rot.z) * XMMatrixTranslation(pos.x, pos.y, pos.z);
+}
+
 XMMATRIX Transforms::GetMatrix()
 {
 	return TransformMatrix;

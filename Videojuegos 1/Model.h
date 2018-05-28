@@ -15,15 +15,11 @@ public:
 	~Model();
 	bool Initialize(string primitive);
 	void Draw();
-	void DrawCol();
 	void BindMesh(D3D_PRIMITIVE_TOPOLOGY TOPOLOGY);
-	void BindMeshCol(D3D_PRIMITIVE_TOPOLOGY TOPOLOGY);
 	void ShutdownModel();
 	float GetPositionHeightMap(vec3 pos);
 	bool isIntoTerrain(vec3 pos);
 	bool UpdateBufferBitmap(vec4 rectBitmap, int widthScreen, int heightScreen);
-	void HaveColition(bool tieneColision);
-	bool HaveMeshColition();
 
 	//Methods bitmaps
 	void SetRect(vec4 rectBitmap);
@@ -44,10 +40,10 @@ public:
 
 	
 protected:
-	bool colisiona = false;
+	bool haveBehaviour;
 	bool dynamicVertexBuffer;//<- For re-position bitmap2D
-	Vertex Mesh, colition;
-	ID3D11Buffer *VertexBuffer, *IndexBuffer,*VertexColBuffer,*IndexColBuffer;
+	Vertex Mesh;
+	ID3D11Buffer *VertexBuffer, *IndexBuffer;
 	
 private:
 	bool LoadModel(string);

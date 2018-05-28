@@ -38,6 +38,8 @@ KeyHandler* ResourceManager::Player1 = nullptr;
 
 //Player1
 
+enemies ResourceManager::behaviour;
+
 
 ResourceManager::ResourceManager()
 {
@@ -480,18 +482,12 @@ bool ResourceManager::bindShader(Shader * shader) {
 	return false;
 }
 
-bool ResourceManager::bindNdDrawModel(Model * model)
+bool ResourceManager::bindModel(Model * model)
 {
 	if (ModeloActual != model)
 	{
 		ModeloActual = model;
 		ModeloActual->BindMesh(/*(ModeloActual->Type =="Terrain") ? D3D10_PRIMITIVE_TOPOLOGY_LINELIST : */D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		ModeloActual->Draw();
-		if (ModeloActual->HaveMeshColition())
-		{
-			ModeloActual->BindMeshCol(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-			ModeloActual->DrawCol();
-		}
 		return true;
 	}
 	return false;
@@ -512,4 +508,79 @@ void ResourceManager::Shutdown()
 	MaterialIndex = 0;
 	LightIndex = 0;
 	GlobalObjectsCounter = 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+//Enemies
+
+string ResourceManager::StartEnemy(float vel, float accuraci, string Projectile, float vision)
+{
+	behaviour.view = vision;
+	behaviour.velocity = vel;
+	behaviour.accuracy = accuraci;
+	behaviour.ProjectileMesh = &ModelIdentifier.find(Projectile)->second;;
+	behaviour.MyDesitionToMove = rand() % behaviour.MyZone.size();
+	return "S_OK";
+}
+
+void ResourceManager::DefinePositionPatrol(vector<vec3> Posiciones) {
+	behaviour.MyZone = Posiciones;
+}
+
+void ResourceManager::DefineTargetToFight(string target)
+{
+	behaviour.target = &GameObjectIdentifier.find(target)->second;
+}
+
+
+bool ResourceManager::GetMyBody(string MyObject) {
+	behaviour.I = &GameObjectIdentifier.find(MyObject)->second;
+	return true;
+}
+
+string ResourceManager::UpdateEnemy()
+{
+	if (AmIOnDestination())
+		behaviour.MyDesitionToMove = rand() % behaviour.MyZone.size();
+	else
+	{
+		MoveTowardDestination();
+	}
+
+	return "S_OK";
+}
+
+void ResourceManager::MoveTowardDestination()
+{
+	//Get vector toward destination
+	vec3 vectop2 = behaviour.MyZone.at(behaviour.MyDesitionToMove) - behaviour.I->Transform->GetTranslation();
+	if (vectop2.x < behaviour.I->Transform->GetTranslation().x);
+	{	behaviour.I->Transform->Translate(vec3(.001, 0, 0)); }
+	//if(vectop2.x > behaviour.I->Transform->GetTranslation().x);
+	//{	behaviour.I->Transform->Translate(vec3(-.001, 0, 0)); }
+
+}
+
+bool ResourceManager::AmIOnDestination()
+{
+	if (behaviour.I == nullptr)
+		return false;
+	if (behaviour.I->Transform->GetTranslation() == behaviour.MyZone.at(behaviour.MyDesitionToMove))
+	{
+		return true;
+	}
+	else
+		return false;
+	return true;
 }

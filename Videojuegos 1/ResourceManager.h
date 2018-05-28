@@ -13,6 +13,16 @@
 struct ObjectInformation {
 	string Name, Type, CreatedBy;
 };
+struct enemies {
+	float velocity;
+	float accuracy;
+	float view;
+	Model *ProjectileMesh = nullptr;
+	int MyDesitionToMove = 0;
+	vector<vec3> MyZone;
+	GameObject *target;
+	GameObject *I;
+};
 class PalabrasYOraciones
 {
 public:
@@ -75,7 +85,7 @@ public:
 	static Material*GetMaterial(string nameMaterial);
 
 	static bool bindShader(Shader* basicshader);
-	static bool bindNdDrawModel(Model * model);
+	static bool bindModel(Model * model);
 
 	static void Shutdown();
 
@@ -99,7 +109,20 @@ public:
 	static KeyHandler* Player1;
 
 
+
+
+	//Enemies
+	static void DefinePositionPatrol(vector<vec3> Posiciones);
+	static void DefineTargetToFight(string target);
+	static void MoveTowardDestination();
+	static string StartEnemy(float vel, float accuraci, string Projectile, float vision);
+	static string UpdateEnemy();
+	static bool GetMyBody(string MyObject);
+
+	static enemies behaviour;
+
 protected:
+	static bool AmIOnDestination();
 	static bool AddGameObject(GameObject gameObject, string idFrom);
 	//Actuales
 	static Shader* ShaderActual;
