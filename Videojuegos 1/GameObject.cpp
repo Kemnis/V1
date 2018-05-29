@@ -3,6 +3,7 @@
 GameObject::GameObject(string name)
 {
 	Transform = new Transforms();
+	colision = new Colision();
 	Name = name;
 }
 
@@ -49,8 +50,19 @@ bool GameObject::AddTexture(Texture * texture)
 
 void GameObject::Shutdown()
 {
-	delete Transform;
-	Transform = 0;
+
+	if (Transform) {
+		delete Transform;
+		Transform = 0;
+	}
+
+	if (colision) {
+		delete colision;
+		colision = 0;
+	}
+
+
+
 }
 
 void GameObject::SetPosBitmap(vec2 Position)
@@ -150,7 +162,7 @@ void GameObject::Draw(XMMATRIX world, XMMATRIX view, XMMATRIX projection)
 			case ShaderType::BasicShader: {
 				if (this->material != nullptr) {
 					ConstantBufferTypes::MaterialBuffer materialBuffer;
-					materialBuffer.ColorMaterial = vec4(this->material->color, 1.0);
+					materialBuffer.ColorMaterial = this->material->color;
 					materialBuffer.escalar = this->material->escalar;
 					shader->SetShaderConstantBuffer("MaterialBuffer", &materialBuffer);
 				}
@@ -167,7 +179,7 @@ void GameObject::Draw(XMMATRIX world, XMMATRIX view, XMMATRIX projection)
 				}
 				if (this->material != nullptr) {
 					ConstantBufferTypes::MaterialBuffer materialBuffer;
-					materialBuffer.ColorMaterial = vec4(this->material->color, 1.0);
+					materialBuffer.ColorMaterial = this->material->color;
 					materialBuffer.escalar = this->material->escalar;
 					shader->SetShaderConstantBuffer("MaterialBuffer", &materialBuffer);
 				}
@@ -179,7 +191,7 @@ void GameObject::Draw(XMMATRIX world, XMMATRIX view, XMMATRIX projection)
 
 				if (this->material != nullptr) {
 					ConstantBufferTypes::MaterialBuffer materialBuffer;
-					materialBuffer.ColorMaterial = vec4(this->material->color, 1.0);
+					materialBuffer.ColorMaterial = this->material->color;
 					materialBuffer.escalar = this->material->escalar;
 					shader->SetShaderConstantBuffer("MaterialBuffer", &materialBuffer);
 				}
@@ -192,6 +204,88 @@ void GameObject::Draw(XMMATRIX world, XMMATRIX view, XMMATRIX projection)
 	}
 	ResourceManager::bindModel(Modelo);
 	Modelo->Draw();
+}
+
+
+Colision* GameObject::GetColision()
+{
+	return colision;
+}
+
+void GameObject::Collider(GameObject*gameObject, double deltaTime) {
+	static float time = 0;
+	if (colision->ColisionSphere(Transform, gameObject->Transform))
+	{
+		ColsionAnimation = true;
+		static bool colision = false;
+		if (time > 0)
+		{
+			time -= deltaTime;
+			AnimationDamage(deltaTime, 3);
+			if (Damage == false)
+			{
+				Damage = true;
+				CountCorazon--;
+			}
+		}
+		else
+		{
+			Damage = false;
+			time = TimeFlicker;
+		}
+
+
+
+		_RPT0(0, "Colison");
+	}
+	else
+		if (time > 0)
+		{
+			time -= deltaTime;
+			AnimationDamage(deltaTime, 3);
+		}
+		else
+		{
+			if (this->material->escalar < 0)
+			{
+				FilckerBoolean = false;
+				this->material->escalar = 0;
+			}
+			else
+				this->material->escalar -= deltaTime * 3;
+		}
+
+}
+
+void GameObject::AnimationDamage(double deltaTime, double time)
+{
+
+
+	if (FilckerBoolean)
+		this->material->escalar -= deltaTime * time;
+	else
+		this->material->escalar += deltaTime * time;
+
+	if (this->material->escalar < 0)
+	{
+		FilckerBoolean = false;
+		this->material->escalar = 0;
+	}
+	else if (this->material->escalar > 1)
+	{
+		FilckerBoolean = true;
+		this->material->escalar = 1;
+	}
+
+
+
+}
+
+void GameObject::Respawn()
+{
+	//Transform->SetTranslation(vec3(209.899216, 9.18199921, 44.6729889));
+	CountCorazon = 3;
+	CountLifes--;
 }
 
 

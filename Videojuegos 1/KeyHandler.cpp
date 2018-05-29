@@ -423,7 +423,16 @@ void KeyHandler::KeyEventLevel(int *changeScene)
 		thridPerson = true;
 	if(Keyboard->KEYSDOWN[KeyCodes.Space])
 	{
+		if(focus==NULL)
 		focus = ResourceManager::GetObjectByName("BotEnemy");
+		else focus = NULL;
 	}
 		
+}
+
+void KeyHandler::LookAtObject(vec3 posPlayer, vec3 focus)
+{
+	vec3 rot = ResourceManager::LookAt(posPlayer, focus);
+	MyRot.y = rot.y - 180;
+	MyRot.x = rot.z - 90;
 }

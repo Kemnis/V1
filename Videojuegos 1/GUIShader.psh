@@ -35,15 +35,14 @@ struct PixelInputType
 float4 PixelProgram(PixelInputType input) : SV_TARGET
 {
 float4 textureColor;
-
+float4 color;
 // Sample the pixel color from the texture using the sampler at this texture coordinate location.
 textureColor = shaderTexture.Sample(SampleType, input.tex);
 
 // Remove bacground
 clip(textureColor.a - 0.7f);
 
+color = lerp(textureColor, textureColor*materialColor, escalar);
 
-
-
-return textureColor;
+return color;
 }

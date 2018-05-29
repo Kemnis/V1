@@ -162,7 +162,7 @@ bool ResourceManager::AddBitmap(string idFrom, string Nombre, vec4 rectBimap)
 	return true;
 }
 
-bool ResourceManager::AddMaterial(string idFrom, string Nombre, vec3 Color)
+bool ResourceManager::AddMaterial(string idFrom, string Nombre, vec4 Color)
 {
 	Material nuevo;
 	nuevo.Name = Nombre;
@@ -561,6 +561,7 @@ string ResourceManager::UpdateEnemy()
 	return "S_OK";
 }
 
+
 void ResourceManager::MoveTowardDestination()
 {
 	//Get vector toward destination
@@ -583,4 +584,19 @@ bool ResourceManager::AmIOnDestination()
 	else
 		return false;
 	return true;
+
+}
+
+vec3 ResourceManager::LookAt(vec3 pos, vec3 focus)
+{
+	vec3 v1, v2;
+	vec3 axis = vec3(0.0, 0.0, 0.0);
+	vec3 vr = pos - focus;
+	float r = sqrt(pow(vr.x, 2) + pow(vr.y, 2) + pow(vr.z, 2));
+
+	axis.y = degrees((float)atan2(vr.x, vr.z));
+	axis.z = degrees((float)acos((-vr.y) / r));
+
+	return axis;
+
 }

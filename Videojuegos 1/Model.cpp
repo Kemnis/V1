@@ -912,6 +912,8 @@ bool Model::Initialize(string NameOfFigure)
 		DefineGeoSphere(2, 10);
 	if (NameOfFigure == "Billboard")
 		DefineBillboard();
+	if (NameOfFigure == "SphereCollider")
+		DefineSphere(2, 4);
 
 	//Set up the description of the static vertex buffer
 	if(!dynamicVertexBuffer)
@@ -1174,6 +1176,9 @@ bool Model::LoadModel(string path)
 			radio = radioMax;
 		else
 			radio = radioMin;
+
+		if (radio < 0)
+			radio *= -1;
 
 	}
 	catch (std::exception& e)

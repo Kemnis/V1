@@ -28,7 +28,7 @@ string SceneMenu::LoadResources()
 {
 	RB = ResourceManager::AddTexture(id, "assets/tituloGame.png", "TitleTexture");
 	RB = ResourceManager::AddShader(id, "GUIShader", new GUIShader("GUIShader.vsh", "GUIShader.psh"));
-	RB = ResourceManager::AddMaterial(id, "ColorBlanco", vec3(0.2, 0.2, 0.4));
+	RB = ResourceManager::AddMaterial(id, "ColorBlanco", vec4(0.2, 0.2, 0.4,1.0));
 
 	if (RB != true)
 	{

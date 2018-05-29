@@ -8,6 +8,8 @@
 #include "MaterialShader.h"
 #include "Material.h"
 #include "Light.h"
+#include "Colision.h"
+
 
 class GameObject
 {
@@ -36,10 +38,19 @@ public:
 	void IsPatrol(vector<vec3> PosicionesPosibles);
 	Shader* GetShader();
 	void Shutdown();
+
+	void AnimationDamage(double deltaTime, double time);
+	void Respawn();
+	Colision * GetColision();
+	void Collider(GameObject*gameObject, double deltaTime);
+
 	Transforms* Transform;
 
 
 
+	bool FilckerBoolean;
+	int CountLifes = 3;
+	int CountCorazon = 3;
 
 
 protected:
@@ -54,7 +65,17 @@ protected:
 	vector<XMMATRIX> multipleworlds;
 	bool ispatrol = false;
 	//EnemyBehaviour MyBehaviour();
+
+	Colision * colision;
+	int CountFlicker;
+	int TimeFlicker = 3;
+	float Time = 2;
+
+	bool ColsionAnimation;
+	bool Damage = false;
+
 private:
+
 	
 };
 

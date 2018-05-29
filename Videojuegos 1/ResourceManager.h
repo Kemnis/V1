@@ -55,7 +55,7 @@ public:
 	static bool AddTexture(string idFrom,string path, string name);
 	static bool AddStage(string idFrom,string path, string name, float Cells, float Witdth,float Height);
 	static bool AddShader(string idFrom,string name, Shader* shader);
-	static bool AddMaterial(string idFrom,string Nombre, vec3 Color);
+	static bool AddMaterial(string idFrom,string Nombre, vec4 Color);
 	static bool AddLight(string idFrom,string Nombre, vec4 ambient, vec4 diffuse, vec3 direction);
 
 	//Not delete change Scene
@@ -86,7 +86,7 @@ public:
 
 	static bool bindShader(Shader* basicshader);
 	static bool bindModel(Model * model);
-
+	static vec3 LookAt(vec3 pos, vec3 focus);
 	static void Shutdown();
 
 	using GameObjectMap = std::map<string, GameObject>;
