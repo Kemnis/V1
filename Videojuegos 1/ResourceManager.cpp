@@ -561,6 +561,7 @@ string ResourceManager::UpdateEnemy()
 	return "S_OK";
 }
 
+
 void ResourceManager::MoveTowardDestination()
 {
 	//Get vector toward destination
@@ -583,6 +584,7 @@ bool ResourceManager::AmIOnDestination()
 	else
 		return false;
 	return true;
+
 }
 
 vec3 ResourceManager::LookAt(vec3 pos, vec3 focus)
@@ -596,4 +598,5 @@ vec3 ResourceManager::LookAt(vec3 pos, vec3 focus)
 	axis.z = degrees((float)acos((-vr.y) / r));
 
 	return axis;
+
 }

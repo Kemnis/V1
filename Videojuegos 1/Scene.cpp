@@ -36,7 +36,9 @@ string Scene::LoadResources()
 	RB = ResourceManager::AddTexture(id, "assets/mt2Stage1.jpg", "Layer2-Mid");
 	RB = ResourceManager::AddTexture(id, "assets/mt3Stage1.jpg", "Layer3-Top");
 	RB = ResourceManager::AddTexture(id, "assets/TreeTex.png", "ArbolTexture");
+
 	RB = ResourceManager::AddMaterial(id, "ColorBlanco", vec4(0.2, 0.2, 0.4,1.0));
+
 
 	RB = ResourceManager::AddLight(id, "Luz", vec4(0.1f, 0.8f, 0.8f, 1.0f), vec4(1.0f, 1.0f, 1.0f, 1.0f), vec3(0.0f, 0.0f, 1.0f));
 	RB = ResourceManager::AddShader(id, "LambertBasicShader", new BasicShader("LambertMaterial.vs", "LambertMaterial.ps"));

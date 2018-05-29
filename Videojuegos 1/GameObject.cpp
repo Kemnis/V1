@@ -50,6 +50,7 @@ bool GameObject::AddTexture(Texture * texture)
 
 void GameObject::Shutdown()
 {
+
 	if (Transform) {
 		delete Transform;
 		Transform = 0;
@@ -59,6 +60,9 @@ void GameObject::Shutdown()
 		delete colision;
 		colision = 0;
 	}
+
+
+
 }
 
 void GameObject::SetPosBitmap(vec2 Position)
@@ -202,6 +206,7 @@ void GameObject::Draw(XMMATRIX world, XMMATRIX view, XMMATRIX projection)
 	Modelo->Draw();
 }
 
+
 Colision* GameObject::GetColision()
 {
 	return colision;
@@ -282,6 +287,7 @@ void GameObject::Respawn()
 	CountCorazon = 3;
 	CountLifes--;
 }
+
 
 
 

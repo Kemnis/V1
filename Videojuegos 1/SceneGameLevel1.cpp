@@ -46,12 +46,15 @@ string SceneGameLevel1::LoadResources()
 	RB = ResourceManager::AddTexture(id, "assets/mt1Stage1.jpg", "Layer1-Bottom");
 	RB = ResourceManager::AddTexture(id, "assets/mt2Stage1.jpg", "Layer2-Mid");
 	RB = ResourceManager::AddTexture(id, "assets/mt3Stage1.jpg", "Layer3-Top");
+
 	RB = ResourceManager::AddMaterial(id, "ColorBlanco", vec4(0.2, 0.2, 0.4,1.0));
+
 	RB = ResourceManager::AddLight(id, "Luz", vec4(0.1f, 0.8f, 0.8f, 1.0f), vec4(1.0f, 1.0f, 1.0f, 1.0f), vec3(0.0f, 0.0f, 1.0f));
 	RB = ResourceManager::AddShader(id, "LambertMaterialShader", new MaterialShader("LambertTexture.vs", "LambertTexture.ps"));
 	RB = ResourceManager::AddShader(id, "LambertLMaterialShader", new MaterialShader("LambertLTexture.vs", "LambertLTexture.ps", 1));
 
 	RB = ResourceManager::AddShader(id, "MaterialPatrol", new MaterialShader("LambertMaterial.vs", "LambertMaterial.ps"));
+
 	RB = ResourceManager::AddShader(id, "GUIShader", new GUIShader("GUIShader.vsh", "GUIShader.psh"));
 	RB = ResourceManager::AddShader(id, "ShaderCollider", new MaterialShader("LambertLMaterial.vs", "LambertLMaterial.ps"));
 
@@ -60,6 +63,7 @@ string SceneGameLevel1::LoadResources()
 	//texture Bitmaps
 	RB = ResourceManager::AddTexture(id, "assets/LifeIco.png", "TextureCorazon");
 	RB = ResourceManager::AddTexture(id, "assets/LifesIco.png", "TextureVidas");
+
 
 	RB = ResourceManager::AddMaterial(id, "ColorMaterialCheckPoint", vec4(0.0, 0.0, 1.0, 0.2));
 	RB = ResourceManager::AddMaterial(id, "ColorCollider", vec4(1.0, 0.0, 0.0, 0.5));
@@ -81,11 +85,14 @@ string SceneGameLevel1::LoadResources()
 //Then Build a GameObject or Define a Behaviour of its (Also Multitextures goes here)
 string SceneGameLevel1::BuildScene()
 {
+
 	RS = ResourceManager::BuildGameObject(id, "NaveJugador", "nave", "TextureNave", "LambertMaterialShader", "ColorCollider", "Luz");
+
 	RS = ResourceManager::BuildGameObject(id, "BotEnemy", "meshEnemy", "TextureEnemy", "LambertMaterialShader", "ColorBlanco", "Luz");
 	RS = ResourceManager::BuildGameObject(id, "SphereMes", "SphereMesh", "World", "LambertLMaterialShader", "ColorBlanco", "Luz");
 	RS = ResourceManager::BuildGameObject(id, "SphereMod", "SphereModel", "World", "SkydomeShader", "ColorBlanco", "Luz");
 	RS = ResourceManager::BuildGameObject(id, "Stage1", "Stage1", "", "TerrenoShader", "ColorBlanco", "Luz");
+
 
 	RS = ResourceManager::BuildGameObject(id, "Patrols", "Patrol", "", "MaterialPatrol", "ColorMaterialCheckPoint", "");
 	RS = ResourceManager::BuildGameObject(id, "Colision", "SphereColi", "", "ShaderCollider", "ColorCollider", "");
@@ -97,6 +104,7 @@ string SceneGameLevel1::BuildScene()
 	RS = ResourceManager::BuildGameObject(id, "BitmapVidas01", "Bitmap04", "TextureVidas", "GUIShader", "ColorDamageBitmap", "");
 	RS = ResourceManager::BuildGameObject(id, "BitmapVidas02", "Bitmap05", "TextureVidas", "GUIShader", "ColorDamageBitmap", "");
 	RS = ResourceManager::BuildGameObject(id, "BitmapVidas03", "Bitmap06", "TextureVidas", "GUIShader", "ColorDamageBitmap", "");
+
 
 	//Addtexture
 	RS = ResourceManager::AsingTextureToGameObject("SphereMod", "WorldNight");
@@ -211,6 +219,7 @@ string SceneGameLevel1::ProcessScene(double dt)
 		temp->AnimationDamage(dt, 0.5);
 	}
 
+	ResourceManager::UpdateEnemy();
 	return "S_OK";
 }
 
@@ -236,6 +245,8 @@ string SceneGameLevel1::RenderScene()
 	GameObject* GObjModel = ResourceManager::GetObjectByName("SphereMod");
 	GameObject* GOjugador = ResourceManager::GetObjectByName("NaveJugador");
 	GameObject* GOPatrol = ResourceManager::GetObjectByName("Patrols");
+
+
 	GameObject*GOEnemy = ResourceManager::GetObjectByName("BotEnemy");
 	GameObject*sphereColision = ResourceManager::GetObjectByName("Colision");
 
@@ -246,10 +257,10 @@ string SceneGameLevel1::RenderScene()
 		specsDx->TurnZBufferOn();
 	specsDx->TurnOnCulling();
 
-
-
 	GoStage->Draw(GoStage->Transform->ToMatrix(),viewMatrix,*projectionMatrix);
+
 	
+  
 	GOEnemy->Draw(GOEnemy->Transform->ToMatrix(), viewMatrix, *projectionMatrix);
 	DrawSphereColsion(sphereColision, GOEnemy, viewMatrix, *projectionMatrix);
 
@@ -279,6 +290,7 @@ string SceneGameLevel1::RenderScene()
 			GameObject*temp = List_Vidas.at(i);
 			temp->Draw(XMMatrixIdentity(), viewMatrix2D, *orthoMatrix);
 		}
+
 
 	specsDx->TurnZBufferOn();
 

@@ -10,6 +10,7 @@
 #include "Light.h"
 #include "Colision.h"
 
+
 class GameObject
 {
 public:
@@ -46,9 +47,11 @@ public:
 	Transforms* Transform;
 
 
+
 	bool FilckerBoolean;
 	int CountLifes = 3;
 	int CountCorazon = 3;
+
 
 protected:
 
@@ -62,6 +65,7 @@ protected:
 	vector<XMMATRIX> multipleworlds;
 	bool ispatrol = false;
 	//EnemyBehaviour MyBehaviour();
+
 	Colision * colision;
 	int CountFlicker;
 	int TimeFlicker = 3;
@@ -69,6 +73,7 @@ protected:
 
 	bool ColsionAnimation;
 	bool Damage = false;
+
 private:
 
 	
