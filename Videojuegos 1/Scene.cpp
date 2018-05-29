@@ -28,17 +28,17 @@ string Scene::LoadResources()
 {
 	RB = ResourceManager::AddModel(id, "Sphere", "SphereMesh");
 	RB = ResourceManager::AddModel(id, "assets/Sphere.obj", "SphereModel");
-	RB = ResourceManager::AddStage(id, "assets/Stage2.bmp", "Stage1", 256, 1024, 1024);
+	RB = ResourceManager::AddStage(id, "assets/Stage1.bmp", "Stage1", 256, 1024, 1024);
 
-	RB = ResourceManager::AddTexture(id, "assets/skydome day1.png", "World");
-	RB = ResourceManager::AddTexture(id, "assets/skydome night2.jpg", "WorldNight");
-	RB = ResourceManager::AddTexture(id, "assets/terrenopasto.jpg", "Layer1-Bottom");
-	RB = ResourceManager::AddTexture(id, "assets/terrenopiedra.jpg", "Layer2-Mid");
-	RB = ResourceManager::AddTexture(id, "assets/terrenopasto2.png", "Layer3-Top");
-	RB = ResourceManager::AddTexture(id, "assets/arbol.png", "ArbolTexture");
-	RB = ResourceManager::AddMaterial(id, "ColorBlanco", vec3(0.2, 0.2, 0.4));
+	RB = ResourceManager::AddTexture(id, "assets/SkyStage1Day.jpg", "World");
+	RB = ResourceManager::AddTexture(id, "assets/SkyStage1Night.jpg", "WorldNight");
+	RB = ResourceManager::AddTexture(id, "assets/mt1Stage1.jpg", "Layer1-Bottom");
+	RB = ResourceManager::AddTexture(id, "assets/mt2Stage1.jpg", "Layer2-Mid");
+	RB = ResourceManager::AddTexture(id, "assets/mt3Stage1.jpg", "Layer3-Top");
+	RB = ResourceManager::AddTexture(id, "assets/TreeTex.png", "ArbolTexture");
+	RB = ResourceManager::AddMaterial(id, "ColorBlanco", vec4(0.2, 0.2, 0.4,1.0));
 
-	RB = ResourceManager::AddLight(id, "Primeras", vec4(0.1f, 0.8f, 0.8f, 1.0f), vec4(1.0f, 1.0f, 1.0f, 1.0f), vec3(0.0f, 0.0f, 1.0f));
+	RB = ResourceManager::AddLight(id, "Luz", vec4(0.1f, 0.8f, 0.8f, 1.0f), vec4(1.0f, 1.0f, 1.0f, 1.0f), vec3(0.0f, 0.0f, 1.0f));
 	RB = ResourceManager::AddShader(id, "LambertBasicShader", new BasicShader("LambertMaterial.vs", "LambertMaterial.ps"));
 	RB = ResourceManager::AddShader(id, "LambertLBasicShader", new BasicShader("LambertLMaterial.vs", "LambertLMaterial.ps", 1));
 	RB = ResourceManager::AddShader(id, "LambertMaterialShader", new MaterialShader("LambertTexture.vs", "LambertTexture.ps"));
@@ -61,9 +61,9 @@ string Scene::LoadResources()
 //Then Build a GameObject or Define a Behaviour of its (Also Multitextures goes here)
 string Scene::BuildScene()
 {
-	RS = ResourceManager::BuildGameObject(id, "SphereMes", "SphereMesh", "World", "LambertLMaterialShader", "ColorBlanco", "Primeras");
-	RS = ResourceManager::BuildGameObject(id, "SphereMod", "SphereModel", "World", "SkydomeShader", "ColorBlanco", "Primeras");
-	RS = ResourceManager::BuildGameObject(id, "Stage1", "Stage1", "", "TerrenoShader", "ColorBlanco", "Primeras");
+	RS = ResourceManager::BuildGameObject(id, "SphereMes", "SphereMesh", "World", "LambertLMaterialShader", "ColorBlanco", "Luz");
+	RS = ResourceManager::BuildGameObject(id, "SphereMod", "SphereModel", "World", "SkydomeShader", "ColorBlanco", "Luz");
+	RS = ResourceManager::BuildGameObject(id, "Stage1", "Stage1", "", "TerrenoShader", "ColorBlanco", "Luz");
 	RS = ResourceManager::BuildGameObject(id, "Arbol", "Billboard", "ArbolTexture", "LambertMaterialShader", "ColorBlanco", "");
 	RS = ResourceManager::BuildGameObject(id, "Arbol2", "Billboard", "ArbolTexture", "LambertMaterialShader", "ColorBlanco", "");
 	RS = ResourceManager::BuildGameObject(id, "bitmapPasto", "Bitmap00", "Layer1-Bottom", "GUIShader", "ColorBlanco", "");
@@ -74,6 +74,9 @@ string Scene::BuildScene()
 	RS = ResourceManager::AsingTextureToGameObject("Stage1", "Layer1-Bottom");
 	RS = ResourceManager::AsingTextureToGameObject("Stage1", "Layer2-Mid");
 	RS = ResourceManager::AsingTextureToGameObject("Stage1", "Layer3-Top");
+
+	RS = ResourceManager::LoadLetters(id, "assets/Abecedario10x10/", "AHLO");
+	RS = ResourceManager::BuildWord(id, "Palabra1", "HOLA", vec2(20, 0));
 
 	if (RS != "S_OK")
 	{
@@ -111,6 +114,7 @@ string Scene::Start() {
 	trans = ResourceManager::GetObjectByName("Arbol2")->Transform->GetTranslation();
 	trans.y = ResourceManager::GetObjectByName("Stage1")->GetModel()->GetPositionHeightMap(trans);
 	ResourceManager::GetObjectByName("Arbol2")->Transform->SetTranslation(trans);
+
 
 	return "S_OK";
 }
@@ -227,8 +231,8 @@ string Scene::RenderScene()
 
 
 	specsDx->TurnZBufferOff();
-		bitmapGO->Draw(XMMatrixIdentity(), viewMatrix2D, *orthoMatrix);
-		bitmapArbol->Draw(XMMatrixIdentity(), viewMatrix2D, *orthoMatrix);
+		//bitmapGO->Draw(XMMatrixIdentity(), viewMatrix2D, *orthoMatrix);
+		//bitmapArbol->Draw(XMMatrixIdentity(), viewMatrix2D, *orthoMatrix);
 	specsDx->TurnZBufferOn();
 
 
@@ -242,6 +246,20 @@ string Scene::RenderScene()
 
 	
 	// Present the rendered scene to the screen.
+	specsDx->TurnZBufferOff();
+	GameObject* words[10];
+	int Letras = 0;
+	string identifier = "Palabra1";
+	while (Letras != 4)
+	{
+		string str = "HOLA";
+		for (char& c : str) {
+			words[Letras] = ResourceManager::GetObjectByName(identifier + c);
+			words[Letras]->Draw(XMMatrixIdentity(), viewMatrix2D, *orthoMatrix);
+			Letras++;
+		}
+	}
+	specsDx->TurnZBufferOn();
 	specsDx->EndScene();
 	return "S_OK";
 }
@@ -263,4 +281,17 @@ bool Scene::DownloadResources()
 		return true;
 	else
 		return false;
+}
+
+void Scene::DrawSphereColsion(GameObject*GoColi, GameObject*gameObject, XMMATRIX view, XMMATRIX projecton) {
+	specsDx->TurnOffCulling();
+	specsDx->TurnZBufferOff();
+		XMMATRIX scaleMatrix = XMMatrixScaling(
+			gameObject->Transform->GetRadio(),
+			gameObject->Transform->GetRadio(),
+			gameObject->Transform->GetRadio()
+		);
+	GoColi->Draw(scaleMatrix*gameObject->Transform->ToMatrix(), view, projecton);
+	specsDx->TurnZBufferOn();
+	specsDx->TurnOnCulling();
 }

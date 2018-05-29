@@ -1,16 +1,18 @@
 #pragma once
-#ifndef _Behaviour_H_
-#define _Behaviour_H_
-
-class Behaviour
-{
-public:
-	Behaviour();
-	~Behaviour();
-
-	virtual string Awake();
-	virtual string Start();
-	virtual string Update();
+enum class BehaviourType {
+	Enemy = 1,
+	Asteroid = 2
 };
 
-#endif
+class Behaviour : public DxComponent<Shader>
+{
+private:
+
+public:
+	Behaviour(BehaviourType type);
+	~Behaviour();
+	BehaviourType type;
+	virtual string Start()=0;
+	virtual string Update()=0;
+
+};

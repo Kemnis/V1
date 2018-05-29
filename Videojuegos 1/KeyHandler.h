@@ -19,6 +19,7 @@ public:
 	void UpdateRotation(float X, float Y, float Z);
 
 	void Update(int *scene);
+	void LookAtObject(vec3 posPlayer,vec3 focus);
 
 	vec3 GetPosition();
 	vec3 GetRotation();

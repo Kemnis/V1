@@ -21,6 +21,9 @@ public:
 protected:
 	string RS,id;
 	bool RB;
+	void DrawSphereColsion(GameObject*GoColi, GameObject*gameObject, XMMATRIX view, XMMATRIX projecton);
+	std::vector<GameObject*> List_Corazones;
+	std::vector<GameObject*> List_Vidas;
 private:
 	XMMATRIX CameraMatrix;
 };

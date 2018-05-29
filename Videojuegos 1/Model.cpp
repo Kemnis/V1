@@ -1,8 +1,7 @@
 #include "stdafx.h"
 
-Model::Model()
-{
-
+Model::Model(){
+	
 }
 
 Model::Model(string path)
@@ -35,8 +34,7 @@ Model::Model(string HeightmapFile, float Cells, float Width, float Height)
 	Type = "Terrain";
 }
 
-Model::Model(vec2 coordPositivo, vec2 coordNegativo)
-{
+Model::Model(vec2 coordPositivo, vec2 coordNegativo){
 	dynamicVertexBuffer = false;
 	VertexBuffer = 0;
 	IndexBuffer = 0;
@@ -46,14 +44,19 @@ Model::Model(vec2 coordPositivo, vec2 coordNegativo)
 	Initialize(Type);
 }
 
-Model::Model(vec4 rectBitmap, int widthScreen, int heightScreen)
-{
+Model::Model(vec4 rectBitmap, int widthScreen, int heightScreen){
 	this->rectBitmap = rectBitmap;
 	dynamicVertexBuffer = true;
 	VertexBuffer = 0;
 	IndexBuffer = 0;
 	DefineBitmap(rectBitmap, widthScreen, heightScreen);
 	Type = "Bitmap";
+	Initialize(Type);
+	SetRect(rectBitmap);
+}
+
+Model::Model(string Palabra, int widthScreen, int heightScreen) {
+	Type = "Letter";
 	Initialize(Type);
 }
 
@@ -237,70 +240,6 @@ void Model::DefineCube(XMFLOAT3 size)
 		Mesh.AddUV(0, 0);	XMStoreFloat4(&Res, normal);	Mesh.AddNormals(Res);
 		Mesh.DoFinalMesh();
 	}
-}
-
-void Model::DefineSphere(float diameter, size_t tessellation)
-{
-	float radius = diameter / 2;
-	if (tessellation < 3)
-		throw std::out_of_range("tesselation parameter out of range");
-
-	size_t verticalSegments = tessellation;
-	size_t horizontalSegments = tessellation * 2;
-	// Create rings of vertices at progressively higher latitudes.
-	for (size_t i = 0; i <= verticalSegments; i++)
-	{
-		float v = 1 - (float)i / verticalSegments;
-
-		float latitude = (i * XM_PI / verticalSegments) - XM_PIDIV2;
-		float dy, dxz;
-
-		XMScalarSinCos(&dy, &dxz, latitude);
-
-		// Create a single ring of vertices at this latitude.
-		for (size_t j = 0; j <= horizontalSegments; j++)
-		{
-			float u = (float)j / horizontalSegments;
-
-			float longitude = j * XM_2PI / horizontalSegments;
-			float dx, dz;
-
-			XMScalarSinCos(&dx, &dz, longitude);
-
-			dx *= dxz;
-			dz *= dxz;
-
-			XMVECTOR normal = XMVectorSet(dx, dy, dz, 0);
-			XMVECTOR result = normal * radius;
-			XMFLOAT4 res;
-			XMStoreFloat4(&res, result);
-			Mesh.AddVertex(res);
-			Mesh.AddUV(u, v);
-			XMStoreFloat4(&res, normal);
-			Mesh.AddNormals(res);
-		}
-	}
-
-	// Fill the index buffer with triangles joining each pair of latitude rings.
-	size_t stride = horizontalSegments + 1;
-
-	for (size_t i = 0; i < (verticalSegments); i++)
-	{
-		for (size_t j = 0; j <= horizontalSegments; j++)
-		{
-			size_t nextI = i + 1;
-			size_t nextJ = (j + 1) % stride;
-
-			Mesh.AddIndex(i * stride + j);
-			Mesh.AddIndex(nextI * stride + j);
-			Mesh.AddIndex(i * stride + nextJ);
-
-			Mesh.AddIndex(i * stride + nextJ);
-			Mesh.AddIndex(nextI * stride + j);
-			Mesh.AddIndex(nextI * stride + nextJ);
-		}
-	}
-	Mesh.DoFinalMesh();
 }
 
 void Model::DefineGeoSphere(float diameter, size_t tessellation)
@@ -631,6 +570,70 @@ void Model::DefineGeoSphere(float diameter, size_t tessellation)
 	fixPole(southPoleIndex);
 }
 
+void Model::DefineSphere(float diameter, size_t tessellation)
+{
+	float radius = diameter / 2;
+	if (tessellation < 3)
+		throw std::out_of_range("tesselation parameter out of range");
+
+	size_t verticalSegments = tessellation;
+	size_t horizontalSegments = tessellation * 2;
+	// Create rings of vertices at progressively higher latitudes.
+	for (size_t i = 0; i <= verticalSegments; i++)
+	{
+		float v = 1 - (float)i / verticalSegments;
+
+		float latitude = (i * XM_PI / verticalSegments) - XM_PIDIV2;
+		float dy, dxz;
+
+		XMScalarSinCos(&dy, &dxz, latitude);
+
+		// Create a single ring of vertices at this latitude.
+		for (size_t j = 0; j <= horizontalSegments; j++)
+		{
+			float u = (float)j / horizontalSegments;
+
+			float longitude = j * XM_2PI / horizontalSegments;
+			float dx, dz;
+
+			XMScalarSinCos(&dx, &dz, longitude);
+
+			dx *= dxz;
+			dz *= dxz;
+
+			XMVECTOR normal = XMVectorSet(dx, dy, dz, 0);
+			XMVECTOR result = normal * radius;
+			XMFLOAT4 res;
+			XMStoreFloat4(&res, result);
+			Mesh.AddVertex(res);
+			Mesh.AddUV(u, v);
+			XMStoreFloat4(&res, normal);
+			Mesh.AddNormals(res);
+		}
+	}
+
+	// Fill the index buffer with triangles joining each pair of latitude rings.
+	size_t stride = horizontalSegments + 1;
+
+	for (size_t i = 0; i < (verticalSegments); i++)
+	{
+		for (size_t j = 0; j <= horizontalSegments; j++)
+		{
+			size_t nextI = i + 1;
+			size_t nextJ = (j + 1) % stride;
+
+			Mesh.AddIndex(i * stride + j);
+			Mesh.AddIndex(nextI * stride + j);
+			Mesh.AddIndex(i * stride + nextJ);
+
+			Mesh.AddIndex(i * stride + nextJ);
+			Mesh.AddIndex(nextI * stride + j);
+			Mesh.AddIndex(nextI * stride + nextJ);
+		}
+	}
+	Mesh.DoFinalMesh();
+}
+
 void Model::DefineBillboard()
 {
 	int indexCount = 0;
@@ -677,8 +680,7 @@ void Model::DefineBillboard()
 	radio = 1;
 }
 
-void Model::DefineBitmap(vec4 rectBitmap, int widthScreen, int heightScreen)
-{
+void Model::DefineBitmap(vec4 rectBitmap, int widthScreen, int heightScreen){
 	float left, right, top, bottom;
 	int countIndex = 0;
 
@@ -816,6 +818,74 @@ bool Model::UpdateBufferBitmap(vec4 rectBitmap, int widthScreen, int heightScree
 	return true;
 }
 
+//void Model::HaveColition(bool tieneColision)
+//{
+//	colisiona = tieneColision;
+//}
+//
+//bool Model::HaveMeshColition()
+//{
+//	return colisiona;
+//}
+
+//void Model::InitCol(string MeshCol)
+//{
+//	D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
+//	D3D11_SUBRESOURCE_DATA vertexData, indexData;
+//	HRESULT result;
+//
+//	if (MeshCol == "Sphere")
+//		DefineSphere(2, 8);
+//	if (MeshCol == "Cube")
+//		DefineCube(XMFLOAT3(1, 1, 1));
+//
+//	//Set up the description of the static vertex buffer
+//	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;//Defualt buffer usage
+//
+//
+//	vertexBufferDesc.ByteWidth = sizeof(Vertex::VertexType)* colition.VertexCount;
+//	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+//	vertexBufferDesc.CPUAccessFlags = 0;
+//	vertexBufferDesc.MiscFlags = 0;
+//	vertexBufferDesc.StructureByteStride = 0;
+//
+//	// Give the subresource structure a pointer to the vertex data.
+//	vertexData.pSysMem = &colition.FinalMesh[0];
+//	vertexData.SysMemPitch = 0;
+//	vertexData.SysMemSlicePitch = 0;
+//
+//	//Now create the vertex buffer
+//	result = device->CreateBuffer(&vertexBufferDesc, &vertexData, &VertexColBuffer);
+//	if (FAILED(result))
+//		ErrorFnc("No se pudo crear el buffer de vertices");
+//
+//	//Set up the description of the static index buffer
+//	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+//	indexBufferDesc.ByteWidth = sizeof(unsigned long)* colition.IndexCount;
+//	indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+//	indexBufferDesc.CPUAccessFlags = 0;
+//	indexBufferDesc.MiscFlags = 0;
+//	indexBufferDesc.StructureByteStride = 0;
+//
+//	vector<unsigned long> indices;
+//	indices = colition.GetIndex();
+//
+//
+//	//Give the subresource structure a pointer to the index data
+//	indexData.pSysMem = &indices[0];
+//	indexData.SysMemPitch = 0;
+//	indexData.SysMemSlicePitch = 0;
+//
+//	//Create the index buffer
+//	result = device->CreateBuffer(&indexBufferDesc, &indexData, &IndexColBuffer);
+//	if (FAILED(result))
+//		ErrorFnc("No se pudo crear el buffer de indices");
+//	
+//}
+
+//bool Model::ConstructBehaviour() {
+//
+//}
 
 bool Model::Initialize(string NameOfFigure)
 {
@@ -842,6 +912,8 @@ bool Model::Initialize(string NameOfFigure)
 		DefineGeoSphere(2, 10);
 	if (NameOfFigure == "Billboard")
 		DefineBillboard();
+	if (NameOfFigure == "SphereCollider")
+		DefineSphere(2, 4);
 
 	//Set up the description of the static vertex buffer
 	if(!dynamicVertexBuffer)
@@ -905,6 +977,12 @@ void Model::Draw()
 	return;
 }
 
+//void Model::DrawCol()
+//{
+//	deviceContext->DrawIndexed(colition.IndexCount, 0, 0);
+//	return;
+//}
+
 void Model::BindMesh(D3D_PRIMITIVE_TOPOLOGY TOPOLOGY)
 {
 	unsigned int stride;
@@ -923,6 +1001,25 @@ void Model::BindMesh(D3D_PRIMITIVE_TOPOLOGY TOPOLOGY)
 	// Set the type of primitive that should be rendered from this vertex buffer, in this case triangles.
 	deviceContext->IASetPrimitiveTopology(TOPOLOGY);
 }
+
+//void Model::BindMeshCol(D3D_PRIMITIVE_TOPOLOGY TOPOLOGY)
+//{
+//	unsigned int stride;
+//	unsigned int offset;
+//
+//	// Set vertex buffer stride and offset.
+//	stride = sizeof(Vertex::VertexType);
+//	offset = 0;
+//
+//	// Set the vertex buffer to active in the input assembler so it can be rendered.
+//	deviceContext->IASetVertexBuffers(0, 1, &VertexColBuffer, &stride, &offset);
+//
+//	// Set the index buffer to active in the input assembler so it can be rendered.
+//	deviceContext->IASetIndexBuffer(IndexColBuffer, DXGI_FORMAT_R32_UINT, 0);
+//
+//	// Set the type of primitive that should be rendered from this vertex buffer, in this case triangles.
+//	deviceContext->IASetPrimitiveTopology(TOPOLOGY);
+//}
 
 Vertex Model::GetMesh()
 {
@@ -1021,7 +1118,7 @@ bool Model::LoadModel(string path)
 		_RPT3(0, "Last Vertex: %f,%f,%f\n", Mesh.GetLastVertex().x, Mesh.GetLastVertex().y, Mesh.GetLastVertex().z);
 		_RPT2(0, "Last UVs: %f, %f\n", Mesh.GetFirstTexture().x, Mesh.GetFirstTexture().y);
 		_RPT3(0, "Last Normals: %f,%f,%f\n", Mesh.GetLastNormal().x, Mesh.GetLastNormal().y, Mesh.GetLastNormal().z);
-
+		
 		//_RPT4(0, "#V: %f   #T: %f   #N: %f   #F: %f\n", Mesh.GetVertex(), Mesh.GetTexture(), Mesh.GetNormal(), Mesh.GetTriangleFN());
 		//------------------------------------------------------------------------------------------
 
@@ -1080,6 +1177,9 @@ bool Model::LoadModel(string path)
 		else
 			radio = radioMin;
 
+		if (radio < 0)
+			radio *= -1;
+
 	}
 	catch (std::exception& e)
 	{
@@ -1128,6 +1228,7 @@ void Model::SetRect(vec4 rectBitmap)
 	PosY = m_screenHeight * 0.5f - m_bitmapHeight * 0.5f - rectBitmap.y;
 	return;
 }
+
 //Method Bitmap
 void Model::SetPosition(vec2 position)
 {

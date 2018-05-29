@@ -11,6 +11,7 @@ public:
 	Model(string path);//Mesh of Objects
 	Model(vec2 coordPositivo, vec2 coordNegativo);//<-Width and Height my Billboard
 	Model(vec4 rectBitmap, int widthScreen, int heightScreen);//Mesh for Bitmap images in 2D screens
+	Model(string Oracion, int widthScreen, int heightScreen);//Construct Words
 	~Model();
 	bool Initialize(string primitive);
 	void Draw();
@@ -36,8 +37,10 @@ public:
 	vec2 SizeXZ;
 	vec2 coordPositivo, coordNegativo;
 	vec4 rectBitmap;
+
 	
 protected:
+	bool haveBehaviour;
 	bool dynamicVertexBuffer;//<- For re-position bitmap2D
 	Vertex Mesh;
 	ID3D11Buffer *VertexBuffer, *IndexBuffer;
@@ -51,6 +54,8 @@ private:
 	void DefineSphere(float diameter, size_t tessellation);
 	void DefineGeoSphere(float diameter, size_t tessellation);
 	void DefineBillboard();
+	void InitCol(string MeshCol);
+	void ConstructAWord(string Oracion, int widthScreen, int heightScreen);
 	void DefineBitmap(vec4 rectBitmap, int widthScreen, int heightScreen);
 
 	//Measure

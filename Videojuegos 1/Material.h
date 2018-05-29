@@ -4,6 +4,6 @@ using namespace glm;
 class Material {
 public:
 	string Name;
-	vec3 color;
+	vec4 color;
 	float escalar;
 };

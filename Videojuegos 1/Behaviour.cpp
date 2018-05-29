@@ -1,12 +1,10 @@
 #include "stdafx.h"
 
-Behaviour::Behaviour(){}
+Behaviour::Behaviour(BehaviourType type){
+	this->type = type;
+}
 
 Behaviour::~Behaviour(){}
-
-string Behaviour::Awake() {
-	return "S_OK";
-}
 
 string Behaviour::Start() {
 	return "S_OK";
@@ -15,3 +13,4 @@ string Behaviour::Start() {
 string Behaviour::Update() {
 	return "S_OK";
 }
+

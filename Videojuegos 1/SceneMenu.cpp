@@ -28,7 +28,7 @@ string SceneMenu::LoadResources()
 {
 	RB = ResourceManager::AddTexture(id, "assets/tituloGame.png", "TitleTexture");
 	RB = ResourceManager::AddShader(id, "GUIShader", new GUIShader("GUIShader.vsh", "GUIShader.psh"));
-	RB = ResourceManager::AddMaterial(id, "ColorBlanco", vec3(0.2, 0.2, 0.4));
+	RB = ResourceManager::AddMaterial(id, "ColorBlanco", vec4(0.2, 0.2, 0.4,1.0));
 
 	if (RB != true)
 	{
@@ -45,6 +45,7 @@ string SceneMenu::LoadResources()
 //Then Build a GameObject or Define a Behaviour of its (Also Multitextures goes here)
 string SceneMenu::BuildScene()
 {
+	
 	RS = ResourceManager::BuildGameObject(id, "BitmapTile", "Bitmap00", "TitleTexture", "GUIShader", "ColorBlanco", "");
 	if (RS != "S_OK")
 	{
@@ -85,6 +86,7 @@ string SceneMenu::RenderScene()
 	orthoMatrix = SceneCamera->GetOrthoMatrix();
 
 	GameObject*goTitle = ResourceManager::GetObjectByName("BitmapTile");
+	
 	
 	specsDx->TurnZBufferOff();
 		goTitle->Draw(XMMatrixIdentity(), viewMatrix, *orthoMatrix);
